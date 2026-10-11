@@ -1,4 +1,4 @@
-import { MessageCircle, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import Link from 'next/link';
 
 export default function TestimonialSection() {

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Delivery & Returns',
@@ -56,7 +55,7 @@ export default function DeliveryPage() {
 
         <section>
           <h2 className="font-heading text-2xl font-bold text-forest mb-3">Pickup from Shop</h2>
-          <p>You can pick up your order free of charge from our shop at <strong>[ADDRESS]</strong>, Nairobi. Select "Pick up from shop" at checkout. Your order will be ready within 2 hours of confirmation.</p>
+          <p>You can pick up your order free of charge from our shop at <strong>[ADDRESS]</strong>, Nairobi. Select &quot;Pick up from shop&quot; at checkout. Your order will be ready within 2 hours of confirmation.</p>
         </section>
 
         <section>

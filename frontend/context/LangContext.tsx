@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 type Lang = 'en' | 'sw';
 
@@ -16,12 +16,13 @@ const LangContext = createContext<LangContextValue>({
 });
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>('en');
-
-  useEffect(() => {
-    const stored = localStorage.getItem('agrovet_lang') as Lang | null;
-    if (stored === 'en' || stored === 'sw') setLang(stored);
-  }, []);
+  const [lang, setLang] = useState<Lang>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('agrovet_lang') as Lang | null;
+      if (stored === 'en' || stored === 'sw') return stored;
+    }
+    return 'en';
+  });
 
   const toggle = () => {
     setLang(prev => {

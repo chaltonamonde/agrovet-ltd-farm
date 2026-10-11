@@ -1,6 +1,6 @@
 'use client';
 import { useCart } from '@/context/CartContext';
-import { formatKsh, cn } from '@/lib/utils';
+import { formatKsh } from '@/lib/utils';
 import Link from 'next/link';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 

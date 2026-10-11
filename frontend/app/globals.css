@@ -44,32 +44,18 @@
   --trans:       all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ─── Tailwind v4 Theme Extension ──────────────────────────────────────────── */
-@theme inline {
-  --color-white:     var(--card);
-  --color-cream-page: var(--bg-page);
-  --color-cream-card: var(--bg-card);
-  --color-cream-section: var(--bg-section);
-  --color-cream-header: var(--bg-header);
-  --color-forest:    var(--forest);
-  --color-forest-2:  var(--forest-2);
-  --color-ink-green: var(--ink-green);
-  --color-leaf:      var(--leaf);
-  --color-leaf-2:    var(--leaf-2);
-  --color-gold:      var(--gold);
-  --color-pale:      var(--pale);
-  --color-pale-2:    var(--pale-2);
-  --color-page:      var(--page);
-  --color-card:      var(--card);
-  --color-idle:      var(--idle);
-  --color-whatsapp:  var(--whatsapp);
-
-  --font-heading: 'Barlow Condensed', sans-serif;
-  --font-body:    'Inter', sans-serif;
-
-  --radius-card: 1.25rem;
-  --radius-pill: 9999px;
-}
+/* ─── Color & Surface Utility Classes ────────────────────────────────────────── */
+.bg-forest    { background-color: var(--forest); }
+.bg-forest-2  { background-color: var(--forest-2); }
+.text-forest  { color: var(--forest); }
+.bg-leaf      { background-color: var(--leaf); }
+.text-leaf    { color: var(--leaf); }
+.bg-gold      { background-color: var(--gold); }
+.text-gold    { color: var(--gold); }
+.bg-card      { background-color: var(--bg-card); }
+.bg-page      { background-color: var(--bg-page); }
+.text-ink     { color: var(--ink-green); }
+.radius-card  { border-radius: 1.25rem; }
 
 /* ─── Base Styles ───────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }

@@ -60,7 +60,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                 Add <strong className="text-leaf">{formatKsh(remaining)}</strong> more for free delivery to Nairobi!
               </p>
             ) : (
-              <p className="text-xs text-leaf font-semibold mb-1.5">🎉 You've unlocked free Nairobi delivery!</p>
+              <p className="text-xs text-leaf font-semibold mb-1.5">🎉 You&apos;ve unlocked free Nairobi delivery!</p>
             )}
             <div className="h-1.5 bg-idle rounded-full overflow-hidden">
               <div

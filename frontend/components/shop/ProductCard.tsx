@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Heart, ShoppingCart, Eye, MessageCircle, Zap } from 'lucide-react';
 import type { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
@@ -40,14 +41,24 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     <article className="card group flex flex-col overflow-hidden relative">
       {/* Image area */}
       <div className="relative aspect-square overflow-hidden bg-pale rounded-t-[1.25rem]">
-        {/* Placeholder image with gradient */}
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-pale to-pale-2">
-          <span className="text-5xl opacity-60">
-            {product.categorySlug === 'crop-production' ? '🌿' :
-             product.categorySlug === 'seeds-fertilizers' ? '🌱' :
-             product.categorySlug === 'farm-tools'        ? '🔧' : '🪴'}
-          </span>
-        </div>
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            priority={priority}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-pale to-pale-2">
+            <span className="text-5xl opacity-60">
+              {product.categorySlug === 'crop-production' ? '🌿' :
+               product.categorySlug === 'seeds-fertilizers' ? '🌱' :
+               product.categorySlug === 'farm-tools'        ? '🔧' : '🪴'}
+            </span>
+          </div>
+        )}
 
         {/* Badges overlay */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">

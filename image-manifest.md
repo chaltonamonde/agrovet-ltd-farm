@@ -8,7 +8,7 @@ This manifest documents every image slot across the entire website, its dimensio
 
 | Slot Name | File Name | Size (px) | What It Must Show | Text It Supports | Alt Text | Matches the text? (yes/no) | Source / Provider |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Live Farm BG** | `images/live-farm-bg.webp` (also `images/hero/farm-live-bg.webp`) | 1920 × 1080 | Expansive lush green Kenyan tea and coffee plantation rolling hills in morning sun, with subtle 38s CSS pan & atmospheric shimmer | Full-website organic living ambient background & "Live Farm View" status badge | Kenyan tea and coffee plantation live background scenery | **Yes** | High-fidelity photorealistic asset |
+| **Live Farm BG** | `images/live-farm-bg.webp` | 1920 × 1080 | Expansive lush green Kenyan tea and coffee plantation rolling hills in morning sun, with subtle 38s CSS pan & atmospheric shimmer | Full-website organic living ambient background & "Live Farm View" status badge | Kenyan tea and coffee plantation live background scenery | **Yes** | High-fidelity photorealistic asset |
 
 ---
 

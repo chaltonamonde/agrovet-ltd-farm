@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react';
+import { Phone, MapPin, Clock, MessageCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Contact Us',

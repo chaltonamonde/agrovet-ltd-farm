@@ -1,9 +1,8 @@
 'use client';
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { formatKsh } from '@/lib/utils';
 import { sampleProducts } from '@/data/mockData';
-import { Package, TrendingUp, AlertTriangle, Download, ArrowUpRight } from 'lucide-react';
+import { Package, TrendingUp, AlertTriangle, Download } from 'lucide-react';
 
 interface OrderRecord {
   id: string;

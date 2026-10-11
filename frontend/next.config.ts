@@ -5,8 +5,17 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [],
   },
-  // Allow build to succeed even with TS errors during phase 1
+  // Strict TypeScript verification
   typescript: { ignoreBuildErrors: false },
+  async redirects() {
+    return [
+      {
+        source: '/products',
+        destination: '/shop',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

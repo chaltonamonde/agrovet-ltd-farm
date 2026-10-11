@@ -2,7 +2,7 @@
 import { notFound } from 'next/navigation';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, MessageCircle, ChevronDown, ChevronUp, Shield, Minus, Plus } from 'lucide-react';
+import { ShoppingCart, MessageCircle, Shield, Minus, Plus } from 'lucide-react';
 import { sampleProducts } from '@/data/mockData';
 import { useCart } from '@/context/CartContext';
 import { formatKsh, getStockInfo, buildWhatsAppUrl, cn } from '@/lib/utils';
