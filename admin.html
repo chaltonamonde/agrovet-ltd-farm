@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard & Store Manager | Agrovet Ltd Kenya</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .admin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 99px;
+    }
+  </style>
+  <!-- Critical Warm Cream Theme Inlined for Zero-Flash & Cache Immunity -->
+  <style>
+    :root {
+      --bg-page:     #E6DFCD;
+      --bg-section:  #DDD5C0;
+      --bg-card:     #F2EDDF;
+      --bg-header:   #EFE9D9;
+      --border:      #C9BFA6;
+      --text:        #2A2A1E;
+      --text-muted:  #5E5A48;
+      --leaf-text:   #3F7A08;
+      --forest:      #223F21;
+      --forest-2:    #265626;
+      --ink-green:   #2D4D28;
+      --leaf:        #5FA30E;
+      --leaf-2:      #78B534;
+      --gold:        #F4B943;
+      --gold-hover:  #e5a930;
+      --pale:        #DDD5C0;
+      --pale-2:      #F2EDDF;
+      --page:        #E6DFCD;
+      --card:        #F2EDDF;
+      --idle:        #B5AA90;
+      --whatsapp:    #25D366;
+      --danger:      #D9381E;
+      --success:     #1E824C;
+      --border-card: #C9BFA6;
+    }
+    html {
+      background-color: #E6DFCD !important;
+    }
+    body {
+      background-color: transparent !important;
+      color: #2A2A1E !important;
+    }
+    .site-header {
+      background-color: #F2EDDF !important;
+    }
+    .main-header, .top-bar {
+      /* inherit warm system */
+    }
+  </style>
+</head>
+<body style="background-color: var(--bg-page);">
+
+  <!-- Admin Header -->
+  <header style="background: var(--forest); color: #fff; padding: 1rem 0; border-bottom: 3px solid var(--gold);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-symbol" style="width: 38px; height: 38px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name" style="color: #fff; font-size: 1.4rem;">AGROVET <span style="color: var(--gold);">ADMIN</span></span>
+            <span class="brand-tagline" style="color: rgba(255,255,255,0.7); font-size: 0.65rem;">MANAGEMENT PORTAL</span>
+          </div>
+        </a>
+      </div>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <span style="font-size: 0.85rem; color: rgba(255,255,255,0.85);">Logged in as:</span>
+        <select id="portal-role-select" onchange="window.AgrovetApp.switchAdminRole(this.value); location.reload();" style="border: 1px solid var(--gold); background: var(--bg-card); padding: 0.35rem 0.75rem; border-radius: 99px; font-weight: 700; color: var(--forest); font-size: 0.85rem;">
+          <option value="owner">Store Owner (Admin)</option>
+          <option value="staff">Store Staff (Orders)</option>
+        </select>
+        <a href="index.html" class="btn btn-gold btn-sm">View Live Store ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    
+    <!-- Top Summary Banner -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="label-caps">STORE CONTROL PANEL</span>
+        <h1 style="font-size: 2.2rem; color: var(--forest); margin-top: 0.2rem;">Agrovet Operations Dashboard</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Kirinyaga Road Agricultural Center Branch • M-Pesa Daraja Connected</p>
+      </div>
+
+      <div style="display: flex; gap: 0.65rem;">
+        <button class="btn btn-leaf btn-sm" onclick="window.AgrovetApp.exportOrdersCsv()">📥 Export Orders CSV</button>
+        <button class="btn btn-outline-leaf btn-sm" onclick="window.AgrovetApp.simulateCsvImport()">📤 Import Products CSV</button>
+      </div>
+    </div>
+
+    <!-- Live Metrics Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid var(--leaf);">
+        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Today's Sales Revenue</div>
+        <div id="metric-revenue" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--forest); margin: 0.25rem 0;">KSh 28,020</div>
+        <div style="font-size: 0.8rem; color: #1e7025; font-weight: 600;">+24% vs last week (M-Pesa STK)</div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid #2EAA43;">
+        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Total Orders Managed</div>
+        <div id="metric-orders" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--forest); margin: 0.25rem 0;">4</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">Delivery across 4 Counties</div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid var(--danger);">
+        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--danger); font-weight: 700;">Low Stock Warnings</div>
+        <div id="metric-lowstock" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--danger); margin: 0.25rem 0;">4 SKUs</div>
+        <div style="font-size: 0.8rem; color: #c81e1e; font-weight: 600;">Urgent supplier re-order needed</div>
+      </div>
+
+      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid var(--gold);">
+        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Active Catalog Items</div>
+        <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--forest); margin: 0.25rem 0;">10</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">PCPB & KEPHIS Compliant</div>
+      </div>
+    </div>
+
+    <!-- Orders Pipeline Table -->
+    <div class="admin-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <h3 style="font-size: 1.35rem; color: var(--forest);">Recent Farmer Orders & County Dispatch Pipeline</h3>
+        <span class="badge badge-stock-in">Live Feed</span>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+          <thead>
+            <tr style="background: var(--pale-2); border-bottom: 2px solid var(--border-card); color: var(--forest);">
+              <th style="padding: 0.85rem 1rem;">Order ID</th>
+              <th style="padding: 0.85rem 1rem;">Date</th>
+              <th style="padding: 0.85rem 1rem;">Customer Name</th>
+              <th style="padding: 0.85rem 1rem;">Phone</th>
+              <th style="padding: 0.85rem 1rem;">County</th>
+              <th style="padding: 0.85rem 1rem;">Total Amount</th>
+              <th style="padding: 0.85rem 1rem;">M-Pesa Receipt</th>
+              <th style="padding: 0.85rem 1rem;">Order Status</th>
+            </tr>
+          </thead>
+          <tbody id="admin-orders-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Product Stock & Price Manager -->
+    <div class="admin-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h3 style="font-size: 1.35rem; color: var(--forest);">Inventory & Product Price Management</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Adjust product prices and pack size quantities directly in the database.</p>
+        </div>
+        <button class="btn btn-leaf btn-sm" onclick="alert('Product creation dialog opened. Enter PCPB Registration number and variants.')">+ Add New Chemical / Seed</button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+          <thead>
+            <tr style="background: var(--pale-2); border-bottom: 2px solid var(--border-card); color: var(--forest);">
+              <th style="padding: 0.85rem 1rem;">Product Name</th>
+              <th style="padding: 0.85rem 1rem;">Category</th>
+              <th style="padding: 0.85rem 1rem;">Active Ingredient</th>
+              <th style="padding: 0.85rem 1rem;">Base Pack</th>
+              <th style="padding: 0.85rem 1rem;">Base Price</th>
+              <th style="padding: 0.85rem 1rem;">Stock Status</th>
+              <th style="padding: 0.85rem 1rem;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-products-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function renderAdminView() {
+      const orders = window.AgrovetApp.state.adminOrders;
+      const totalRev = orders.reduce((sum, o) => sum + o.total, 0);
+
+      document.getElementById('metric-revenue').textContent = window.AgrovetApp.formatKsh(totalRev);
+      document.getElementById('metric-orders').textContent = orders.length;
+
+      // Populate orders table
+      const tbody = document.getElementById('admin-orders-table-body');
+      tbody.innerHTML = orders.map((ord, idx) => `
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--forest);">${ord.id}</td>
+          <td style="padding: 0.75rem 1rem; color: var(--text-muted);">${ord.date}</td>
+          <td style="padding: 0.75rem 1rem; font-weight: 600;">${ord.customer}</td>
+          <td style="padding: 0.75rem 1rem;">${ord.phone}</td>
+          <td style="padding: 0.75rem 1rem;">${ord.county}</td>
+          <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--forest);">${window.AgrovetApp.formatKsh(ord.total)}</td>
+          <td style="padding: 0.75rem 1rem;"><code style="background: var(--bg-section); padding: 3px 6px; border-radius: 4px; font-weight: 600; color: var(--forest);">${ord.mpesaCode}</code></td>
+          <td style="padding: 0.75rem 1rem;">
+            <select onchange="window.AgrovetApp.updateOrderStatus(${idx}, this.value)" style="border: 1px solid var(--border); padding: 0.35rem 0.6rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">
+              <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+              <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+              <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+              <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
+            </select>
+          </td>
+        </tr>
+      `).join('');
+
+      // Populate products table
+      const prodTbody = document.getElementById('admin-products-table-body');
+      prodTbody.innerHTML = window.AGROVET_DATA.products.map(p => `
+        <tr style="border-bottom: 1px solid var(--border);">
+          <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--forest);">${p.name}</td>
+          <td style="padding: 0.75rem 1rem;">${p.categoryName}</td>
+          <td style="padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--text);">${p.activeIngredient || 'N/A'}</td>
+          <td style="padding: 0.75rem 1rem;">${p.variants[0].packSize}</td>
+          <td style="padding: 0.75rem 1rem; font-weight: 700;">${window.AgrovetApp.formatKsh(p.variants[0].price)}</td>
+          <td style="padding: 0.75rem 1rem;">
+            <span class="badge ${p.variants[0].stockStatus === 'in_stock' ? 'badge-stock-in' : 'badge-stock-low'}">
+              ${p.variants[0].stockStatus === 'in_stock' ? 'In Stock' : 'Low Stock'}
+            </span>
+          </td>
+          <td style="padding: 0.75rem 1rem;">
+            <button class="btn btn-outline-leaf btn-sm" onclick="alert('Edit SKU ${p.variants[0].sku}: Base price is KSh ${p.variants[0].price}')">Edit</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAdminView();
+    });
+  </script>
+</body>
+</html>

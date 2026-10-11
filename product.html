@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | Agrovet Ltd Kenya</title>
+  <meta name="description" content="Certified agricultural inputs and crop chemicals with dosage, pre-harvest interval (PHI) and safety directions. Agrovet Ltd Nairobi.">
+  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <style>
+    .product-single-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      margin: 2rem 0 3.5rem;
+    }
+    @media (min-width: 992px) {
+      .product-single-grid {
+        grid-template-columns: 1fr 1.2fr;
+      }
+    }
+    .product-gallery {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+    .pack-selector-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .pack-btn {
+      padding: 0.55rem 1.15rem;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-card);
+      background: var(--bg-card);
+      font-weight: 600;
+      color: var(--forest);
+      cursor: pointer;
+      transition: var(--trans);
+    }
+    .pack-btn.active, .pack-btn:hover {
+      border-color: var(--leaf);
+      background: var(--pale);
+      color: var(--forest);
+    }
+    .product-tabs-nav {
+      display: flex;
+      border-bottom: 2px solid var(--border-card);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+    }
+    .tab-nav-btn {
+      padding: 0.75rem 1rem;
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab-nav-btn.active {
+      color: var(--forest);
+      border-bottom-color: var(--leaf);
+    }
+    .tab-content-panel {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    .tab-content-panel.active {
+      display: block;
+    }
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .spec-table th, .spec-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-card);
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    .spec-table th {
+      background: var(--pale-2);
+      color: var(--forest);
+      width: 35%;
+    }
+  </style>
+  <!-- Critical Warm Cream Theme Inlined for Zero-Flash & Cache Immunity -->
+  <style>
+    :root {
+      --bg-page:     #E6DFCD;
+      --bg-section:  #DDD5C0;
+      --bg-card:     #F2EDDF;
+      --bg-header:   #EFE9D9;
+      --border:      #C9BFA6;
+      --text:        #2A2A1E;
+      --text-muted:  #5E5A48;
+      --leaf-text:   #3F7A08;
+      --forest:      #223F21;
+      --forest-2:    #265626;
+      --ink-green:   #2D4D28;
+      --leaf:        #5FA30E;
+      --leaf-2:      #78B534;
+      --gold:        #F4B943;
+      --gold-hover:  #e5a930;
+      --pale:        #DDD5C0;
+      --pale-2:      #F2EDDF;
+      --page:        #E6DFCD;
+      --card:        #F2EDDF;
+      --idle:        #B5AA90;
+      --whatsapp:    #25D366;
+      --danger:      #D9381E;
+      --success:     #1E824C;
+      --border-card: #C9BFA6;
+    }
+    html {
+      background-color: #E6DFCD !important;
+    }
+    body {
+      background-color: transparent !important;
+      color: #2A2A1E !important;
+    }
+    .site-header {
+      background-color: #F2EDDF !important;
+    }
+    .main-header, .top-bar {
+      /* inherit warm system */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar & Header -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="top-bar-left">
+        <span>🚚 Nationwide delivery across Kenya • Order online or call</span>
+      </div>
+      <div class="top-bar-right">
+        <span>📍 Kirinyaga Rd, Nairobi</span>
+        <a href="tel:+254700000000">📞 +254 700 000 000</a>
+        <button class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">🇰🇪 Kiswahili</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="main-header">
+      <div class="container">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-symbol">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">AGROVET <span>LTD</span></span>
+            <span class="brand-tagline">KENYA'S FARM INPUTS SPECIALIST</span>
+          </div>
+        </a>
+
+        <div class="search-wrapper">
+          <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search crops, chemicals, seeds...">
+            <button class="search-btn">🔍</button>
+          </div>
+          <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="header-actions">
+          <a href="admin.html" class="action-link" style="color: var(--leaf); font-weight: 700;">Admin</a>
+          <button class="cart-btn-trigger" onclick="window.AgrovetApp.openCart()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span class="cart-count-badge">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Product Detail Container -->
+  <main class="section section-page">
+    <div class="container" id="product-detail-container">
+      
+      <!-- Breadcrumb -->
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+        <a href="index.html" style="color: var(--leaf);">Home</a> / 
+        <a href="shop.html" style="color: var(--leaf);">Shop</a> / 
+        <span id="p-crumb-category">Crop Protection</span> / 
+        <span id="p-crumb-title" style="color: var(--forest); font-weight: 600;">Product</span>
+      </div>
+
+      <div class="product-single-grid">
+        
+        <!-- Left: Image Showcase -->
+        <div class="product-gallery">
+          <div style="width: 100%; text-align: center; margin-bottom: 1rem;" id="p-large-icon">
+            <img id="p-main-img" src="images/products/sample-herbicide-glyphosate-front.webp" width="400" height="400" style="max-height: 320px; width: auto; object-fit: contain; mix-blend-mode: multiply; margin: 0 auto;" alt="Official Registered Pack" fetchpriority="high">
+          </div>
+          <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
+            <span class="badge badge-stock-in" id="p-badge-status">In Stock</span>
+            <span class="badge" style="background: var(--pale); color: var(--forest);" id="p-badge-reg">PCPB Verified</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem;">Official registered label packaging • Tamper-proof factory seal</p>
+        </div>
+
+        <!-- Right: Actions & Pricing -->
+        <div>
+          <span class="label-caps" id="p-category-subtitle">CROP PROTECTION</span>
+          <h1 id="p-title" style="font-size: 2.2rem; color: var(--forest); margin: 0.4rem 0 0.8rem; line-height: 1.15;">Product Title</h1>
+          <p id="p-short-desc" style="color: var(--text); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">Short product summary.</p>
+
+          <!-- Price & Stock -->
+          <div style="background: var(--pale-2); border-radius: 14px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid var(--border-card);">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.25rem;">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Price for Selected Pack:</span>
+              <span id="p-sku-display" style="font-size: 0.8rem; color: var(--text-muted); font-family: monospace;">SKU: HRB-GLY-100</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 1rem;">
+              <span id="p-price-display" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--forest);">KSh 0</span>
+              <span id="p-stock-display" class="badge badge-stock-in">In Stock (120 units)</span>
+            </div>
+          </div>
+
+          <!-- Pack Size Selector -->
+          <div style="margin-bottom: 1.5rem;">
+            <label style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; color: var(--forest); display: block; margin-bottom: 0.5rem;">
+              Select Available Pack Size:
+            </label>
+            <div class="pack-selector-row" id="p-pack-buttons"></div>
+          </div>
+
+          <!-- Quantity Stepper & Add to Cart -->
+          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+            <div class="qty-control" style="padding: 4px; border: 1.5px solid var(--border-card);">
+              <button class="qty-btn" onclick="adjustQty(-1)" style="width: 36px; height: 36px; font-size: 1.2rem;">−</button>
+              <span id="p-qty-val" class="qty-value" style="font-size: 1.1rem; padding: 0 1rem;">1</span>
+              <button class="qty-btn" onclick="adjustQty(1)" style="width: 36px; height: 36px; font-size: 1.2rem;">+</button>
+            </div>
+
+            <button id="p-add-cart-btn" class="btn btn-leaf btn-lg" style="flex: 1; min-width: 200px;">
+              Add to Shopping Cart 🛒
+            </button>
+          </div>
+
+          <!-- WhatsApp Direct Order -->
+          <div style="margin-bottom: 2rem;">
+            <a id="p-wa-btn" href="#" target="_blank" class="btn btn-whatsapp btn-lg" style="width: 100%;">
+              💬 Order Directly on WhatsApp
+            </a>
+            <small style="color: var(--text-muted); font-size: 0.78rem; display: block; text-align: center; margin-top: 0.4rem;">
+              Fast agronomist response • Confirm delivery county & Lipa na M-Pesa details
+            </small>
+          </div>
+
+          <!-- Agrochemical Safety Banner -->
+          <div class="safety-warning-banner">
+            <span style="font-size: 1.5rem;">⚠️</span>
+            <div>
+              <strong>PCPB Regulatory & Operator Safety Direction:</strong>
+              <p style="margin-top: 0.2rem; font-size: 0.82rem;">Always wear chemical-resistant gloves, eye goggles and a respirator. Read product label thoroughly before mixing.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Tabbed Specifications -->
+      <div>
+        <div class="product-tabs-nav">
+          <button class="tab-nav-btn active" onclick="switchTab('tab-desc', this)">Detailed Description</button>
+          <button class="tab-nav-btn" onclick="switchTab('tab-how', this)">How to Use & Mixing</button>
+          <button class="tab-nav-btn" onclick="switchTab('tab-safety', this)">Safety & Operator PPE</button>
+          <button class="tab-nav-btn" onclick="switchTab('tab-dosage', this)">Dosage & PHI Table</button>
+        </div>
+
+        <!-- Tab 1: Description -->
+        <div id="tab-desc" class="tab-content-panel active">
+          <h3 style="font-size: 1.35rem; color: var(--forest); margin-bottom: 0.75rem;">Product Overview</h3>
+          <p id="p-tab-full-desc">Full description goes here.</p>
+          <table class="spec-table">
+            <tr><th>Active Ingredient</th><td id="p-tab-ai">Glyphosate 360 g/L</td></tr>
+            <tr><th>PCPB Registration</th><td id="p-tab-pcpb">[PCPB LICENCE NO.]</td></tr>
+            <tr><th>Target Crops</th><td id="p-tab-crops">Tomatoes, Maize, Potatoes</td></tr>
+            <tr><th>Target Pests / Weeds</th><td id="p-tab-pests">Aphids, Blight, Couch grass</td></tr>
+          </table>
+        </div>
+
+        <!-- Tab 2: How to Use -->
+        <div id="tab-how" class="tab-content-panel">
+          <h3 style="font-size: 1.35rem; color: var(--forest); margin-bottom: 0.75rem;">Application & Knapsack Directions</h3>
+          <p id="p-tab-how-to">Mix according to prescribed knapsack ratios using clean pond or borehole water.</p>
+          <div style="background: var(--pale); border-radius: 12px; padding: 1.25rem; margin-top: 1rem;">
+            <h4 style="font-size: 1rem; color: var(--forest); margin-bottom: 0.5rem;">Best Practice Spraying Guidelines:</h4>
+            <ul style="padding-left: 1.25rem; font-size: 0.88rem; line-height: 1.6;">
+              <li>Spray early in the morning (6:00 AM – 9:00 AM) or late afternoon to minimize evaporation.</li>
+              <li>Avoid spraying when rainfall is expected within 4 hours.</li>
+              <li>Use flat-fan nozzles for soil herbicides and hollow-cone nozzles for contact insecticides.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tab 3: Safety & PPE -->
+        <div id="tab-safety" class="tab-content-panel">
+          <h3 style="font-size: 1.35rem; color: var(--forest); margin-bottom: 0.75rem;">Safety, Environmental Hazard & PPE</h3>
+          <p id="p-tab-safety-desc">Chemical safety instructions.</p>
+          <table class="spec-table">
+            <tr><th>Mandatory PPE</th><td>Nitrile chemical gloves, respirator mask, goggles, boots</td></tr>
+            <tr><th>Pollinator Toxicity</th><td>Keep away from flowering crops when bees are actively foraging</td></tr>
+            <tr><th>Disposal Instructions</th><td>Triple rinse container into spray tank, puncture container and bury safely. Never reuse chemical containers for food or water.</td></tr>
+          </table>
+        </div>
+
+        <!-- Tab 4: Dosage & PHI Table -->
+        <div id="tab-dosage" class="tab-content-panel">
+          <h3 style="font-size: 1.35rem; color: var(--forest); margin-bottom: 0.75rem;">Prescribed Dosage & Pre-Harvest Interval (PHI)</h3>
+          <table class="spec-table">
+            <tr><th>Field Dosage Rate</th><td id="p-tab-dose">15ml – 20ml per 20 Litre knapsack</td></tr>
+            <tr><th>Pre-Harvest Interval (PHI)</th><td id="p-tab-phi">3 to 7 days before harvest</td></tr>
+            <tr><th>Re-entry Period</th><td>12 hours after spraying foliage dries completely</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Master Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0;">
+        <div>© 2024–2026 Agrovet Ltd (agrovet.ltd). All Rights Reserved.</div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="index.html">Home</a>
+          <a href="shop.html">Shop Catalogue</a>
+          <a href="cart.html">View Cart</a>
+          <a href="admin.html" style="color: var(--gold);">Admin Portal</a>
+          <div style="margin-top: 0.75rem; font-size: 0.75rem; text-align: center; color: var(--text-muted);">
+        <a href="credits.html" style="color: var(--leaf-text); text-decoration: underline;">Image Licensing & Source Credits</a> • 
+        <a href="image-manifest.md" style="color: var(--text-muted); text-decoration: underline;">Image Manifest</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <!-- Cart Drawer -->
+  <div id="drawer-backdrop" class="drawer-backdrop" onclick="window.AgrovetApp.closeCart()"></div>
+  <aside id="cart-drawer" class="cart-drawer">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <h3 style="font-size: 1.35rem; color: var(--forest);">Your Shopping Cart</h3>
+        <span class="cart-count-badge">0</span>
+      </div>
+      <button class="drawer-close-btn" onclick="window.AgrovetApp.closeCart()">✕</button>
+    </div>
+    <div id="drawer-free-delivery-notice" class="delivery-progress-wrap">
+      <div class="prog-text">Add KSh 10,000 more for FREE delivery across Kenya!</div>
+      <div class="delivery-prog-bar"><div class="delivery-prog-fill"></div></div>
+    </div>
+    <div id="drawer-cart-list" class="drawer-items-list"></div>
+    <div class="drawer-footer">
+      <div class="drawer-subtotal-row"><span>Subtotal:</span><span class="cart-subtotal-val">KSh 0</span></div>
+      <a href="cart.html" class="btn btn-gold btn-lg" style="width: 100%;">Proceed to County Checkout →</a>
+    </div>
+  </aside>
+
+  <!-- Mobile Tab Bar -->
+  <nav class="mobile-tab-bar">
+    <a href="index.html" class="tab-bar-item"><span>Home</span></a>
+    <a href="shop.html" class="tab-bar-item"><span>Shop</span></a>
+    <button class="tab-bar-item" onclick="window.AgrovetApp.openCart()"><span class="tab-badge cart-count-badge">0</span><span>Cart</span></button>
+    <a href="admin.html" class="tab-bar-item"><span>Admin</span></a>
+  </nav>
+
+  <!-- Floating WhatsApp -->
+  <a href="https://wa.me/254700000000" class="floating-whatsapp" target="_blank" title="WhatsApp Us">💬</a>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentProduct = null;
+    let selectedVariantIdx = 0;
+    let currentQty = 1;
+
+    function adjustQty(delta) {
+      currentQty = Math.max(1, currentQty + delta);
+      document.getElementById('p-qty-val').textContent = currentQty;
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabId)?.classList.add('active');
+    }
+
+    function selectPack(idx) {
+      selectedVariantIdx = idx;
+      const v = currentProduct.variants[idx];
+
+      document.getElementById('p-price-display').textContent = 'KSh ' + v.price.toLocaleString();
+      document.getElementById('p-sku-display').textContent = 'SKU: ' + v.sku;
+      
+      const stockBadge = document.getElementById('p-stock-display');
+      stockBadge.textContent = v.stockStatus === 'in_stock' ? `In Stock (${v.stockQty} units)` : 'Low Stock (Hurry)';
+      stockBadge.className = v.stockStatus === 'in_stock' ? 'badge badge-stock-in' : 'badge badge-stock-low';
+
+      document.querySelectorAll('.pack-btn').forEach((b, i) => {
+        b.className = i === idx ? 'pack-btn active' : 'pack-btn';
+      });
+
+      // Update WhatsApp Order Link
+      const waText = encodeURIComponent(`Hello Agrovet Ltd, I would like to order ${currentProduct.name} (Pack: ${v.packSize}) at KSh ${v.price.toLocaleString()}. Please arrange delivery.`);
+      document.getElementById('p-wa-btn').href = `https://wa.me/254700000000?text=${waText}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('slug') || 'sample-herbicide-glyphosate';
+
+      currentProduct = window.AGROVET_DATA.products.find(p => p.slug === slug) || window.AGROVET_DATA.products[0];
+
+      // Populate Page
+      document.title = `${currentProduct.name} | Agrovet Ltd Kenya`;
+      document.getElementById('p-crumb-category').textContent = currentProduct.categoryName;
+      document.getElementById('p-crumb-title').textContent = currentProduct.name;
+      document.getElementById('p-category-subtitle').textContent = currentProduct.categoryName.toUpperCase();
+      document.getElementById('p-title').textContent = currentProduct.name;
+      const mainImg = document.getElementById('p-main-img');
+      if (mainImg) {
+        mainImg.src = currentProduct.image || ('images/products/' + currentProduct.slug + '-front.webp');
+        mainImg.alt = currentProduct.name + ' - Official PCPB Registered Pack';
+      }
+      document.getElementById('p-short-desc').textContent = currentProduct.shortDescription;
+
+      // Pack Buttons
+      const packBox = document.getElementById('p-pack-buttons');
+      packBox.innerHTML = currentProduct.variants.map((v, i) => `
+        <button class="pack-btn ${i === 0 ? 'active' : ''}" onclick="selectPack(${i})">
+          ${v.packSize} — KSh ${v.price.toLocaleString()}
+        </button>
+      `).join('');
+
+      selectPack(0);
+
+      // Add to Cart handler
+      document.getElementById('p-add-cart-btn').addEventListener('click', () => {
+        window.AgrovetApp.addToCart(currentProduct.id, selectedVariantIdx, currentQty);
+      });
+
+      // Tabs Content
+      document.getElementById('p-tab-full-desc').textContent = currentProduct.fullDescription || currentProduct.shortDescription;
+      document.getElementById('p-tab-ai').textContent = currentProduct.activeIngredient || 'Standard formulation';
+      document.getElementById('p-tab-pcpb').textContent = currentProduct.pcpbReg || '[PCPB LICENCE NO.]';
+      document.getElementById('p-tab-crops').textContent = currentProduct.targetCrops?.join(', ') || 'Various Kenyan crops';
+      document.getElementById('p-tab-pests').textContent = currentProduct.targetPests?.join(', ') || 'Broad spectrum';
+      document.getElementById('p-tab-how-to').textContent = currentProduct.dosage ? `Application: ${currentProduct.dosage}` : 'Follow directions on packet.';
+      document.getElementById('p-tab-safety-desc').textContent = currentProduct.safety || 'Wear complete PPE. Store away from children.';
+      document.getElementById('p-tab-dose').textContent = currentProduct.dosage || 'Confirm with label.';
+      document.getElementById('p-tab-phi').textContent = currentProduct.phi || 'Refer to pack.';
+    });
+  </script>
+</body>
+</html>

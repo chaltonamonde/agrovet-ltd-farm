@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Farm Inputs Catalogue | Agrovet Ltd Kenya</title>
+  <meta name="description" content="Browse Kenya's full range of certified herbicides, insecticides, fungicides, vegetable seeds, fertilizers and sprayers. Filter by crop, pest, and pack size.">
+  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <style>
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    @media (min-width: 992px) {
+      .shop-layout {
+        grid-template-columns: 280px 1fr;
+      }
+    }
+    .filter-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+    .filter-group {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .filter-title {
+      font-size: 1.1rem;
+      color: var(--forest);
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .filter-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+    }
+    .filter-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .filter-label:hover {
+      color: var(--leaf);
+    }
+    .shop-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: var(--bg-card);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-card);
+      margin-bottom: 1.5rem;
+    }
+    .category-chips-bar {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .chip-btn {
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--forest);
+      white-space: nowrap;
+      transition: var(--trans);
+    }
+    .chip-btn.active, .chip-btn:hover {
+      background: var(--leaf);
+      color: #fff;
+      border-color: var(--leaf);
+    }
+  </style>
+  <!-- Critical Warm Cream Theme Inlined for Zero-Flash & Cache Immunity -->
+  <style>
+    :root {
+      --bg-page:     #E6DFCD;
+      --bg-section:  #DDD5C0;
+      --bg-card:     #F2EDDF;
+      --bg-header:   #EFE9D9;
+      --border:      #C9BFA6;
+      --text:        #2A2A1E;
+      --text-muted:  #5E5A48;
+      --leaf-text:   #3F7A08;
+      --forest:      #223F21;
+      --forest-2:    #265626;
+      --ink-green:   #2D4D28;
+      --leaf:        #5FA30E;
+      --leaf-2:      #78B534;
+      --gold:        #F4B943;
+      --gold-hover:  #e5a930;
+      --pale:        #DDD5C0;
+      --pale-2:      #F2EDDF;
+      --page:        #E6DFCD;
+      --card:        #F2EDDF;
+      --idle:        #B5AA90;
+      --whatsapp:    #25D366;
+      --danger:      #D9381E;
+      --success:     #1E824C;
+      --border-card: #C9BFA6;
+    }
+    html {
+      background-color: #E6DFCD !important;
+    }
+    body {
+      background-color: transparent !important;
+      color: #2A2A1E !important;
+    }
+    .site-header {
+      background-color: #F2EDDF !important;
+    }
+    .main-header, .top-bar {
+      /* inherit warm system */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar & Header -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="top-bar-left">
+        <span>🚚 Nationwide delivery across all 47 counties • Fast Courier Dispatch</span>
+      </div>
+      <div class="top-bar-right">
+        <span>📍 Kirinyaga Rd, Nairobi</span>
+        <a href="tel:+254700000000">📞 +254 700 000 000</a>
+        <button class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">🇰🇪 Kiswahili</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="main-header">
+      <div class="container">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-symbol">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">AGROVET <span>LTD</span></span>
+            <span class="brand-tagline">KENYA'S FARM INPUTS SPECIALIST</span>
+          </div>
+        </a>
+
+        <div class="search-wrapper">
+          <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search crops, chemicals, seeds, sprayers, pests...">
+            <button class="search-btn">🔍</button>
+          </div>
+          <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <div class="header-actions">
+          <a href="admin.html" class="action-link" style="color: var(--leaf); font-weight: 700;">Admin</a>
+          <button class="cart-btn-trigger" onclick="window.AgrovetApp.openCart()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span class="cart-count-badge">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <nav class="nav-bar">
+      <div class="container">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="shop.html" class="nav-link active">Shop Catalogue</a></li>
+          <li><a href="shop.html?cat=crop-production" class="nav-link">Crop Protection</a></li>
+          <li><a href="shop.html?cat=seeds-fertilizers" class="nav-link">Seeds & Fertilizers</a></li>
+          <li><a href="shop.html?cat=farm-tools" class="nav-link">Tools & PPE</a></li>
+          <li><a href="index.html#crop-solver" class="nav-link" style="color: var(--gold);">Problem & Crop Guide</a></li>
+          <li><a href="blog.html" class="nav-link">Farming Guides</a></li>
+          <li><a href="about.html" class="nav-link">About Us</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Shop Main Content -->
+  <main class="section section-page">
+    <div class="container">
+      
+      <!-- Breadcrumbs -->
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <a href="index.html" style="color: var(--leaf);">Home</a> / <span>Shop Catalogue</span>
+      </div>
+
+      <h1 style="font-size: 2.4rem; color: var(--forest); margin-bottom: 0.5rem;">All Farm Inputs & Agrochemicals</h1>
+      <p style="color: var(--text-muted); max-width: 680px; margin-bottom: 1.5rem;">Explore our comprehensive range of certified crop protection chemicals, high-yielding hybrid seeds, fertilizers and spraying tools. All products registered with PCPB and KEPHIS.</p>
+
+      <!-- Category Filter Chips -->
+      <div class="category-chips-bar" id="category-chips-bar">
+        <button class="chip-btn active" onclick="filterCategory('all', this)">All Products (10)</button>
+        <button class="chip-btn" onclick="filterCategory('crop-production', this)">Crop Protection (5)</button>
+        <button class="chip-btn" onclick="filterCategory('herbicides', this)">Herbicides (1)</button>
+        <button class="chip-btn" onclick="filterCategory('insecticides', this)">Insecticides (2)</button>
+        <button class="chip-btn" onclick="filterCategory('fungicides', this)">Fungicides (1)</button>
+        <button class="chip-btn" onclick="filterCategory('seeds-fertilizers', this)">Seeds & Fertilizers (3)</button>
+        <button class="chip-btn" onclick="filterCategory('farm-tools', this)">Farm Tools & PPE (2)</button>
+        <button class="chip-btn" onclick="filterCategory('planting-media', this)">Planting Media (1)</button>
+      </div>
+
+      <div class="shop-layout">
+        
+        <!-- Sidebar Filters -->
+        <aside class="filter-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.2rem; color: var(--forest);">Filter Catalogue</h3>
+            <button onclick="resetFilters()" style="font-size: 0.78rem; color: var(--leaf); font-weight: 600;">Reset All</button>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-title">Target Crop</h4>
+            <ul class="filter-list">
+              <li><label class="filter-label"><input type="checkbox" onchange="filterProducts()" value="Tomatoes"> Tomatoes</label></li>
+              <li><label class="filter-label"><input type="checkbox" onchange="filterProducts()" value="Maize"> Maize</label></li>
+              <li><label class="filter-label"><input type="checkbox" onchange="filterProducts()" value="Potatoes"> Potatoes</label></li>
+              <li><label class="filter-label"><input type="checkbox" onchange="filterProducts()" value="Vegetables"> Vegetables / Sukuma</label></li>
+              <li><label class="filter-label"><input type="checkbox" onchange="filterProducts()" value="Onions"> Onions</label></li>
+            </ul>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-title">Stock Availability</h4>
+            <ul class="filter-list">
+              <li><label class="filter-label"><input type="checkbox" id="filter-in-stock" onchange="filterProducts()" checked> In Stock Only</label></li>
+            </ul>
+          </div>
+
+          <div class="filter-group">
+            <h4 class="filter-title">Price Range</h4>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem;">
+              <span>KSh 80</span>
+              <span id="price-val-display">KSh 10,000</span>
+            </div>
+            <input type="range" id="price-slider" min="80" max="10000" step="100" value="10000" oninput="updatePriceFilter(this.value)" style="width: 100%; accent-color: var(--leaf);">
+          </div>
+
+          <div style="background: var(--pale); border-radius: 12px; padding: 1rem; text-align: center;">
+            <h4 style="font-size: 0.95rem; color: var(--forest); margin-bottom: 0.25rem;">Need Agronomist Help?</h4>
+            <p style="font-size: 0.78rem; color: var(--text); margin-bottom: 0.75rem;">Not sure what chemical to buy? Send a photo of your affected crop.</p>
+            <a href="https://wa.me/254700000000?text=Hello%20Agronomist,%20help%20me%20choose%20the%20right%20chemical" target="_blank" class="btn btn-whatsapp btn-sm" style="width: 100%;">WhatsApp Us</a>
+          </div>
+        </aside>
+
+        <!-- Product Grid & Toolbar -->
+        <div>
+          <div class="shop-toolbar">
+            <div style="font-size: 0.9rem; color: var(--text-muted);">
+              Showing <strong id="product-count-display">10</strong> products
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <label for="sort-select" style="font-size: 0.85rem; color: var(--text); font-weight: 600;">Sort By:</label>
+              <select id="sort-select" onchange="sortProducts(this.value)" style="border: 1px solid var(--border-card); padding: 0.35rem 0.75rem; border-radius: var(--radius-pill); font-size: 0.85rem; color: var(--forest);">
+                <option value="featured">Featured First</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name">Product Name (A-Z)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="product-grid" id="shop-products-grid"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer & Shared Modals -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0;">
+        <div>© 2024–2026 Agrovet Ltd (agrovet.ltd). All Rights Reserved.</div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="admin.html" style="color: var(--gold);">Admin Portal</a>
+          <div style="margin-top: 0.75rem; font-size: 0.75rem; text-align: center; color: var(--text-muted);">
+        <a href="credits.html" style="color: var(--leaf-text); text-decoration: underline;">Image Licensing & Source Credits</a> • 
+        <a href="image-manifest.md" style="color: var(--text-muted); text-decoration: underline;">Image Manifest</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <!-- Slide-over Cart Drawer -->
+  <div id="drawer-backdrop" class="drawer-backdrop" onclick="window.AgrovetApp.closeCart()"></div>
+  <aside id="cart-drawer" class="cart-drawer">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <h3 style="font-size: 1.35rem; color: var(--forest);">Your Shopping Cart</h3>
+        <span class="cart-count-badge">0</span>
+      </div>
+      <button class="drawer-close-btn" onclick="window.AgrovetApp.closeCart()">✕</button>
+    </div>
+    <div id="drawer-free-delivery-notice" class="delivery-progress-wrap">
+      <div class="prog-text">Add KSh 10,000 more for FREE delivery across Kenya!</div>
+      <div class="delivery-prog-bar"><div class="delivery-prog-fill"></div></div>
+    </div>
+    <div id="drawer-cart-list" class="drawer-items-list"></div>
+    <div class="drawer-footer">
+      <div class="drawer-subtotal-row"><span>Subtotal:</span><span class="cart-subtotal-val">KSh 0</span></div>
+      <button class="btn btn-gold btn-lg" onclick="window.AgrovetApp.openMpesaModal()" style="width: 100%; margin-bottom: 0.5rem;">⚡ Fast M-Pesa Checkout</button>
+      <a href="cart.html" class="btn btn-outline-leaf" style="width: 100%;">View Full Cart & Checkout</a>
+    </div>
+  </aside>
+
+  <!-- M-Pesa Modal -->
+  <div id="mpesa-stk-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="window.AgrovetApp.closeMpesaModal()">✕</button>
+      <div id="mpesa-step-prompt">
+        <h3 style="font-size: 1.5rem; color: var(--forest); margin-bottom: 0.5rem;">Instant M-Pesa STK Push</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">Enter your phone number to receive prompt on your screen.</p>
+        <div style="margin-bottom: 1rem;">
+          <input type="tel" id="mpesa-phone-input" placeholder="0712345678" value="0712345678" style="width: 100%; border: 1.5px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.75rem 1.25rem; font-size: 1rem;">
+        </div>
+        <button class="btn btn-leaf btn-lg" onclick="window.AgrovetApp.simulateMpesa()" style="width: 100%;">Pay via M-Pesa</button>
+      </div>
+      <div id="mpesa-step-waiting" style="display: none; text-align: center; padding: 2rem 1rem;">
+        <h3>Sending STK Push to Phone...</h3>
+        <p>Please enter your M-Pesa PIN on your phone.</p>
+      </div>
+      <div id="mpesa-step-success" style="display: none; text-align: center; padding: 1.5rem 1rem;">
+        <h3>Payment Successful!</h3>
+        <p>Code: <strong id="mpesa-tx-code">QJK9483012</strong></p>
+        <button class="btn btn-leaf" onclick="window.AgrovetApp.closeMpesaModal()" style="width: 100%;">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div id="quick-view-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="window.AgrovetApp.closeQuickView()">✕</button>
+      <div id="quick-view-content"></div>
+    </div>
+  </div>
+
+  <!-- Mobile Tab Bar -->
+  <nav class="mobile-tab-bar">
+    <a href="index.html" class="tab-bar-item"><span>Home</span></a>
+    <a href="shop.html" class="tab-bar-item active"><span>Shop</span></a>
+    <button class="tab-bar-item" onclick="window.AgrovetApp.openCart()"><span class="tab-badge cart-count-badge">0</span><span>Cart</span></button>
+    <a href="admin.html" class="tab-bar-item"><span>Admin</span></a>
+  </nav>
+
+  <!-- Floating WhatsApp -->
+  <a href="https://wa.me/254700000000" class="floating-whatsapp" target="_blank" title="WhatsApp Us">💬</a>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentCategory = 'all';
+    let maxPrice = 10000;
+
+    function renderShopGrid(items) {
+      const container = document.getElementById('shop-products-grid');
+      const countEl = document.getElementById('product-count-display');
+      if (!container) return;
+
+      countEl.textContent = items.length;
+
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--bg-card); border-radius: 14px; border: 1px solid var(--border-card);">
+            <h3>No products found</h3>
+            <p style="color: var(--text-muted); margin: 0.5rem 0 1rem;">Try clearing your filters or price slider.</p>
+            <button class="btn btn-leaf btn-sm" onclick="resetFilters()">Reset Filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map(p => {
+        const minPrice = p.variants[0].price;
+        const maxP = p.variants[p.variants.length - 1].price;
+        const priceStr = p.variants.length > 1 ? `KSh ${minPrice.toLocaleString()} - KSh ${maxP.toLocaleString()}` : `KSh ${minPrice.toLocaleString()}`;
+
+        return `
+          <div class="product-card">
+            <div class="product-badge-wrap">
+              ${p.isSale ? '<span class="badge badge-sale">SALE</span>' : ''}
+              ${p.isNew ? '<span class="badge badge-new">NEW</span>' : ''}
+              <span class="badge ${p.variants[0].stockStatus === 'in_stock' ? 'badge-stock-in' : 'badge-stock-low'}">
+                ${p.variants[0].stockStatus === 'in_stock' ? 'In Stock' : 'Low Stock'}
+              </span>
+            </div>
+            <button class="wishlist-btn" data-product-id="${p.id}" onclick="window.AgrovetApp.toggleWishlist('${p.id}')">🤍</button>
+            <div class="product-thumb-wrap" onclick="window.AgrovetApp.openQuickView('${p.id}')">
+              <img src="${p.image || 'images/products/' + p.slug + '-front.webp'}" class="product-img" width="300" height="300" alt="${p.name} official packaging with label" loading="lazy">
+            </div>
+            <div class="product-details">
+              <div class="product-category-tag">${p.categoryName}</div>
+              <h3 class="product-title"><a href="product.html?slug=${p.slug}">${p.name}</a></h3>
+              <p class="product-subtext">${p.shortDescription}</p>
+              <div class="product-pricing">
+                <span class="current-price">${priceStr}</span>
+              </div>
+              <div class="product-footer-actions">
+                <button class="btn btn-leaf btn-card-add" onclick="window.AgrovetApp.openQuickView('${p.id}')">View Pack Sizes</button>
+                <a href="https://wa.me/254700000000?text=I%20want%20to%20order%20${encodeURIComponent(p.name)}" target="_blank" class="btn-card-wa">💬</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      window.AgrovetApp.state.wishlist && document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        if (window.AgrovetApp.state.wishlist.includes(btn.dataset.productId)) {
+          btn.innerHTML = '❤️';
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      filterProducts();
+    }
+
+    function updatePriceFilter(val) {
+      maxPrice = Number(val);
+      document.getElementById('price-val-display').textContent = 'KSh ' + maxPrice.toLocaleString();
+      filterProducts();
+    }
+
+    function filterProducts() {
+      let filtered = window.AGROVET_DATA.products;
+
+      // Category filter
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === currentCategory || p.subCategory === currentCategory);
+      }
+
+      // In stock checkbox
+      const inStockOnly = document.getElementById('filter-in-stock')?.checked;
+      if (inStockOnly) {
+        filtered = filtered.filter(p => p.variants.some(v => v.stockStatus === 'in_stock'));
+      }
+
+      // Price slider
+      filtered = filtered.filter(p => p.variants[0].price <= maxPrice);
+
+      renderShopGrid(filtered);
+    }
+
+    function sortProducts(criteria) {
+      let items = [...window.AGROVET_DATA.products];
+      if (criteria === 'price-asc') {
+        items.sort((a, b) => a.variants[0].price - b.variants[0].price);
+      } else if (criteria === 'price-desc') {
+        items.sort((a, b) => b.variants[0].price - a.variants[0].price);
+      } else if (criteria === 'name') {
+        items.sort((a, b) => a.name.localeCompare(b.name));
+      }
+      renderShopGrid(items);
+    }
+
+    function resetFilters() {
+      currentCategory = 'all';
+      maxPrice = 10000;
+      document.getElementById('price-slider').value = 10000;
+      document.getElementById('price-val-display').textContent = 'KSh 10,000';
+      document.querySelectorAll('.chip-btn').forEach((b, i) => b.className = i === 0 ? 'chip-btn active' : 'chip-btn');
+      filterProducts();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check query param e.g. ?cat=seeds
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('cat');
+      if (catParam) {
+        currentCategory = catParam;
+        const matchingBtn = Array.from(document.querySelectorAll('.chip-btn')).find(b => b.textContent.toLowerCase().includes(catParam.replace('-', ' ')));
+        if (matchingBtn) {
+          document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+          matchingBtn.classList.add('active');
+        }
+      }
+      filterProducts();
+    });
+  </script>
+</body>
+</html>

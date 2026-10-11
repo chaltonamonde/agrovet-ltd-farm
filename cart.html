@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart & Checkout | Agrovet Ltd Kenya</title>
+  <meta name="description" content="Review your farm input order, calculate county delivery rates, and complete payment with M-Pesa Daraja STK Push or Pay on Delivery.">
+  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <style>
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    @media (min-width: 992px) {
+      .checkout-layout {
+        grid-template-columns: 1.3fr 0.9fr;
+      }
+    }
+    .card-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.15rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--forest);
+      margin-bottom: 0.4rem;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      border: 1.5px solid var(--border-card);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.92rem;
+      color: var(--forest);
+      transition: var(--trans);
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(95, 163, 14, 0.15);
+    }
+    .payment-radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .payment-card-option {
+      border: 1.5px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: var(--trans);
+    }
+    .payment-card-option.active, .payment-card-option:hover {
+      border-color: var(--leaf);
+      background-color: var(--pale-2);
+    }
+    .order-summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+      margin-bottom: 0.75rem;
+    }
+    .order-grand-total {
+      border-top: 2px dashed var(--border-card);
+      padding-top: 1rem;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--forest);
+    }
+  </style>
+  <!-- Critical Warm Cream Theme Inlined for Zero-Flash & Cache Immunity -->
+  <style>
+    :root {
+      --bg-page:     #E6DFCD;
+      --bg-section:  #DDD5C0;
+      --bg-card:     #F2EDDF;
+      --bg-header:   #EFE9D9;
+      --border:      #C9BFA6;
+      --text:        #2A2A1E;
+      --text-muted:  #5E5A48;
+      --leaf-text:   #3F7A08;
+      --forest:      #223F21;
+      --forest-2:    #265626;
+      --ink-green:   #2D4D28;
+      --leaf:        #5FA30E;
+      --leaf-2:      #78B534;
+      --gold:        #F4B943;
+      --gold-hover:  #e5a930;
+      --pale:        #DDD5C0;
+      --pale-2:      #F2EDDF;
+      --page:        #E6DFCD;
+      --card:        #F2EDDF;
+      --idle:        #B5AA90;
+      --whatsapp:    #25D366;
+      --danger:      #D9381E;
+      --success:     #1E824C;
+      --border-card: #C9BFA6;
+    }
+    html {
+      background-color: #E6DFCD !important;
+    }
+    body {
+      background-color: transparent !important;
+      color: #2A2A1E !important;
+    }
+    .site-header {
+      background-color: #F2EDDF !important;
+    }
+    .main-header, .top-bar {
+      /* inherit warm system */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar & Header -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="top-bar-left">
+        <span>🚚 Nationwide delivery across all 47 counties • Order online or call</span>
+      </div>
+      <div class="top-bar-right">
+        <span>📍 Kirinyaga Rd, Nairobi</span>
+        <a href="tel:+254700000000">📞 +254 700 000 000</a>
+        <button class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">🇰🇪 Kiswahili</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="main-header">
+      <div class="container">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-symbol">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">AGROVET <span>LTD</span></span>
+            <span class="brand-tagline">KENYA'S FARM INPUTS SPECIALIST</span>
+          </div>
+        </a>
+
+        <div class="header-actions">
+          <a href="shop.html" class="action-link">← Back to Catalogue</a>
+          <a href="admin.html" class="action-link" style="color: var(--leaf); font-weight: 700;">Admin</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cart & Checkout Container -->
+  <main class="section section-page">
+    <div class="container">
+      
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <a href="index.html" style="color: var(--leaf);">Home</a> / 
+        <a href="shop.html" style="color: var(--leaf);">Shop</a> / 
+        <span style="color: var(--forest); font-weight: 600;">Shopping Cart & Checkout</span>
+      </div>
+
+      <h1 style="font-size: 2.2rem; color: var(--forest); margin-bottom: 0.5rem;">Review Cart & Farm Delivery</h1>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Verify your farm inputs, select your county to calculate delivery fees, and choose payment via M-Pesa STK Push or Pay on Delivery.</p>
+
+      <div class="checkout-layout">
+        
+        <!-- Left Column: Items & Delivery Details -->
+        <div>
+          
+          <!-- Cart Table -->
+          <div class="card-box">
+            <h3 style="font-size: 1.25rem; color: var(--forest); margin-bottom: 1.25rem;">1. Items in Your Order</h3>
+            <div id="full-cart-items-container"></div>
+          </div>
+
+          <!-- Customer & Delivery County Form -->
+          <div class="card-box">
+            <h3 style="font-size: 1.25rem; color: var(--forest); margin-bottom: 1.25rem;">2. Farmer Delivery Details</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label" for="cust-name">Farmer / Business Name *</label>
+                <input type="text" id="cust-name" class="form-input" placeholder="e.g. Samuel Mwangi" value="Samuel Mwangi">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cust-phone">Safaricom Mobile Number *</label>
+                <input type="tel" id="cust-phone" class="form-input" placeholder="e.g. 0712 345 678" value="0712345678">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="checkout-county-select">Select Delivery County (All 47 Counties) *</label>
+              <select id="checkout-county-select" class="form-select"></select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cust-town">Town, Market Center or Farm Landmark *</label>
+              <input type="text" id="cust-town" class="form-input" placeholder="e.g. Naivasha town near Total station / Kiambu stage" value="Limuru Town near Post Office">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cust-notes">Crop Notes / Application Instructions</label>
+              <textarea id="cust-notes" class="form-textarea" rows="2" placeholder="Optional: Any specific delivery directions or questions for our agronomist..."></textarea>
+            </div>
+          </div>
+
+          <!-- Payment Method Choice -->
+          <div class="card-box">
+            <h3 style="font-size: 1.25rem; color: var(--forest); margin-bottom: 0.5rem;">3. Select Payment Method</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Secure Kenyan checkout. Transactions confirmed via Safaricom Daraja API.</p>
+
+            <div class="payment-radio-group">
+              <label class="payment-card-option active" onclick="selectPayMethod('mpesa-stk', this)">
+                <input type="radio" name="pay-method" value="mpesa-stk" checked>
+                <div>
+                  <strong style="color: #2EAA43; font-size: 1rem;">Lipa na M-Pesa — STK Push (Recommended)</strong>
+                  <p style="font-size: 0.8rem; color: var(--text); margin-top: 0.15rem;">Automated payment prompt sent directly to your Safaricom phone.</p>
+                </div>
+              </label>
+
+              <label class="payment-card-option" onclick="selectPayMethod('mpesa-manual', this)">
+                <input type="radio" name="pay-method" value="mpesa-manual">
+                <div>
+                  <strong style="color: var(--forest); font-size: 0.95rem;">Manual Lipa na M-Pesa (Buy Goods Till / Paybill)</strong>
+                  <p style="font-size: 0.8rem; color: var(--text); margin-top: 0.15rem;">Pay to Till <strong>876543</strong> or Paybill <strong>543210</strong> (Agrovet Ltd).</p>
+                </div>
+              </label>
+
+              <label class="payment-card-option" onclick="selectPayMethod('pod', this)">
+                <input type="radio" name="pay-method" value="pod">
+                <div>
+                  <strong style="color: var(--forest); font-size: 0.95rem;">Pay on Delivery (Nairobi & Metropolitan Kiambu)</strong>
+                  <p style="font-size: 0.8rem; color: var(--text); margin-top: 0.15rem;">Inspect parcel with rider before paying via M-Pesa.</p>
+                </div>
+              </label>
+
+              <label class="payment-card-option" onclick="selectPayMethod('pickup', this)">
+                <input type="radio" name="pay-method" value="pickup">
+                <div>
+                  <strong style="color: var(--forest); font-size: 0.95rem;">Pay at Shop (Kirinyaga Road, Nairobi)</strong>
+                  <p style="font-size: 0.8rem; color: var(--text); margin-top: 0.15rem;">Free in-store pickup during opening hours (Mon–Sat 7am–6pm).</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Order Summary & Place Order -->
+        <div>
+          <div class="card-box" style="position: sticky; top: 90px;">
+            <h3 style="font-size: 1.35rem; color: var(--forest); margin-bottom: 1.25rem;">Order Summary</h3>
+
+            <div class="order-summary-row">
+              <span>Items Subtotal:</span>
+              <strong id="checkout-subtotal-display" style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--forest);">KSh 0</strong>
+            </div>
+
+            <div class="order-summary-row">
+              <span>Delivery Fee:</span>
+              <strong id="checkout-shipping-fee" style="color: var(--leaf);">KSh 200</strong>
+            </div>
+
+            <div class="order-summary-row" style="font-size: 0.82rem; color: var(--text-muted);">
+              <span>Estimated Delivery:</span>
+              <span id="checkout-shipping-duration">1 – 2 working days</span>
+            </div>
+
+            <div style="background: var(--pale); border-radius: 10px; padding: 0.75rem; margin: 1rem 0; font-size: 0.82rem; color: var(--ink-green);">
+              🚚 <strong>Free Delivery Notice:</strong> Orders over KSh 10,000 enjoy 100% Free Shipping to any county!
+            </div>
+
+            <div class="order-grand-total">
+              <span>Grand Total:</span>
+              <span id="checkout-grand-total">KSh 0</span>
+            </div>
+
+            <button id="place-order-btn" class="btn btn-gold btn-lg" onclick="handlePlaceOrder()" style="width: 100%; margin-top: 1.5rem; font-size: 1.1rem;">
+              Complete Order via M-Pesa ⚡
+            </button>
+
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+              <span>🔒 256-Bit SSL Encrypted</span>
+              <span>•</span>
+              <span>Safaricom Daraja API Verified</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Master Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0;">
+        <div>© 2024–2026 Agrovet Ltd (agrovet.ltd). All Rights Reserved.</div>
+        <div style="display: flex; gap: 1rem;">
+          <a href="index.html">Home</a>
+          <a href="shop.html">Shop Catalogue</a>
+          <a href="delivery-returns.html">Delivery Rates</a>
+          <a href="admin.html" style="color: var(--gold);">Admin Portal</a>
+          <div style="margin-top: 0.75rem; font-size: 0.75rem; text-align: center; color: var(--text-muted);">
+        <a href="credits.html" style="color: var(--leaf-text); text-decoration: underline;">Image Licensing & Source Credits</a> • 
+        <a href="image-manifest.md" style="color: var(--text-muted); text-decoration: underline;">Image Manifest</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <!-- M-Pesa STK Push Simulation Modal -->
+  <div id="mpesa-stk-modal" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="window.AgrovetApp.closeMpesaModal()">✕</button>
+      <div id="mpesa-step-prompt">
+        <h3 style="font-size: 1.5rem; color: var(--forest); margin-bottom: 0.5rem;">Safaricom M-Pesa STK Push</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">Confirm your phone number to receive payment prompt.</p>
+        <div style="background: var(--pale-2); border-radius: 10px; padding: 0.75rem; margin-bottom: 1rem;">
+          <span>Payable Amount: </span>
+          <strong id="mpesa-modal-total" style="font-family: var(--font-heading); font-size: 1.3rem; color: var(--forest);">KSh 0</strong>
+        </div>
+        <input type="tel" id="mpesa-phone-input" placeholder="0712345678" value="0712345678" style="width: 100%; border: 1.5px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.75rem 1.25rem; font-size: 1rem; margin-bottom: 1rem;">
+        <button class="btn btn-leaf btn-lg" onclick="window.AgrovetApp.simulateMpesa()" style="width: 100%; background: #2EAA43;">
+          Send STK Push Prompt →
+        </button>
+      </div>
+      <div id="mpesa-step-waiting" style="display: none; text-align: center; padding: 2rem 1rem;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; border: 4px solid #2EAA43; border-top-color: transparent; animation: spin 1s linear infinite; margin: 0 auto 1.5rem;"></div>
+        <h3 style="color: var(--forest);">Check Your Phone Screen Now!</h3>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">Enter your M-Pesa PIN on the prompt...</p>
+      </div>
+      <div id="mpesa-step-success" style="display: none; text-align: center; padding: 1.5rem 1rem;">
+        <div style="font-size: 3rem; color: #1e7025; margin-bottom: 0.5rem;">✓</div>
+        <h3 style="color: var(--forest);">Order & Payment Confirmed!</h3>
+        <p style="margin: 0.5rem 0 1.5rem;">Transaction Code: <strong id="mpesa-tx-code">QJK9483012</strong></p>
+        <a href="shop.html" class="btn btn-leaf" style="width: 100%;">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let selectedPayment = 'mpesa-stk';
+
+    function selectPayMethod(method, el) {
+      selectedPayment = method;
+      document.querySelectorAll('.payment-card-option').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+
+      const btn = document.getElementById('place-order-btn');
+      if (method === 'mpesa-stk') {
+        btn.textContent = 'Complete Order via M-Pesa ⚡';
+      } else if (method === 'pod') {
+        btn.textContent = 'Confirm Pay on Delivery Order →';
+      } else if (method === 'pickup') {
+        btn.textContent = 'Confirm In-Store Pickup Order →';
+      } else {
+        btn.textContent = 'View Manual Paybill Instructions →';
+      }
+    }
+
+    function renderFullCartTable() {
+      const container = document.getElementById('full-cart-items-container');
+      const cart = window.AgrovetApp.state.cart;
+      if (!container) return;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+            <p style="font-size: 1.1rem; color: var(--forest); font-weight: 700; margin-bottom: 0.5rem;">Your cart is currently empty</p>
+            <p style="font-size: 0.88rem; margin-bottom: 1.5rem;">Add farm inputs from our shop to calculate county shipping.</p>
+            <a href="shop.html" class="btn btn-leaf btn-sm">Browse Products</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          ${cart.map((item, idx) => `
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-card); padding-bottom: 1rem;">
+              <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <div style="width: 44px; height: 44px; border-radius: 8px; background: var(--pale-2); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">🌿</div>
+                <div>
+                  <h4 style="font-size: 0.95rem; color: var(--forest);">${item.name}</h4>
+                  <small style="color: var(--text-muted);">Pack: <strong>${item.packSize}</strong> • SKU: ${item.sku}</small>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 1.25rem;">
+                <div class="qty-control">
+                  <button class="qty-btn" onclick="window.AgrovetApp.updateQty(${idx}, ${item.qty - 1})">−</button>
+                  <span class="qty-value">${item.qty}</span>
+                  <button class="qty-btn" onclick="window.AgrovetApp.updateQty(${idx}, ${item.qty + 1})">+</button>
+                </div>
+                <strong style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--forest); min-width: 90px; text-align: right;">
+                  ${window.AgrovetApp.formatKsh(item.price * item.qty)}
+                </strong>
+                <button onclick="window.AgrovetApp.updateQty(${idx}, 0)" style="color: #c81e1e; font-size: 1.1rem;" title="Delete item">✕</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      // Update Summary Subtotal
+      const sub = window.AgrovetApp.state.cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      document.getElementById('checkout-subtotal-display').textContent = window.AgrovetApp.formatKsh(sub);
+    }
+
+    function handlePlaceOrder() {
+      if (window.AgrovetApp.state.cart.length === 0) {
+        window.AgrovetApp.showToast('Please add items to your cart before proceeding', '⚠️');
+        return;
+      }
+
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+
+      if (!name || !phone) {
+        window.AgrovetApp.showToast('Please enter your name and phone number', '⚠️');
+        return;
+      }
+
+      if (selectedPayment === 'mpesa-stk') {
+        const phoneInput = document.getElementById('mpesa-phone-input');
+        if (phoneInput) phoneInput.value = phone;
+        window.AgrovetApp.openMpesaModal();
+      } else if (selectedPayment === 'pod') {
+        // Record Pay on Delivery order
+        const randId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+        window.AgrovetApp.state.adminOrders.unshift({
+          id: randId,
+          date: new Date().toISOString().split('T')[0],
+          customer: name,
+          phone: phone,
+          county: window.AgrovetApp.state.selectedCounty,
+          total: window.AgrovetApp.state.cart.reduce((s, i) => s + (i.price * i.qty), 0),
+          paymentMethod: 'Pay on Delivery',
+          mpesaCode: 'Pending POD',
+          status: 'Processing',
+          items: window.AgrovetApp.state.cart.length
+        });
+        localStorage.setItem('agrovet_orders', JSON.stringify(window.AgrovetApp.state.adminOrders));
+        window.AgrovetApp.state.cart = [];
+        window.AgrovetApp.state.cart = [];
+        localStorage.setItem('agrovet_cart', '[]');
+        renderFullCartTable();
+        alert(`Order Placed Successfully! Order #${randId}. Our dispatch team will call you to confirm rider delivery.`);
+      } else if (selectedPayment === 'pickup') {
+        alert('Pickup Order Confirmed! Your items will be packaged and ready for collection at Kirinyaga Road, Agricultural Center, Shop No. 12.');
+      } else {
+        alert('Manual M-Pesa Instructions: Go to M-Pesa > Lipa na M-Pesa > Buy Goods Till: 876543 (Agrovet Ltd). Enter amount and send confirmation to WhatsApp (+254 700 000 000).');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderFullCartTable();
+      // Listen for cart changes
+      const origUpdateQty = window.AgrovetApp.updateQty;
+      window.AgrovetApp.updateQty = function(idx, qty) {
+        origUpdateQty(idx, qty);
+        renderFullCartTable();
+        // Recalculate grand total
+        const countySelect = document.getElementById('checkout-county-select');
+        countySelect && countySelect.dispatchEvent(new Event('change'));
+      };
+    });
+  </script>
+</body>
+</html>
