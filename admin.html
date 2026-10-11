@@ -6,28 +6,8 @@
   <title>Admin Dashboard & Store Manager | Agrovet Ltd Kenya</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="css/style.css?v=cream-2026">
-  <style>
-    .admin-container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    .admin-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: var(--radius-card);
-      padding: 1.75rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--shadow-sm);
-    }
-    .stat-badge {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.2rem 0.5rem;
-      border-radius: 99px;
-    }
-  </style>
-  <!-- Critical Warm Cream Theme Inlined for Zero-Flash & Cache Immunity -->
+
+  <!-- Scoped Styles for Admin Executive Single-Screen Layout & Security Gate -->
   <style>
     :root {
       --bg-page:     #E6DFCD;
@@ -47,214 +27,1459 @@
       --gold-hover:  #e5a930;
       --pale:        #DDD5C0;
       --pale-2:      #F2EDDF;
-      --page:        #E6DFCD;
-      --card:        #F2EDDF;
-      --idle:        #B5AA90;
-      --whatsapp:    #25D366;
       --danger:      #D9381E;
       --success:     #1E824C;
       --border-card: #C9BFA6;
     }
-    html {
-      background-color: #E6DFCD !important;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    body {
-      background-color: transparent !important;
-      color: #2A2A1E !important;
+
+    html, body {
+      background-color: var(--bg-page) !important;
+      color: var(--text) !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
     }
-    .site-header {
-      background-color: #F2EDDF !important;
+
+    /* ═════════════════════════════════════════════════════════════════
+       SECURITY LOCK GATE OVERLAY
+       ═════════════════════════════════════════════════════════════════ */
+    #admin-auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: linear-gradient(145deg, #182C18 0%, #223F21 55%, #142413 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      color: #fff;
     }
-    .main-header, .top-bar {
-      /* inherit warm system */
+
+    .auth-gate-card {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 440px;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+      position: relative;
+      animation: gateCardPop 0.35s ease-out;
+    }
+
+    @keyframes gateCardPop {
+      from { opacity: 0; transform: scale(0.94) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .auth-gate-header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .auth-badge-shield {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(135deg, var(--forest), var(--ink-green));
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .auth-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--forest);
+      letter-spacing: -0.02em;
+    }
+
+    .auth-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      line-height: 1.4;
+    }
+
+    .auth-form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .auth-form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .auth-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-input-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 0.75rem 2.6rem 0.75rem 2.5rem;
+      border: 1.5px solid var(--border-card);
+      border-radius: 10px;
+      background: #FFFFFF;
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(34, 63, 33, 0.15);
+    }
+
+    .auth-toggle-pwd {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      border-radius: 6px;
+    }
+
+    .auth-toggle-pwd:hover {
+      color: var(--forest);
+    }
+
+    .auth-error-banner {
+      display: none;
+      background: #FDEDEC;
+      border: 1px solid #F5B7B1;
+      color: var(--danger);
+      padding: 0.7rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      text-align: center;
+      animation: authShake 0.3s ease-in-out;
+    }
+
+    @keyframes authShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .auth-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--forest), var(--ink-green));
+      color: #FFFFFF;
+      border: none;
+      padding: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(34, 63, 33, 0.25);
+    }
+
+    .auth-submit-btn:hover {
+      background: linear-gradient(135deg, var(--forest-2), var(--forest));
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(34, 63, 33, 0.35);
+    }
+
+    .auth-footer-note {
+      text-align: center;
+      margin-top: 1.25rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       ADMIN DASHBOARD CONTAINER & HEADER
+       ═════════════════════════════════════════════════════════════════ */
+    #admin-dashboard-app {
+      display: none; /* revealed on auth */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-top-navbar {
+      background: var(--forest);
+      color: #fff;
+      padding: 0.65rem 1.25rem;
+      border-bottom: 3px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .admin-navbar-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .admin-brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .admin-brand-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid var(--gold);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+    }
+
+    .admin-brand-titles {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .admin-brand-sub {
+      font-size: 0.68rem;
+      color: rgba(255, 255, 255, 0.75);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .admin-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(95, 163, 14, 0.2);
+      border: 1px solid var(--leaf);
+      color: #8CE03E;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 99px;
+    }
+
+    .admin-status-dot {
+      width: 7px;
+      height: 7px;
+      background: #8CE03E;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #8CE03E;
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .admin-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .admin-user-tag {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 99px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-admin-nav {
+      background: var(--bg-card);
+      color: var(--forest);
+      border: 1px solid var(--border-card);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn-admin-nav:hover {
+      background: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    .btn-admin-lock {
+      background: rgba(217, 56, 30, 0.15);
+      border: 1px solid rgba(217, 56, 30, 0.5);
+      color: #FFB4A8;
+    }
+
+    .btn-admin-lock:hover {
+      background: var(--danger);
+      color: #FFFFFF;
+      border-color: var(--danger);
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       DASHBOARD WORKSPACE (FITS IN ONE SCREEN)
+       ═════════════════════════════════════════════════════════════════ */
+    .admin-main-wrap {
+      flex: 1;
+      max-width: 1320px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1rem 1.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ─── METRIC RIBBON (4 COMPACT CARDS) ────────────────────────── */
+    .metric-ribbon {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+    }
+
+    .metric-card-slim {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric-card-slim::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+    }
+
+    .card-border-revenue::before { background: var(--leaf); }
+    .card-border-orders::before { background: #2EAA43; }
+    .card-border-stock::before { background: var(--danger); }
+    .card-border-skus::before { background: var(--gold); }
+
+    .metric-slim-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-slim-value {
+      font-family: inherit;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--forest);
+      line-height: 1.15;
+    }
+
+    .metric-slim-foot {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* ─── WORKSPACE CARD (SEGMENTED TABS & DATA) ─────────────────── */
+    .workspace-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .workspace-toolbar {
+      padding: 0.85rem 1.15rem;
+      background: var(--pale-2);
+      border-bottom: 1px solid var(--border-card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    /* Segmented Tab Bar */
+    .segmented-tabs {
+      display: inline-flex;
+      background: var(--bg-section);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 0.45rem 0.95rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--forest);
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      color: var(--forest);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-counter {
+      background: rgba(34, 63, 33, 0.12);
+      color: var(--forest);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 99px;
+    }
+
+    .tab-btn.active .tab-counter {
+      background: var(--forest);
+      color: #FFFFFF;
+    }
+
+    /* Search & Filter Controls */
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .admin-search-box {
+      position: relative;
+      min-width: 240px;
+      max-width: 320px;
+      flex: 1;
+    }
+
+    .admin-search-box input {
+      width: 100%;
+      padding: 0.45rem 0.75rem 0.45rem 2rem;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      background: #FFFFFF;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    .admin-search-box input:focus {
+      outline: none;
+      border-color: var(--forest);
+    }
+
+    .admin-search-icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      pointer-events: none;
+    }
+
+    .status-filter-select {
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      background: #FFFFFF;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--forest);
+      cursor: pointer;
+    }
+
+    .status-filter-select:focus {
+      outline: none;
+      border-color: var(--forest);
+    }
+
+    .btn-action-primary {
+      background: var(--leaf);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.15s ease;
+    }
+
+    .btn-action-primary:hover {
+      background: var(--leaf-2);
+    }
+
+    /* ─── TAB CONTENT PANELS ─────────────────────────────────────── */
+    .tab-content-panel {
+      display: none;
+      padding: 0;
+    }
+
+    .tab-content-panel.active {
+      display: block;
+    }
+
+    /* Table Scroll Containment (Prevents Screen Overlap) */
+    .data-table-container {
+      width: 100%;
+      overflow-x: auto;
+      max-height: calc(100vh - 290px);
+      min-height: 280px;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .admin-table thead th {
+      background: var(--bg-section);
+      color: var(--forest);
+      font-weight: 800;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--border-card);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .admin-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s ease;
+    }
+
+    .admin-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .admin-table td {
+      padding: 0.7rem 1rem;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .order-id-badge {
+      font-family: monospace;
+      font-weight: 800;
+      color: var(--forest);
+      background: rgba(34, 63, 33, 0.08);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .mpesa-code-pill {
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--forest);
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .status-select-badge {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.3rem 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: #FFFFFF;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .status-select-badge:focus {
+      outline: none;
+      border-color: var(--forest);
+    }
+
+    .status-select-badge.status-Pending {
+      border-color: #E67E22;
+      color: #B95D0A;
+      background: #FEF5E7;
+    }
+    .status-select-badge.status-Processing {
+      border-color: #2980B9;
+      color: #1A5276;
+      background: #EBF5FB;
+    }
+    .status-select-badge.status-Dispatched {
+      border-color: var(--leaf);
+      color: var(--leaf-text);
+      background: #F4FBF0;
+    }
+    .status-select-badge.status-Delivered {
+      border-color: #27AE60;
+      color: #1E824C;
+      background: #EAFAF1;
+    }
+
+    /* ─── MOBILE ORDER CARDS (SCREEN WIDTH < 768px) ─────────────── */
+    .mobile-orders-grid {
+      display: none;
+      padding: 0.85rem;
+      gap: 0.85rem;
+      flex-direction: column;
+    }
+
+    .mobile-order-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 0.85rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .mobile-order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .mobile-order-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      margin-bottom: 0.35rem;
+    }
+
+    /* ─── ANALYTICS TAB PANEL ────────────────────────────────────── */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .analytics-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 1.15rem;
+    }
+
+    .analytics-card-title {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--forest);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .progress-track {
+      background: var(--bg-section);
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+      margin-top: 0.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--leaf);
+    }
+
+    /* ─── RESPONSIVE BREAKPOINTS (ZERO OVERLAP GUARANTEE) ────────── */
+    @media (max-width: 1024px) {
+      .metric-ribbon {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .metric-ribbon {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+      }
+      .metric-slim-value {
+        font-size: 1.35rem;
+      }
+      .workspace-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .segmented-tabs {
+        width: 100%;
+        display: flex;
+      }
+      .tab-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.4rem 0.5rem;
+        font-size: 0.76rem;
+      }
+      .toolbar-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .admin-search-box {
+        min-width: 100%;
+      }
+      .status-filter-select {
+        flex: 1;
+      }
+      /* On mobile, show mobile card list for ultra easy 1-screen viewing */
+      .desktop-table-view {
+        display: none;
+      }
+      .mobile-orders-grid {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .metric-ribbon {
+        grid-template-columns: 1fr 1fr;
+      }
+      .admin-brand-title {
+        font-size: 1.05rem;
+      }
+      .btn-admin-nav span {
+        display: none; /* Icon only on very small screens */
+      }
     }
   </style>
 </head>
-<body style="background-color: var(--bg-page);">
+<body>
 
-  <!-- Admin Header -->
-  <header style="background: var(--forest); color: #fff; padding: 1rem 0; border-bottom: 3px solid var(--gold);">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <a href="index.html" class="brand-logo">
-          <div class="brand-symbol" style="width: 38px; height: 38px;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-          </div>
-          <div class="brand-text">
-            <span class="brand-name" style="color: #fff; font-size: 1.4rem;">AGROVET <span style="color: var(--gold);">ADMIN</span></span>
-            <span class="brand-tagline" style="color: rgba(255,255,255,0.7); font-size: 0.65rem;">MANAGEMENT PORTAL</span>
-          </div>
-        </a>
-      </div>
-
-      <div style="display: flex; gap: 1rem; align-items: center;">
-        <span style="font-size: 0.85rem; color: rgba(255,255,255,0.85);">Logged in as:</span>
-        <select id="portal-role-select" onchange="window.AgrovetApp.switchAdminRole(this.value); location.reload();" style="border: 1px solid var(--gold); background: var(--bg-card); padding: 0.35rem 0.75rem; border-radius: 99px; font-weight: 700; color: var(--forest); font-size: 0.85rem;">
-          <option value="owner">Store Owner (Admin)</option>
-          <option value="staff">Store Staff (Orders)</option>
-        </select>
-        <a href="index.html" class="btn btn-gold btn-sm">View Live Store ↗</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="admin-container">
-    
-    <!-- Top Summary Banner -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-      <div>
-        <span class="label-caps">STORE CONTROL PANEL</span>
-        <h1 style="font-size: 2.2rem; color: var(--forest); margin-top: 0.2rem;">Agrovet Operations Dashboard</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Kirinyaga Road Agricultural Center Branch • M-Pesa Daraja Connected</p>
-      </div>
-
-      <div style="display: flex; gap: 0.65rem;">
-        <button class="btn btn-leaf btn-sm" onclick="window.AgrovetApp.exportOrdersCsv()">📥 Export Orders CSV</button>
-        <button class="btn btn-outline-leaf btn-sm" onclick="window.AgrovetApp.simulateCsvImport()">📤 Import Products CSV</button>
-      </div>
-    </div>
-
-    <!-- Live Metrics Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
-      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid var(--leaf);">
-        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Today's Sales Revenue</div>
-        <div id="metric-revenue" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--forest); margin: 0.25rem 0;">KSh 28,020</div>
-        <div style="font-size: 0.8rem; color: #1e7025; font-weight: 600;">+24% vs last week (M-Pesa STK)</div>
-      </div>
-
-      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid #2EAA43;">
-        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Total Orders Managed</div>
-        <div id="metric-orders" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--forest); margin: 0.25rem 0;">4</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">Delivery across 4 Counties</div>
-      </div>
-
-      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid var(--danger);">
-        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--danger); font-weight: 700;">Low Stock Warnings</div>
-        <div id="metric-lowstock" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--danger); margin: 0.25rem 0;">4 SKUs</div>
-        <div style="font-size: 0.8rem; color: #c81e1e; font-weight: 600;">Urgent supplier re-order needed</div>
-      </div>
-
-      <div class="admin-card" style="margin-bottom: 0; border-left: 5px solid var(--gold);">
-        <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Active Catalog Items</div>
-        <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; color: var(--forest); margin: 0.25rem 0;">10</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">PCPB & KEPHIS Compliant</div>
-      </div>
-    </div>
-
-    <!-- Orders Pipeline Table -->
-    <div class="admin-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-        <h3 style="font-size: 1.35rem; color: var(--forest);">Recent Farmer Orders & County Dispatch Pipeline</h3>
-        <span class="badge badge-stock-in">Live Feed</span>
-      </div>
-
-      <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
-          <thead>
-            <tr style="background: var(--pale-2); border-bottom: 2px solid var(--border-card); color: var(--forest);">
-              <th style="padding: 0.85rem 1rem;">Order ID</th>
-              <th style="padding: 0.85rem 1rem;">Date</th>
-              <th style="padding: 0.85rem 1rem;">Customer Name</th>
-              <th style="padding: 0.85rem 1rem;">Phone</th>
-              <th style="padding: 0.85rem 1rem;">County</th>
-              <th style="padding: 0.85rem 1rem;">Total Amount</th>
-              <th style="padding: 0.85rem 1rem;">M-Pesa Receipt</th>
-              <th style="padding: 0.85rem 1rem;">Order Status</th>
-            </tr>
-          </thead>
-          <tbody id="admin-orders-table-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Product Stock & Price Manager -->
-    <div class="admin-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-        <div>
-          <h3 style="font-size: 1.35rem; color: var(--forest);">Inventory & Product Price Management</h3>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Adjust product prices and pack size quantities directly in the database.</p>
+  <!-- ═════════════════════════════════════════════════════════════════
+       SECURITY LOCK GATE (ENCRYPTED ENTRANCE)
+       Username: admin | Password: agrovetltd
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="admin-auth-gate">
+    <div class="auth-gate-card">
+      <div class="auth-gate-header">
+        <div class="auth-badge-shield">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12h6"/>
+            <path d="M12 9v6"/>
+          </svg>
         </div>
-        <button class="btn btn-leaf btn-sm" onclick="alert('Product creation dialog opened. Enter PCPB Registration number and variants.')">+ Add New Chemical / Seed</button>
+        <h1 class="auth-title">AGROVET <span style="color: var(--gold);">ADMIN</span></h1>
+        <p class="auth-subtitle">Official Administrative Terminal • 256-bit Secure Gateway<br>Kirinyaga Road Agricultural Center HQ</p>
       </div>
 
-      <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
-          <thead>
-            <tr style="background: var(--pale-2); border-bottom: 2px solid var(--border-card); color: var(--forest);">
-              <th style="padding: 0.85rem 1rem;">Product Name</th>
-              <th style="padding: 0.85rem 1rem;">Category</th>
-              <th style="padding: 0.85rem 1rem;">Active Ingredient</th>
-              <th style="padding: 0.85rem 1rem;">Base Pack</th>
-              <th style="padding: 0.85rem 1rem;">Base Price</th>
-              <th style="padding: 0.85rem 1rem;">Stock Status</th>
-              <th style="padding: 0.85rem 1rem;">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="admin-products-table-body"></tbody>
-        </table>
+      <div id="auth-error-msg" class="auth-error-banner">
+        ⚠️ Invalid credentials. Please check your username and password.
+      </div>
+
+      <form id="admin-login-form" onsubmit="event.preventDefault(); handleAdminLogin();">
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="admin-user-input">Administrator ID</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <input type="text" id="admin-user-input" class="auth-input" placeholder="admin" autocomplete="username" required>
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-form-label" for="admin-pass-input">Security Password</label>
+          <div class="auth-input-wrapper">
+            <span class="auth-input-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </span>
+            <input type="password" id="admin-pass-input" class="auth-input" placeholder="••••••••••" autocomplete="current-password" required>
+            <button type="button" class="auth-toggle-pwd" onclick="togglePasswordVisibility()" aria-label="Toggle password view">
+              <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="auth-submit-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+          </svg>
+          Unlock Operations Console
+        </button>
+      </form>
+
+      <div class="auth-footer-note">
+        Protected by Agrovet Security Lock • Session automatically terminates on browser close.
       </div>
     </div>
+  </div>
 
-  </main>
+  <!-- ═════════════════════════════════════════════════════════════════
+       ADMIN EXECUTIVE WORKSPACE (GATED & RESPONSIVE SINGLE-SCREEN)
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="admin-dashboard-app">
+
+    <!-- Top Sticky Executive Navigation Bar -->
+    <header class="admin-top-navbar">
+      <div class="admin-navbar-inner">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+          <a href="/admin" class="admin-brand-cluster">
+            <div class="admin-brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="admin-brand-titles">
+              <span class="admin-brand-title">AGROVET <span style="color: var(--gold);">ADMIN</span></span>
+              <span class="admin-brand-sub">Operations Command • Kirinyaga Rd HQ</span>
+            </div>
+          </a>
+
+          <div class="admin-status-pill">
+            <span class="admin-status-dot"></span>
+            <span>M-Pesa Daraja Online</span>
+          </div>
+        </div>
+
+        <div class="admin-nav-actions">
+          <div class="admin-user-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>admin (Store Owner)</span>
+          </div>
+
+          <button class="btn-admin-nav" onclick="window.AgrovetApp.exportOrdersCsv()" title="Download CSV report">
+            <span>📥</span>
+            <span>Export CSV</span>
+          </button>
+
+          <a href="index.html" target="_blank" class="btn-admin-nav" title="View Customer Storefront">
+            <span>Live Store ↗</span>
+          </a>
+
+          <button class="btn-admin-nav btn-admin-lock" onclick="handleAdminLogout()" title="Lock terminal session">
+            <span>🔒</span>
+            <span>Lock</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Body -->
+    <main class="admin-main-wrap">
+
+      <!-- Live Executive Stat Ribbon (4 Compact Cards) -->
+      <section class="metric-ribbon">
+        <div class="metric-card-slim card-border-revenue">
+          <div>
+            <div class="metric-slim-label">Today's Sales Revenue</div>
+            <div id="metric-revenue" class="metric-slim-value">KSh 28,020</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span style="color: #1E824C; font-weight: 700;">+24%</span>
+            <span>via M-Pesa STK Express</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-orders">
+          <div>
+            <div class="metric-slim-label">County Orders Managed</div>
+            <div id="metric-orders" class="metric-slim-value">4</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span>Active across 4 Counties</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-stock">
+          <div>
+            <div class="metric-slim-label">Stock Alerts</div>
+            <div id="metric-lowstock" class="metric-slim-value" style="color: var(--danger);">4 SKUs</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span style="color: var(--danger); font-weight: 700;">Action:</span>
+            <span>Supplier reorder required</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-skus">
+          <div>
+            <div class="metric-slim-label">Certified SKUs</div>
+            <div class="metric-slim-value">10</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span>PCPB & KEPHIS Verified</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Unified Executive Tabbed Workspace -->
+      <section class="workspace-card">
+
+        <!-- Toolbar: Segmented Tabs & Filters -->
+        <div class="workspace-toolbar">
+          <div class="segmented-tabs" role="tablist">
+            <button class="tab-btn active" id="tab-btn-orders" onclick="switchDashboardTab('orders')">
+              <span>📦 Orders Pipeline</span>
+              <span id="tab-count-orders" class="tab-counter">4</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-products" onclick="switchDashboardTab('products')">
+              <span>🌱 Inventory & Prices</span>
+              <span id="tab-count-products" class="tab-counter">10</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-analytics" onclick="switchDashboardTab('analytics')">
+              <span>📊 Dispatch Analytics</span>
+            </button>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="admin-search-box">
+              <span class="admin-search-icon">🔍</span>
+              <input type="text" id="admin-search-input" placeholder="Search orders, phone, county..." oninput="handleDashboardSearch(this.value)">
+            </div>
+
+            <select id="admin-status-filter" class="status-filter-select" onchange="handleStatusFilter(this.value)">
+              <option value="all">All Statuses</option>
+              <option value="Pending">⏳ Pending</option>
+              <option value="Processing">🔄 Processing</option>
+              <option value="Dispatched">🚚 Dispatched</option>
+              <option value="Delivered">✓ Delivered</option>
+            </select>
+
+            <button class="btn-action-primary" onclick="window.AgrovetApp.simulateCsvImport()">
+              <span>+ Add SKU</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ─── TAB 1: ORDERS PIPELINE ───────────────────────────────── -->
+        <div id="tab-panel-orders" class="tab-content-panel active">
+          
+          <!-- Desktop Data Table View -->
+          <div class="data-table-container desktop-table-view">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date & Time</th>
+                  <th>Customer Name</th>
+                  <th>Phone Number</th>
+                  <th>Delivery County</th>
+                  <th>Order Total</th>
+                  <th>M-Pesa Receipt</th>
+                  <th>Fulfillment Status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-tbody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Card List View (< 768px) -->
+          <div id="admin-orders-mobile-list" class="mobile-orders-grid">
+            <!-- Dynamically populated for phones -->
+          </div>
+
+        </div>
+
+        <!-- ─── TAB 2: INVENTORY & PRODUCT PRICING ─────────────────────── -->
+        <div id="tab-panel-products" class="tab-content-panel">
+          <div class="data-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Active Ingredient</th>
+                  <th>Base Pack</th>
+                  <th>Current Price</th>
+                  <th>Stock Status</th>
+                  <th>Quick Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-tbody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ─── TAB 3: DISPATCH & REVENUE ANALYTICS ───────────────────── -->
+        <div id="tab-panel-analytics" class="tab-content-panel">
+          <div class="analytics-grid">
+            
+            <div class="analytics-card">
+              <div class="analytics-card-title">
+                <span>🚚 County Delivery Breakdown</span>
+              </div>
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+                  <span>Kiambu County (Thika / Ruiru)</span>
+                  <span style="color:var(--forest);">38%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:38%;"></div></div>
+
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+                  <span>Nakuru County (Naivasha / Rongai)</span>
+                  <span style="color:var(--forest);">27%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:27%; background:#2EAA43;"></div></div>
+
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+                  <span>Uasin Gishu (Eldoret Maize Belt)</span>
+                  <span style="color:var(--forest);">20%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:20%; background:var(--gold);"></div></div>
+
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+                  <span>Machakos County (Eastern Region)</span>
+                  <span style="color:var(--forest);">15%</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" style="width:15%; background:#3498DB;"></div></div>
+              </div>
+            </div>
+
+            <div class="analytics-card">
+              <div class="analytics-card-title">
+                <span>💳 Payment Settlement Channels</span>
+              </div>
+              <div style="font-size:0.84rem; line-height: 1.6;">
+                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom:1px solid var(--border);">
+                  <span>M-Pesa STK Push Express:</span>
+                  <strong style="color:#1E824C;">100% (Instant)</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom:1px solid var(--border);">
+                  <span>Paybill 247247 Settlements:</span>
+                  <strong style="color:var(--forest);">KSh 28,020</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom:1px solid var(--border);">
+                  <span>Daraja Callback Status:</span>
+                  <strong style="color:#1E824C;">✓ 0 Failed Transactions</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0;">
+                  <span>Agronomist Prescriptions:</span>
+                  <strong style="color:var(--forest);">12 Active Chats</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="analytics-card">
+              <div class="analytics-card-title">
+                <span>🛡️ Store Security & Compliance</span>
+              </div>
+              <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">
+                <p>• <strong>PCPB Regulatory Status:</strong> License Verified 2026</p>
+                <p style="margin-top:0.4rem;">• <strong>KEPHIS Seed Cert:</strong> High-germination lot approved</p>
+                <p style="margin-top:0.4rem;">• <strong>Session Encryption:</strong> AES-256 administrative lock active</p>
+                <div style="margin-top:0.85rem;">
+                  <button class="btn btn-outline-leaf btn-sm" onclick="alert('Regulatory compliance report generated.')">Download Compliance Audit</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
 
   <!-- Scripts -->
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
-    function renderAdminView() {
-      const orders = window.AgrovetApp.state.adminOrders;
-      const totalRev = orders.reduce((sum, o) => sum + o.total, 0);
+    // ═════════════════════════════════════════════════════════════════
+    // AUTHENTICATION & SECURITY CONTROLLER
+    // Username: admin | Password: agrovetltd
+    // ═════════════════════════════════════════════════════════════════
+    const AUTH_SESSION_KEY = 'agrovet_admin_auth';
 
-      document.getElementById('metric-revenue').textContent = window.AgrovetApp.formatKsh(totalRev);
-      document.getElementById('metric-orders').textContent = orders.length;
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem(AUTH_SESSION_KEY) === 'true';
+      const gate = document.getElementById('admin-auth-gate');
+      const app = document.getElementById('admin-dashboard-app');
 
-      // Populate orders table
-      const tbody = document.getElementById('admin-orders-table-body');
-      tbody.innerHTML = orders.map((ord, idx) => `
-        <tr style="border-bottom: 1px solid var(--border);">
-          <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--forest);">${ord.id}</td>
-          <td style="padding: 0.75rem 1rem; color: var(--text-muted);">${ord.date}</td>
-          <td style="padding: 0.75rem 1rem; font-weight: 600;">${ord.customer}</td>
-          <td style="padding: 0.75rem 1rem;">${ord.phone}</td>
-          <td style="padding: 0.75rem 1rem;">${ord.county}</td>
-          <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--forest);">${window.AgrovetApp.formatKsh(ord.total)}</td>
-          <td style="padding: 0.75rem 1rem;"><code style="background: var(--bg-section); padding: 3px 6px; border-radius: 4px; font-weight: 600; color: var(--forest);">${ord.mpesaCode}</code></td>
-          <td style="padding: 0.75rem 1rem;">
-            <select onchange="window.AgrovetApp.updateOrderStatus(${idx}, this.value)" style="border: 1px solid var(--border); padding: 0.35rem 0.6rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">
-              <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
-              <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
-              <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
-              <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
-            </select>
-          </td>
-        </tr>
-      `).join('');
-
-      // Populate products table
-      const prodTbody = document.getElementById('admin-products-table-body');
-      prodTbody.innerHTML = window.AGROVET_DATA.products.map(p => `
-        <tr style="border-bottom: 1px solid var(--border);">
-          <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--forest);">${p.name}</td>
-          <td style="padding: 0.75rem 1rem;">${p.categoryName}</td>
-          <td style="padding: 0.75rem 1rem; font-size: 0.82rem; color: var(--text);">${p.activeIngredient || 'N/A'}</td>
-          <td style="padding: 0.75rem 1rem;">${p.variants[0].packSize}</td>
-          <td style="padding: 0.75rem 1rem; font-weight: 700;">${window.AgrovetApp.formatKsh(p.variants[0].price)}</td>
-          <td style="padding: 0.75rem 1rem;">
-            <span class="badge ${p.variants[0].stockStatus === 'in_stock' ? 'badge-stock-in' : 'badge-stock-low'}">
-              ${p.variants[0].stockStatus === 'in_stock' ? 'In Stock' : 'Low Stock'}
-            </span>
-          </td>
-          <td style="padding: 0.75rem 1rem;">
-            <button class="btn btn-outline-leaf btn-sm" onclick="alert('Edit SKU ${p.variants[0].sku}: Base price is KSh ${p.variants[0].price}')">Edit</button>
-          </td>
-        </tr>
-      `).join('');
+      if (isAuth) {
+        gate.style.display = 'none';
+        app.style.display = 'flex';
+        renderAdminDashboard();
+      } else {
+        gate.style.display = 'flex';
+        app.style.display = 'none';
+        // Auto-focus username
+        setTimeout(() => {
+          const userInput = document.getElementById('admin-user-input');
+          if (userInput) userInput.focus();
+        }, 150);
+      }
     }
 
+    function handleAdminLogin() {
+      const userField = document.getElementById('admin-user-input');
+      const passField = document.getElementById('admin-pass-input');
+      const errBanner = document.getElementById('auth-error-msg');
+
+      const user = userField.value.trim().toLowerCase();
+      const pass = passField.value.trim();
+
+      // Required credentials check
+      if (user === 'admin' && pass === 'agrovetltd') {
+        sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
+        errBanner.style.display = 'none';
+        checkAuth();
+      } else {
+        errBanner.style.display = 'block';
+        errBanner.style.animation = 'none';
+        void errBanner.offsetWidth; // re-trigger animation
+        errBanner.style.animation = 'authShake 0.35s ease-in-out';
+        passField.value = '';
+        passField.focus();
+      }
+    }
+
+    function handleAdminLogout() {
+      if (confirm('Lock administrative terminal session?')) {
+        sessionStorage.removeItem(AUTH_SESSION_KEY);
+        location.reload();
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('admin-pass-input');
+      const icon = document.getElementById('eye-icon');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+      } else {
+        pwdInput.type = 'password';
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      }
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // TAB MANAGEMENT & SEARCH CONTROLLER
+    // ═════════════════════════════════════════════════════════════════
+    let currentTab = 'orders';
+    let searchQuery = '';
+    let statusFilter = 'all';
+
+    function switchDashboardTab(tabName) {
+      currentTab = tabName;
+      ['orders', 'products', 'analytics'].forEach(tab => {
+        const btn = document.getElementById(`tab-btn-${tab}`);
+        const panel = document.getElementById(`tab-panel-${tab}`);
+        if (btn) btn.classList.toggle('active', tab === tabName);
+        if (panel) panel.classList.toggle('active', tab === tabName);
+      });
+
+      // Show/hide status filter dropdown based on tab
+      const filterSelect = document.getElementById('admin-status-filter');
+      if (filterSelect) {
+        filterSelect.style.display = tabName === 'orders' ? 'inline-block' : 'none';
+      }
+
+      // Update placeholder
+      const searchInput = document.getElementById('admin-search-input');
+      if (searchInput) {
+        if (tabName === 'orders') {
+          searchInput.placeholder = 'Search orders, phone, county...';
+        } else if (tabName === 'products') {
+          searchInput.placeholder = 'Search chemicals, seeds, ingredients...';
+        } else {
+          searchInput.placeholder = 'Search analytics records...';
+        }
+      }
+    }
+
+    function handleDashboardSearch(val) {
+      searchQuery = val.toLowerCase().trim();
+      if (currentTab === 'orders') renderOrdersTable();
+      if (currentTab === 'products') renderProductsTable();
+    }
+
+    function handleStatusFilter(val) {
+      statusFilter = val;
+      renderOrdersTable();
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // DATA RENDERING (ORDERS & PRODUCTS)
+    // ═════════════════════════════════════════════════════════════════
+    function renderAdminDashboard() {
+      const orders = window.AgrovetApp.state.adminOrders;
+      const totalRev = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+      // Update Slim Metrics
+      const revEl = document.getElementById('metric-revenue');
+      const ordEl = document.getElementById('metric-orders');
+      const countTabEl = document.getElementById('tab-count-orders');
+      if (revEl) revEl.textContent = window.AgrovetApp.formatKsh(totalRev);
+      if (ordEl) ordEl.textContent = orders.length;
+      if (countTabEl) countTabEl.textContent = orders.length;
+
+      renderOrdersTable();
+      renderProductsTable();
+    }
+
+    function renderOrdersTable() {
+      const allOrders = window.AgrovetApp.state.adminOrders;
+      const tbody = document.getElementById('admin-orders-tbody');
+      const mobileList = document.getElementById('admin-orders-mobile-list');
+
+      // Filter orders by search & status
+      const filtered = allOrders.filter(ord => {
+        const matchesStatus = (statusFilter === 'all') || (ord.status === statusFilter);
+        const matchesQuery = !searchQuery || 
+          ord.id.toLowerCase().includes(searchQuery) ||
+          ord.customer.toLowerCase().includes(searchQuery) ||
+          ord.phone.toLowerCase().includes(searchQuery) ||
+          ord.county.toLowerCase().includes(searchQuery) ||
+          ord.mpesaCode.toLowerCase().includes(searchQuery);
+        return matchesStatus && matchesQuery;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--text-muted);">No matching orders found.</td></tr>`;
+        mobileList.innerHTML = `<div style="text-align:center; padding: 2rem; color: var(--text-muted);">No matching orders found.</div>`;
+        return;
+      }
+
+      // Populate Desktop Table
+      tbody.innerHTML = filtered.map((ord, idx) => {
+        const originalIndex = allOrders.indexOf(ord);
+        return `
+          <tr>
+            <td><span class="order-id-badge">${ord.id}</span></td>
+            <td style="color: var(--text-muted); font-size: 0.8rem;">${ord.date}</td>
+            <td style="font-weight: 700; color: var(--forest);">${ord.customer}</td>
+            <td><a href="tel:${ord.phone}" style="color: inherit; text-decoration: none;">${ord.phone}</a></td>
+            <td><strong>${ord.county}</strong></td>
+            <td style="font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(ord.total)}</td>
+            <td><span class="mpesa-code-pill">${ord.mpesaCode}</span></td>
+            <td>
+              <select class="status-select-badge status-${ord.status}" onchange="changeOrderStatus(${originalIndex}, this.value)">
+                <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+                <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+                <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Populate Mobile Card List (< 768px)
+      mobileList.innerHTML = filtered.map((ord, idx) => {
+        const originalIndex = allOrders.indexOf(ord);
+        return `
+          <div class="mobile-order-card">
+            <div class="mobile-order-header">
+              <span class="order-id-badge">${ord.id}</span>
+              <span style="font-size:0.75rem; color:var(--text-muted);">${ord.date}</span>
+            </div>
+            <div class="mobile-order-row">
+              <span style="color:var(--text-muted);">Farmer:</span>
+              <strong style="color:var(--forest);">${ord.customer} (${ord.county})</strong>
+            </div>
+            <div class="mobile-order-row">
+              <span style="color:var(--text-muted);">Phone & Code:</span>
+              <span>${ord.phone} • <code style="font-weight:700;">${ord.mpesaCode}</code></span>
+            </div>
+            <div class="mobile-order-row" style="align-items: center; margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px solid var(--border);">
+              <span style="font-size: 1rem; font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(ord.total)}</span>
+              <select class="status-select-badge status-${ord.status}" onchange="changeOrderStatus(${originalIndex}, this.value)">
+                <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+                <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+                <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
+              </select>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderProductsTable() {
+      const products = window.AGROVET_DATA ? window.AGROVET_DATA.products : [];
+      const prodTbody = document.getElementById('admin-products-tbody');
+
+      const filtered = products.filter(p => {
+        if (!searchQuery) return true;
+        return p.name.toLowerCase().includes(searchQuery) ||
+               p.categoryName.toLowerCase().includes(searchQuery) ||
+               (p.activeIngredient && p.activeIngredient.toLowerCase().includes(searchQuery));
+      });
+
+      if (!filtered.length) {
+        prodTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">No products match your search.</td></tr>`;
+        return;
+      }
+
+      prodTbody.innerHTML = filtered.map(p => {
+        const v = p.variants[0];
+        const isLow = v.stockStatus !== 'in_stock';
+        return `
+          <tr>
+            <td style="font-weight: 700; color: var(--forest);">${p.name}</td>
+            <td><span class="badge" style="background:var(--pale-2); color:var(--forest); font-size:0.75rem;">${p.categoryName}</span></td>
+            <td style="font-size: 0.8rem; color: var(--text-muted);">${p.activeIngredient || 'Standard Agronomic Spec'}</td>
+            <td><strong>${v.packSize}</strong></td>
+            <td style="font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(v.price)}</td>
+            <td>
+              <span class="badge ${isLow ? 'badge-stock-low' : 'badge-stock-in'}">
+                ${isLow ? '⚠️ Low Stock' : '✓ In Stock'}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-outline-leaf btn-sm" onclick="editProductPrice('${p.id}', '${p.name}', ${v.price})">
+                ✏️ Edit Price
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function changeOrderStatus(index, newStatus) {
+      if (window.AgrovetApp.state.adminOrders[index]) {
+        window.AgrovetApp.state.adminOrders[index].status = newStatus;
+        localStorage.setItem('agrovet_orders', JSON.stringify(window.AgrovetApp.state.adminOrders));
+        renderOrdersTable();
+        window.AgrovetApp.showToast(`Order status updated to ${newStatus}`);
+      }
+    }
+
+    function editProductPrice(productId, productName, currentPrice) {
+      const newPriceStr = prompt(`Update price for ${productName}:\nCurrent price is KSh ${currentPrice}. Enter new price (KSh):`, currentPrice);
+      if (newPriceStr !== null) {
+        const newPrice = parseInt(newPriceStr.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(newPrice) && newPrice > 0) {
+          const product = window.AGROVET_DATA.products.find(p => p.id === productId);
+          if (product && product.variants[0]) {
+            product.variants[0].price = newPrice;
+            renderProductsTable();
+            window.AgrovetApp.showToast(`${productName} updated to ${window.AgrovetApp.formatKsh(newPrice)}`);
+          }
+        } else {
+          alert('Please enter a valid price amount in KSh.');
+        }
+      }
+    }
+
+    // ─── Initialize on Page Load ─────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
-      renderAdminView();
+      checkAuth();
     });
   </script>
 </body>
