@@ -2351,6 +2351,168 @@ h1, h2, h3, h4, h5, h6 {
     padding: 40px 0 !important; /* Consistent 40px vertical spacing between sections */
   }
 
+  /* ── Header Top Bar: Refined, Professional Mobile Layout ── */
+  .top-bar {
+    padding: 6px 0 !important;
+    font-size: 11.5px !important;
+    background-color: #173516 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .top-bar .container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Nationwide Delivery Announcement Banner */
+  .top-bar-left {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: var(--gold) !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1.25 !important;
+  }
+
+  .top-bar-left span {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    max-width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Compact Badges Row: Location, Phone, Kiswahili */
+  .top-bar-right {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+    font-size: 11px !important;
+  }
+
+  /* Location Chip */
+  .top-bar-right > span:not(.live-status-pill) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 99px !important;
+    padding: 2.5px 8px !important;
+    font-size: 10.5px !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Phone Number Pill: Prominent, Compact, Clickable */
+  .top-bar-right a[href^="tel:"] {
+    background: rgba(244, 185, 67, 0.16) !important;
+    border: 1px solid rgba(244, 185, 67, 0.45) !important;
+    border-radius: 99px !important;
+    padding: 2.5px 9px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: var(--gold) !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .top-bar-right a[href^="tel:"]:active {
+    background: var(--gold) !important;
+    color: var(--forest) !important;
+    transform: scale(0.97) !important;
+  }
+
+  /* Live status pill and language switcher compact */
+  .top-bar-right .live-status-pill {
+    font-size: 10px !important;
+    padding: 2px 7px !important;
+    gap: 4px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(95, 163, 14, 0.3) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .top-bar-right .lang-switch-btn {
+    font-size: 10px !important;
+    padding: 2px 7px !important;
+    border-radius: 99px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* ── Main Header Logo & Actions on Phone ── */
+  .main-header {
+    padding: 0.6rem 0 !important;
+  }
+
+  .main-header .container {
+    gap: 0.5rem !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .brand-logo {
+    gap: 0.5rem !important;
+  }
+
+  .brand-symbol {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+  }
+
+  .brand-symbol svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .brand-name {
+    font-size: 1.25rem !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .brand-tagline {
+    font-size: 0.56rem !important;
+    letter-spacing: 0.04em !important;
+    opacity: 0.75 !important;
+  }
+
+  .header-actions {
+    gap: 0.45rem !important;
+  }
+
+  .cart-btn-trigger {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+  }
+
+  .menu-toggle-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+  }
+
   /* ── 1. TRUST BAR: Horizontal Swipeable Row ── */
   .trust-strip {
     padding: 8px 10px !important;
@@ -2742,6 +2904,77 @@ h1, h2, h3, h4, h5, h6 {
   /* Hide decorative empty space card on mobile so the promo card is only as tall as its content */
   .promo-grid > div:last-child {
     display: none !important;
+  }
+
+  /* ── Mobile Footer: Refined, Professional Spacing & Typography ── */
+  .site-footer {
+    padding: 2.5rem 0 calc(2rem + 64px) !important; /* 64px clearance for fixed bottom tab bar */
+    border-top: 3px solid var(--leaf) !important;
+  }
+
+  .footer-grid {
+    gap: 1.6rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .footer-col h4 {
+    font-size: 1.05rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .footer-col p {
+    font-size: 0.85rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .footer-links {
+    gap: 0.45rem !important;
+  }
+
+  .footer-links a {
+    font-size: 0.86rem !important;
+    padding: 2px 0 !important;
+  }
+
+  .footer-contact-item {
+    font-size: 0.85rem !important;
+    gap: 0.6rem !important;
+    margin-bottom: 0.65rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .footer-contact-item a {
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-decoration: underline !important;
+  }
+
+  .footer-contact-item a:hover {
+    color: var(--gold) !important;
+  }
+
+  .trust-badges-footer {
+    gap: 0.45rem !important;
+    margin-top: 0.85rem !important;
+  }
+
+  .trust-badge-pill {
+    padding: 0.25rem 0.6rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .footer-bottom {
+    padding-top: 1.25rem !important;
+    gap: 0.85rem !important;
+    font-size: 0.78rem !important;
+    text-align: center !important;
+  }
+
+  .footer-bottom > div:last-child {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.6rem 1rem !important;
   }
 }
 
