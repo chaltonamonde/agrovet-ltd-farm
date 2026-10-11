@@ -47,7 +47,7 @@
   </script>
 
   <!-- Master Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <link rel="stylesheet" href="css/style.css?v=2026-v3">
   <!-- Critical Warm Cream Theme Inlined for Zero-Flash & Cache Immunity -->
   <style>
     :root {
@@ -75,6 +75,7 @@
       --danger:      #D9381E;
       --success:     #1E824C;
       --border-card: #C9BFA6;
+      --category-section-bg: url('images/category-farm-bg.webp');
     }
     html {
       background-color: #E6DFCD !important;
@@ -85,11 +86,83 @@
       position: relative;
     }
     .site-header {
-      background-color: rgba(242, 237, 223, 0.95) !important;
-      backdrop-filter: blur(8px);
+      background-color: rgba(242, 237, 223, 0.96) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      box-shadow: 0 4px 20px rgba(34, 63, 33, 0.08) !important;
+      border-bottom: 1px solid rgba(201, 191, 166, 0.5) !important;
     }
-    .main-header, .top-bar {
-      /* inherit warm system */
+
+    /* ── Clearly Visible Farm Background in Category Section ── */
+    .section-categories {
+      position: relative !important;
+      overflow: hidden !important;
+      padding: 85px 0 !important;
+      background-color: #203f1f !important;
+      background-image: url('images/category-farm-bg.webp') !important;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      background-attachment: scroll !important;
+    }
+    @media (min-width: 1024px) {
+      .section-categories {
+        background-attachment: fixed !important;
+      }
+    }
+    @media (max-width: 767px) {
+      .section-categories {
+        padding: 50px 0 !important;
+      }
+    }
+    /* Subtle overlay allowing lush farm landscape to clearly shine through */
+    .section-categories::before {
+      content: "" !important;
+      position: absolute !important;
+      inset: 0 !important;
+      background: linear-gradient(180deg, rgba(245, 252, 242, 0.65) 0%, rgba(235, 246, 230, 0.58) 100%) !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+    }
+    .section-categories .container {
+      position: relative !important;
+      z-index: 1 !important;
+    }
+    .section-categories .category-rail-card {
+      background-color: #ffffff !important;
+      border: 1px solid rgba(201, 191, 166, 0.6) !important;
+      box-shadow: 0 6px 20px rgba(25, 45, 20, 0.08) !important;
+    }
+    .section-categories .category-rail-card:hover {
+      background-color: #ffffff !important;
+      border-color: var(--leaf) !important;
+      transform: translateY(-5px) !important;
+      box-shadow: 0 14px 30px rgba(25, 45, 20, 0.16) !important;
+    }
+    .section-categories .section-title {
+      color: #173816 !important;
+      text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8) !important;
+    }
+    .section-categories .label-caps {
+      color: #3F7A08 !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.14em !important;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+    }
+    .section-categories .view-all-link {
+      background: rgba(255, 255, 255, 0.9) !important;
+      padding: 0.45rem 1rem !important;
+      border-radius: 99px !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+      color: #3F7A08 !important;
+      font-weight: 700 !important;
+      border: 1px solid rgba(63, 122, 8, 0.2) !important;
+    }
+    .section-categories .view-all-link:hover {
+      background: #ffffff !important;
+      color: #173816 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
     }
   </style>
 </head>
@@ -203,7 +276,7 @@
     <!-- Mobile Search Bar (Below Header) -->
     <div class="mobile-search-bar">
       <div class="search-box">
-        <input type="text" class="search-input" placeholder="Search products, pests, seeds..." aria-label="Search inputs mobile">
+        <input type="text" class="search-input" placeholder="Search crops, chemicals, seeds, sprayers..." aria-label="Search inputs mobile">
         <button class="search-btn" aria-label="Submit search">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <circle cx="11" cy="11" r="8"></circle>
@@ -213,37 +286,95 @@
       </div>
     </div>
 
+    <!-- Mobile Quick Taskbar Strip (Pill Links for Mobile Viewports) -->
+    <nav class="mobile-taskbar-strip" aria-label="Mobile Navigation Bar">
+      <div class="mobile-taskbar-scroll">
+        <a href="index.html" class="mobile-taskbar-pill active">🏠 Home</a>
+        <a href="about.html" class="mobile-taskbar-pill">📖 About Us</a>
+        <a href="shop.html" class="mobile-taskbar-pill">🏷️ Categories</a>
+        <a href="shop.html" class="mobile-taskbar-pill highlight">🛒 Shop Now <span class="hot-badge">HOT</span></a>
+        <a href="blog.html" class="mobile-taskbar-pill">📰 Blog</a>
+        <a href="contact.html" class="mobile-taskbar-pill">📞 Contact</a>
+      </div>
+    </nav>
+
     <!-- Desktop Navigation Bar -->
     <nav class="nav-bar">
       <div class="container">
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
           <a href="shop.html" class="nav-category-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
             <span data-i18n="allCategories">ALL CATEGORIES</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left: 0.2rem;">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
           </a>
 
           <ul class="nav-links">
             <li><a href="index.html" class="nav-link active">Home</a></li>
             <li><a href="about.html" class="nav-link">About Us</a></li>
             <li><a href="shop.html" class="nav-link">Browse Categories</a></li>
-            <li><a href="shop.html" class="nav-link">Shop Now</a></li>
+            <li><a href="shop.html" class="nav-link">Shop Now <span class="nav-hot-pill">HOT</span></a></li>
             <li><a href="blog.html" class="nav-link">Blog & Articles</a></li>
             <li><a href="contact.html" class="nav-link">Contact Us</a></li>
           </ul>
         </div>
 
-        <div>
-          <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd,%20I%20need%20expert%20agronomist%20advice" target="_blank" class="btn btn-whatsapp btn-sm">
-            💬 Talk to Agronomist
+        <div class="nav-cta-wrap">
+          <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd,%20I%20need%20expert%20agronomist%20advice" target="_blank" class="btn btn-whatsapp btn-sm nav-whatsapp-cta">
+            <span class="whatsapp-pulse-dot"></span>
+            <span>💬 Talk to Agronomist</span>
           </a>
         </div>
       </div>
     </nav>
   </header>
+
+  <!-- Mobile Slide-Out Navigation Drawer -->
+  <div id="mobile-nav-drawer" class="mobile-nav-drawer" aria-label="Mobile Menu Drawer">
+    <div class="drawer-overlay" onclick="document.getElementById('mobile-nav-drawer').classList.remove('active')"></div>
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <div class="brand-text">
+          <span class="brand-name">AGROVET <span>LTD</span></span>
+          <span class="brand-tagline">KENYA'S FARM INPUTS SPECIALIST</span>
+        </div>
+        <button class="drawer-close-btn" onclick="document.getElementById('mobile-nav-drawer').classList.remove('active')" aria-label="Close Navigation">✕</button>
+      </div>
+
+      <div class="drawer-body">
+        <div>
+          <div class="drawer-section-title">Store Pages</div>
+          <ul class="drawer-links">
+            <li><a href="index.html" class="drawer-link active"><span>🏠 Home</span></a></li>
+            <li><a href="about.html" class="drawer-link"><span>📖 About Us</span></a></li>
+            <li><a href="shop.html" class="drawer-link"><span>🏷️ Browse Categories</span></a></li>
+            <li><a href="shop.html" class="drawer-link highlight"><span>🛒 Shop Now</span> <span class="hot-badge">HOT</span></a></li>
+            <li><a href="blog.html" class="drawer-link"><span>📰 Blog & Articles</span></a></li>
+            <li><a href="contact.html" class="drawer-link"><span>📞 Contact Us</span></a></li>
+            <li><a href="admin.html" class="drawer-link" style="color: var(--leaf); font-weight: 700;"><span>⚙️ Admin Portal</span></a></li>
+          </ul>
+        </div>
+
+        <div class="drawer-cta-box">
+          <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd" target="_blank" class="btn btn-whatsapp" style="width: 100%; justify-content: center;">
+            💬 WhatsApp Agronomist
+          </a>
+          <a href="tel:+254700000000" class="drawer-phone-link">
+            📞 Hotline: +254 700 000 000
+          </a>
+          <div style="font-size: 0.76rem; color: var(--text-muted); text-align: center;">
+            📍 Kirinyaga Road, Nairobi • Mon–Sat 7am–6pm
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
        SECTION 1: HERO CAROUSEL (5 Slides with Autoplay & Swipe)
@@ -385,7 +516,7 @@
   <!-- ═══════════════════════════════════════════════════════════════
        SECTION 3: SHOP FARM INPUTS BY CATEGORY (Numbered 01 to 07)
        ═══════════════════════════════════════════════════════════════ -->
-  <section class="section section-pale">
+  <section class="section section-categories" id="category-departments">
     <div class="container">
       <div class="section-head">
         <div>
@@ -619,7 +750,6 @@
           <div class="product-thumb-wrap" onclick="window.AgrovetApp.openQuickView('p5')">
             <img src="images/products/sample-npk-fertilizer-front.webp" class="product-img" width="300" height="300" alt="SAMPLE Granular Fertilizer — NPK 17:17:17 Balanced 25kg bag" loading="lazy">
           </div>
-          </div>
           <div class="product-details">
             <div class="product-category-tag">Granular Fertilizers</div>
             <h3 class="product-title"><a href="product.html?slug=sample-granular-fertilizer-npk">SAMPLE Granular Fertilizer — NPK 17:17:17 Balanced</a></h3>
@@ -642,7 +772,6 @@
           <button class="wishlist-btn" data-product-id="p6" onclick="window.AgrovetApp.toggleWishlist('p6')">🤍</button>
           <div class="product-thumb-wrap" onclick="window.AgrovetApp.openQuickView('p6')">
             <img src="images/products/sample-knapsack-sprayer-front.webp" class="product-img" width="300" height="300" alt="SAMPLE Knapsack Sprayer — 16L Heavy Duty Manual Sprayer with brass lance" loading="lazy">
-          </div>
           </div>
           <div class="product-details">
             <div class="product-category-tag">Farm Tools • Sprayers</div>
@@ -667,7 +796,6 @@
           <div class="product-thumb-wrap" onclick="window.AgrovetApp.openQuickView('p7')">
             <img src="images/products/sample-peat-moss-front.webp" class="product-img" width="300" height="300" alt="SAMPLE Peat Moss — Seedling Growing Medium 70L compressed bale" loading="lazy">
           </div>
-          </div>
           <div class="product-details">
             <div class="product-category-tag">Planting Media</div>
             <h3 class="product-title"><a href="product.html?slug=sample-peat-moss-growing-media">SAMPLE Peat Moss — Seedling Growing Medium</a></h3>
@@ -690,7 +818,6 @@
           <button class="wishlist-btn" data-product-id="p10" onclick="window.AgrovetApp.toggleWishlist('p10')">🤍</button>
           <div class="product-thumb-wrap" onclick="window.AgrovetApp.openQuickView('p10')">
             <img src="images/products/sample-chemical-ppe-front.webp" class="product-img" width="300" height="300" alt="SAMPLE Farm Chemical PPE Complete Safety Suit, respirator, goggles and gloves" loading="lazy">
-          </div>
           </div>
           <div class="product-details">
             <div class="product-category-tag">Safety Equipment • PPE</div>
