@@ -1068,7 +1068,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--bg-card);
   border-radius: var(--radius-card);
   padding: 1.5rem;
-  margin-top: -1rem;
+  margin-top: 1.75rem; /* Separated cleanly from hero carousel changing pictures */
   position: relative;
   z-index: 10;
   box-shadow: var(--shadow-md);
@@ -2502,21 +2502,48 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .cart-btn-trigger {
-    width: 40px !important;
-    height: 40px !important;
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
     border-radius: 10px !important;
   }
 
+  .cart-count-badge {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    font-size: 0.68rem !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    padding: 0 3px !important;
+    border-radius: 99px !important;
+    background-color: var(--gold) !important;
+    color: var(--forest) !important;
+    border: 1.5px solid #fff !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+  }
+
   .menu-toggle-btn {
-    width: 40px !important;
-    height: 40px !important;
+    width: 42px !important;
+    height: 42px !important;
     border-radius: 10px !important;
   }
 
   /* ── 1. TRUST BAR: Horizontal Swipeable Row ── */
   .trust-strip {
     padding: 8px 10px !important;
-    margin-top: -0.75rem;
+    margin-top: 22px !important; /* Separated cleanly from hero carousel changing pictures */
+    margin-bottom: 20px !important;
     position: relative;
     max-height: 88px;
     height: auto;
@@ -2659,10 +2686,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .product-details {
-    padding: 10px 10px 12px !important;
+    padding: 8px 8px 10px !important;
     display: flex;
     flex-direction: column;
     flex: 1;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden;
   }
 
   .product-category-tag {
@@ -2717,20 +2747,30 @@ h1, h2, h3, h4, h5, h6 {
 
   .product-footer-actions {
     display: flex !important;
-    gap: 6px !important;
-    margin-top: 0 !important;
+    align-items: center !important;
+    gap: 5px !important;
+    margin-top: auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   .btn-card-add {
-    min-height: 44px !important;
-    height: 44px !important;
-    font-size: 13px !important;
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    font-size: 11.5px !important;
     font-weight: 700 !important;
-    padding: 0 8px !important;
-    display: flex !important;
+    padding: 0 4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     border-radius: 8px !important;
+    box-sizing: border-box !important;
     transition: all 0.15s ease !important;
   }
 
@@ -2740,15 +2780,18 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .btn-card-wa {
-    min-width: 44px !important;
-    min-height: 44px !important;
-    width: 44px !important;
-    height: 44px !important;
-    display: flex !important;
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 1.15rem !important;
+    font-size: 1.1rem !important;
     border-radius: 8px !important;
+    box-sizing: border-box !important;
     transition: all 0.15s ease !important;
   }
 
