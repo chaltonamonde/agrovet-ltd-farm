@@ -7,7 +7,9 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="css/style.css?v=cream-2026">
 
-  <!-- Scoped Styles for Admin Executive Single-Screen Layout & Security Gate -->
+  <!-- Chart.js for High-Performance Visual Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
   <style>
     :root {
       --bg-page:     #E6DFCD;
@@ -30,6 +32,8 @@
       --danger:      #D9381E;
       --success:     #1E824C;
       --border-card: #C9BFA6;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md:   0 4px 14px rgba(0,0,0,0.09);
     }
 
     * {
@@ -49,6 +53,7 @@
 
     /* ═════════════════════════════════════════════════════════════════
        SECURITY LOCK GATE OVERLAY
+       Username: admin | Password: agrovetltd
        ═════════════════════════════════════════════════════════════════ */
     #admin-auth-gate {
       position: fixed;
@@ -231,10 +236,10 @@
     }
 
     /* ═════════════════════════════════════════════════════════════════
-       ADMIN DASHBOARD CONTAINER & HEADER
+       ADMIN DASHBOARD APP & TOP NAVBAR
        ═════════════════════════════════════════════════════════════════ */
     #admin-dashboard-app {
-      display: none; /* revealed on auth */
+      display: none;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -252,7 +257,7 @@
     }
 
     .admin-navbar-inner {
-      max-width: 1320px;
+      max-width: 1380px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -279,11 +284,6 @@
       align-items: center;
       justify-content: center;
       color: var(--gold);
-    }
-
-    .admin-brand-titles {
-      display: flex;
-      flex-direction: column;
     }
 
     .admin-brand-title {
@@ -331,7 +331,7 @@
     .admin-nav-actions {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
     }
 
@@ -382,32 +382,32 @@
     }
 
     /* ═════════════════════════════════════════════════════════════════
-       DASHBOARD WORKSPACE (FITS IN ONE SCREEN)
+       MAIN WRAPPER & EXECUTIVE METRIC RIBBON
        ═════════════════════════════════════════════════════════════════ */
     .admin-main-wrap {
       flex: 1;
-      max-width: 1320px;
+      max-width: 1380px;
       width: 100%;
       margin: 0 auto;
-      padding: 1rem 1.25rem 2rem;
+      padding: 0.85rem 1rem 2rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.85rem;
     }
 
-    /* ─── METRIC RIBBON (4 COMPACT CARDS) ────────────────────────── */
+    /* Executive 5-Metric Ribbon */
     .metric-ribbon {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.85rem;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
     }
 
     .metric-card-slim {
       background: var(--bg-card);
       border: 1px solid var(--border-card);
       border-radius: 12px;
-      padding: 0.85rem 1rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 0.75rem 0.95rem;
+      box-shadow: var(--shadow-sm);
       position: relative;
       overflow: hidden;
       display: flex;
@@ -425,59 +425,60 @@
     }
 
     .card-border-revenue::before { background: var(--leaf); }
-    .card-border-orders::before { background: #2EAA43; }
-    .card-border-stock::before { background: var(--danger); }
-    .card-border-skus::before { background: var(--gold); }
+    .card-border-profit::before  { background: #1E824C; }
+    .card-border-orders::before  { background: #2EAA43; }
+    .card-border-stock::before   { background: var(--danger); }
+    .card-border-skus::before    { background: var(--gold); }
 
     .metric-slim-label {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: var(--text-muted);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.2rem;
     }
 
     .metric-slim-value {
-      font-family: inherit;
-      font-size: 1.65rem;
+      font-size: 1.5rem;
       font-weight: 800;
       color: var(--forest);
       line-height: 1.15;
     }
 
     .metric-slim-foot {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      margin-top: 0.3rem;
+      margin-top: 0.25rem;
       display: flex;
       align-items: center;
       gap: 0.3rem;
     }
 
-    /* ─── WORKSPACE CARD (SEGMENTED TABS & DATA) ─────────────────── */
+    /* ═════════════════════════════════════════════════════════════════
+       WORKSPACE CARD & SEGMENTED TABS
+       ═════════════════════════════════════════════════════════════════ */
     .workspace-card {
       background: var(--bg-card);
       border: 1px solid var(--border-card);
       border-radius: 14px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-md);
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
     .workspace-toolbar {
-      padding: 0.85rem 1.15rem;
+      padding: 0.75rem 1rem;
       background: var(--pale-2);
       border-bottom: 1px solid var(--border-card);
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.65rem;
     }
 
-    /* Segmented Tab Bar */
     .segmented-tabs {
       display: inline-flex;
       background: var(--bg-section);
@@ -485,20 +486,21 @@
       border-radius: 10px;
       padding: 3px;
       gap: 3px;
+      flex-wrap: wrap;
     }
 
     .tab-btn {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      padding: 0.45rem 0.95rem;
+      padding: 0.4rem 0.85rem;
       border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.4rem;
       transition: all 0.15s ease;
     }
 
@@ -509,13 +511,13 @@
     .tab-btn.active {
       background: #FFFFFF;
       color: var(--forest);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
     }
 
     .tab-counter {
       background: rgba(34, 63, 33, 0.12);
       color: var(--forest);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 800;
       padding: 1px 6px;
       border-radius: 99px;
@@ -526,11 +528,10 @@
       color: #FFFFFF;
     }
 
-    /* Search & Filter Controls */
     .toolbar-actions {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
       flex: 1;
       justify-content: flex-end;
@@ -538,14 +539,14 @@
 
     .admin-search-box {
       position: relative;
-      min-width: 240px;
-      max-width: 320px;
+      min-width: 220px;
+      max-width: 300px;
       flex: 1;
     }
 
     .admin-search-box input {
       width: 100%;
-      padding: 0.45rem 0.75rem 0.45rem 2rem;
+      padding: 0.42rem 0.75rem 0.42rem 2rem;
       border: 1px solid var(--border-card);
       border-radius: 8px;
       background: #FFFFFF;
@@ -572,25 +573,20 @@
       border: 1px solid var(--border-card);
       border-radius: 8px;
       background: #FFFFFF;
-      padding: 0.45rem 0.75rem;
-      font-size: 0.82rem;
+      padding: 0.42rem 0.75rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--forest);
       cursor: pointer;
-    }
-
-    .status-filter-select:focus {
-      outline: none;
-      border-color: var(--forest);
     }
 
     .btn-action-primary {
       background: var(--leaf);
       color: #FFFFFF;
       border: none;
-      padding: 0.45rem 0.85rem;
+      padding: 0.42rem 0.85rem;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -603,28 +599,28 @@
       background: var(--leaf-2);
     }
 
-    /* ─── TAB CONTENT PANELS ─────────────────────────────────────── */
+    /* ═════════════════════════════════════════════════════════════════
+       TAB CONTENT PANELS & DATA TABLES
+       ═════════════════════════════════════════════════════════════════ */
     .tab-content-panel {
       display: none;
-      padding: 0;
     }
 
     .tab-content-panel.active {
       display: block;
     }
 
-    /* Table Scroll Containment (Prevents Screen Overlap) */
     .data-table-container {
       width: 100%;
       overflow-x: auto;
-      max-height: calc(100vh - 290px);
+      max-height: calc(100vh - 280px);
       min-height: 280px;
     }
 
     .admin-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.84rem;
+      font-size: 0.83rem;
       text-align: left;
       white-space: nowrap;
     }
@@ -633,10 +629,10 @@
       background: var(--bg-section);
       color: var(--forest);
       font-weight: 800;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      padding: 0.75rem 1rem;
+      padding: 0.7rem 0.9rem;
       border-bottom: 2px solid var(--border-card);
       position: sticky;
       top: 0;
@@ -649,11 +645,11 @@
     }
 
     .admin-table tbody tr:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.45);
     }
 
     .admin-table td {
-      padding: 0.7rem 1rem;
+      padding: 0.65rem 0.9rem;
       color: var(--text);
       vertical-align: middle;
     }
@@ -674,134 +670,275 @@
       color: var(--forest);
       background: #FFFFFF;
       border: 1px solid var(--border);
-      padding: 2px 7px;
+      padding: 2px 6px;
       border-radius: 5px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
 
     .status-select-badge {
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 0.3rem 0.55rem;
-      font-size: 0.78rem;
+      padding: 0.28rem 0.5rem;
+      font-size: 0.76rem;
       font-weight: 700;
       background: #FFFFFF;
+      cursor: pointer;
+    }
+
+    .status-select-badge.status-Pending    { border-color: #E67E22; color: #B95D0A; background: #FEF5E7; }
+    .status-select-badge.status-Processing { border-color: #2980B9; color: #1A5276; background: #EBF5FB; }
+    .status-select-badge.status-Dispatched { border-color: var(--leaf); color: var(--leaf-text); background: #F4FBF0; }
+    .status-select-badge.status-Delivered  { border-color: #27AE60; color: #1E824C; background: #EAFAF1; }
+
+    /* ═════════════════════════════════════════════════════════════════
+       CHARTS & CATEGORY ANALYTICS GRID (NEW POWERFUL ENGINE)
+       ═════════════════════════════════════════════════════════════════ */
+    .charts-dashboard-wrap {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Category Quick-Filter Bar */
+    .category-filter-ribbon {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .category-pill-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .cat-filter-btn {
+      background: var(--bg-section);
+      border: 1px solid var(--border-card);
+      border-radius: 99px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--forest);
+      padding: 0.3rem 0.75rem;
       cursor: pointer;
       transition: all 0.15s ease;
     }
 
-    .status-select-badge:focus {
-      outline: none;
+    .cat-filter-btn:hover, .cat-filter-btn.active {
+      background: var(--forest);
+      color: #FFFFFF;
       border-color: var(--forest);
     }
 
-    .status-select-badge.status-Pending {
-      border-color: #E67E22;
-      color: #B95D0A;
-      background: #FEF5E7;
-    }
-    .status-select-badge.status-Processing {
-      border-color: #2980B9;
-      color: #1A5276;
-      background: #EBF5FB;
-    }
-    .status-select-badge.status-Dispatched {
-      border-color: var(--leaf);
-      color: var(--leaf-text);
-      background: #F4FBF0;
-    }
-    .status-select-badge.status-Delivered {
-      border-color: #27AE60;
-      color: #1E824C;
-      background: #EAFAF1;
+    /* 4-Chart Interactive Grid */
+    .analytics-charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
     }
 
-    /* ─── MOBILE ORDER CARDS (SCREEN WIDTH < 768px) ─────────────── */
-    .mobile-orders-grid {
-      display: none;
-      padding: 0.85rem;
-      gap: 0.85rem;
+    .chart-box-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
       flex-direction: column;
     }
 
-    .mobile-order-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-card);
-      border-radius: 10px;
-      padding: 0.85rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .mobile-order-header {
+    .chart-box-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 1px dashed var(--border);
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    .mobile-order-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      margin-bottom: 0.35rem;
-    }
-
-    /* ─── ANALYTICS TAB PANEL ────────────────────────────────────── */
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
-      padding: 1.25rem;
-    }
-
-    .analytics-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-card);
-      border-radius: 10px;
-      padding: 1.15rem;
-    }
-
-    .analytics-card-title {
-      font-size: 0.92rem;
+    .chart-box-title {
+      font-size: 0.88rem;
       font-weight: 800;
       color: var(--forest);
-      margin-bottom: 0.85rem;
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.4rem;
     }
 
-    .progress-track {
-      background: var(--bg-section);
+    .chart-box-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
       border-radius: 99px;
-      height: 8px;
-      overflow: hidden;
-      margin-top: 0.3rem;
-      margin-bottom: 0.75rem;
+      background: var(--pale-2);
+      color: var(--forest);
+      border: 1px solid var(--border-card);
     }
 
-    .progress-fill {
-      height: 100%;
-      border-radius: 99px;
-      background: var(--leaf);
+    .chart-canvas-wrap {
+      position: relative;
+      height: 220px;
+      width: 100%;
     }
 
-    /* ─── RESPONSIVE BREAKPOINTS (ZERO OVERLAP GUARANTEE) ────────── */
-    @media (max-width: 1024px) {
+    /* Category Deep-Dive Focus Card */
+    .cat-deepdive-card {
+      background: #FFFFFF;
+      border: 2px solid var(--forest);
+      border-radius: 12px;
+      padding: 1.15rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .cat-kpis-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .cat-kpi-subcard {
+      background: var(--pale-2);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      text-align: center;
+    }
+
+    .cat-kpi-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .cat-kpi-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--forest);
+      margin-top: 0.15rem;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       MODAL STYLES (INSPECTION, ADD SKU, EDIT PRICE)
+       ═════════════════════════════════════════════════════════════════ */
+    .admin-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .admin-modal-backdrop.open {
+      display: flex;
+    }
+
+    .admin-modal-window {
+      background: var(--bg-card);
+      border: 2px solid var(--forest);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      padding: 1.5rem;
+      animation: gateCardPop 0.25s ease-out;
+    }
+
+    .admin-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border-card);
+    }
+
+    .admin-modal-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--forest);
+    }
+
+    .admin-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-weight: bold;
+    }
+
+    .admin-form-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .admin-form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+    }
+
+    .admin-form-input, .admin-form-select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      background: #FFFFFF;
+      color: var(--text);
+    }
+
+    /* Printable Packing Slip / Invoice Format */
+    .invoice-print-sheet {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-size: 0.82rem;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVENESS & ZERO OVERFLOW
+       ═════════════════════════════════════════════════════════════════ */
+    @media (max-width: 1100px) {
       .metric-ribbon {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .analytics-charts-grid {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 768px) {
       .metric-ribbon {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.65rem;
+        gap: 0.5rem;
       }
       .metric-slim-value {
-        font-size: 1.35rem;
+        font-size: 1.3rem;
+      }
+      .cat-kpis-row {
+        grid-template-columns: repeat(2, 1fr);
       }
       .workspace-toolbar {
         flex-direction: column;
@@ -814,8 +951,8 @@
       .tab-btn {
         flex: 1;
         justify-content: center;
-        padding: 0.4rem 0.5rem;
-        font-size: 0.76rem;
+        padding: 0.35rem 0.4rem;
+        font-size: 0.72rem;
       }
       .toolbar-actions {
         width: 100%;
@@ -824,15 +961,14 @@
       .admin-search-box {
         min-width: 100%;
       }
-      .status-filter-select {
-        flex: 1;
-      }
-      /* On mobile, show mobile card list for ultra easy 1-screen viewing */
       .desktop-table-view {
         display: none;
       }
       .mobile-orders-grid {
         display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.75rem;
       }
     }
 
@@ -841,10 +977,10 @@
         grid-template-columns: 1fr 1fr;
       }
       .admin-brand-title {
-        font-size: 1.05rem;
+        font-size: 1rem;
       }
       .btn-admin-nav span {
-        display: none; /* Icon only on very small screens */
+        display: none;
       }
     }
   </style>
@@ -852,7 +988,7 @@
 <body>
 
   <!-- ═════════════════════════════════════════════════════════════════
-       SECURITY LOCK GATE (ENCRYPTED ENTRANCE)
+       SECURITY LOCK GATE OVERLAY
        Username: admin | Password: agrovetltd
        ═════════════════════════════════════════════════════════════════ -->
   <div id="admin-auth-gate">
@@ -922,7 +1058,7 @@
   </div>
 
   <!-- ═════════════════════════════════════════════════════════════════
-       ADMIN EXECUTIVE WORKSPACE (GATED & RESPONSIVE SINGLE-SCREEN)
+       ADMIN DASHBOARD APP (EXECUTIVE SINGLE-SCREEN COMMAND CENTER)
        ═════════════════════════════════════════════════════════════════ -->
   <div id="admin-dashboard-app">
 
@@ -959,7 +1095,12 @@
 
           <button class="btn-admin-nav" onclick="window.AgrovetApp.exportOrdersCsv()" title="Download CSV report">
             <span>📥</span>
-            <span>Export CSV</span>
+            <span>Orders CSV</span>
+          </button>
+
+          <button class="btn-admin-nav" onclick="exportInventoryCsv()" title="Download Inventory report">
+            <span>📊</span>
+            <span>Stock CSV</span>
           </button>
 
           <a href="index.html" target="_blank" class="btn-admin-nav" title="View Customer Storefront">
@@ -977,7 +1118,7 @@
     <!-- Main Workspace Body -->
     <main class="admin-main-wrap">
 
-      <!-- Live Executive Stat Ribbon (4 Compact Cards) -->
+      <!-- Executive 5-Metric Ribbon -->
       <section class="metric-ribbon">
         <div class="metric-card-slim card-border-revenue">
           <div>
@@ -986,13 +1127,24 @@
           </div>
           <div class="metric-slim-foot">
             <span style="color: #1E824C; font-weight: 700;">+24%</span>
-            <span>via M-Pesa STK Express</span>
+            <span>M-Pesa STK push</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-profit">
+          <div>
+            <div class="metric-slim-label">Est. Gross Profit</div>
+            <div id="metric-profit" class="metric-slim-value" style="color: #1E824C;">KSh 6,865</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span style="color: #1E824C; font-weight: 700;">24.5%</span>
+            <span>avg agrovet margin</span>
           </div>
         </div>
 
         <div class="metric-card-slim card-border-orders">
           <div>
-            <div class="metric-slim-label">County Orders Managed</div>
+            <div class="metric-slim-label">County Orders</div>
             <div id="metric-orders" class="metric-slim-value">4</div>
           </div>
           <div class="metric-slim-foot">
@@ -1007,17 +1159,17 @@
           </div>
           <div class="metric-slim-foot">
             <span style="color: var(--danger); font-weight: 700;">Action:</span>
-            <span>Supplier reorder required</span>
+            <span>Supplier re-order</span>
           </div>
         </div>
 
         <div class="metric-card-slim card-border-skus">
           <div>
-            <div class="metric-slim-label">Certified SKUs</div>
-            <div class="metric-slim-value">10</div>
+            <div class="metric-slim-label">Catalog SKUs</div>
+            <div id="metric-skus" class="metric-slim-value">10</div>
           </div>
           <div class="metric-slim-foot">
-            <span>PCPB & KEPHIS Verified</span>
+            <span>PCPB & KEPHIS Compliant</span>
           </div>
         </div>
       </section>
@@ -1029,7 +1181,7 @@
         <div class="workspace-toolbar">
           <div class="segmented-tabs" role="tablist">
             <button class="tab-btn active" id="tab-btn-orders" onclick="switchDashboardTab('orders')">
-              <span>📦 Orders Pipeline</span>
+              <span>📦 Orders & Dispatch</span>
               <span id="tab-count-orders" class="tab-counter">4</span>
             </button>
             <button class="tab-btn" id="tab-btn-products" onclick="switchDashboardTab('products')">
@@ -1037,7 +1189,10 @@
               <span id="tab-count-products" class="tab-counter">10</span>
             </button>
             <button class="tab-btn" id="tab-btn-analytics" onclick="switchDashboardTab('analytics')">
-              <span>📊 Dispatch Analytics</span>
+              <span>📈 Category Analytics & Charts</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-financial" onclick="switchDashboardTab('financial')">
+              <span>💼 Financial & Audit</span>
             </button>
           </div>
 
@@ -1055,13 +1210,13 @@
               <option value="Delivered">✓ Delivered</option>
             </select>
 
-            <button class="btn-action-primary" onclick="window.AgrovetApp.simulateCsvImport()">
+            <button class="btn-action-primary" onclick="openAddProductModal()">
               <span>+ Add SKU</span>
             </button>
           </div>
         </div>
 
-        <!-- ─── TAB 1: ORDERS PIPELINE ───────────────────────────────── -->
+        <!-- ─── TAB 1: ORDERS & DISPATCH PIPELINE ─────────────────────── -->
         <div id="tab-panel-orders" class="tab-content-panel active">
           
           <!-- Desktop Data Table View -->
@@ -1077,18 +1232,15 @@
                   <th>Order Total</th>
                   <th>M-Pesa Receipt</th>
                   <th>Fulfillment Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
-              <tbody id="admin-orders-tbody">
-                <!-- Dynamically populated via JS -->
-              </tbody>
+              <tbody id="admin-orders-tbody"></tbody>
             </table>
           </div>
 
           <!-- Mobile Card List View (< 768px) -->
-          <div id="admin-orders-mobile-list" class="mobile-orders-grid">
-            <!-- Dynamically populated for phones -->
-          </div>
+          <div id="admin-orders-mobile-list" class="mobile-orders-grid"></div>
 
         </div>
 
@@ -1101,89 +1253,179 @@
                   <th>Product Name</th>
                   <th>Category</th>
                   <th>Active Ingredient</th>
-                  <th>Base Pack</th>
+                  <th>Pack Size</th>
                   <th>Current Price</th>
                   <th>Stock Status</th>
                   <th>Quick Action</th>
                 </tr>
               </thead>
-              <tbody id="admin-products-tbody">
-                <!-- Dynamically populated via JS -->
-              </tbody>
+              <tbody id="admin-products-tbody"></tbody>
             </table>
           </div>
         </div>
 
-        <!-- ─── TAB 3: DISPATCH & REVENUE ANALYTICS ───────────────────── -->
+        <!-- ─── TAB 3: CATEGORY ANALYTICS & INTERACTIVE CHARTS ─────────── -->
         <div id="tab-panel-analytics" class="tab-content-panel">
-          <div class="analytics-grid">
+          <div class="charts-dashboard-wrap">
             
-            <div class="analytics-card">
-              <div class="analytics-card-title">
-                <span>🚚 County Delivery Breakdown</span>
+            <!-- Category Selector Ribbon -->
+            <div class="category-filter-ribbon">
+              <div style="font-size:0.8rem; font-weight:800; color:var(--forest);">
+                <span>🌱 Focus Category:</span>
               </div>
-              <div>
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
-                  <span>Kiambu County (Thika / Ruiru)</span>
-                  <span style="color:var(--forest);">38%</span>
-                </div>
-                <div class="progress-track"><div class="progress-fill" style="width:38%;"></div></div>
-
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
-                  <span>Nakuru County (Naivasha / Rongai)</span>
-                  <span style="color:var(--forest);">27%</span>
-                </div>
-                <div class="progress-track"><div class="progress-fill" style="width:27%; background:#2EAA43;"></div></div>
-
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
-                  <span>Uasin Gishu (Eldoret Maize Belt)</span>
-                  <span style="color:var(--forest);">20%</span>
-                </div>
-                <div class="progress-track"><div class="progress-fill" style="width:20%; background:var(--gold);"></div></div>
-
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
-                  <span>Machakos County (Eastern Region)</span>
-                  <span style="color:var(--forest);">15%</span>
-                </div>
-                <div class="progress-track"><div class="progress-fill" style="width:15%; background:#3498DB;"></div></div>
+              <div class="category-pill-group">
+                <button class="cat-filter-btn active" onclick="setAnalyticsCategory('all', this)">All Categories</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('crop-production', this)">Crop Production (Dawa)</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('seeds-fertilizers', this)">Seeds & Fertilizers</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('farm-tools', this)">Farm Tools & Sprayers</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('planting-media', this)">Planting Media</button>
               </div>
             </div>
 
-            <div class="analytics-card">
-              <div class="analytics-card-title">
-                <span>💳 Payment Settlement Channels</span>
+            <!-- Category Deep-Dive Focus Card -->
+            <div class="cat-deepdive-card" id="category-deepdive-box">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h3 id="cat-focus-title" style="font-size:1.15rem; color:var(--forest); font-weight:800;">All Categories Performance Overview</h3>
+                  <p id="cat-focus-desc" style="font-size:0.75rem; color:var(--text-muted);">Consolidated agricultural inputs analytics across Nairobi, Central and Rift Valley branches.</p>
+                </div>
+                <span id="cat-focus-badge" class="chart-box-tag" style="background:#EBF5FB; color:#1A5276; border-color:#AED6F1;">PCPB / KEPHIS Audited</span>
               </div>
-              <div style="font-size:0.84rem; line-height: 1.6;">
-                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom:1px solid var(--border);">
-                  <span>M-Pesa STK Push Express:</span>
-                  <strong style="color:#1E824C;">100% (Instant)</strong>
+
+              <div class="cat-kpis-row">
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Category Revenue</div>
+                  <div class="cat-kpi-val" id="cat-kpi-rev">KSh 28,020</div>
                 </div>
-                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom:1px solid var(--border);">
-                  <span>Paybill 247247 Settlements:</span>
-                  <strong style="color:var(--forest);">KSh 28,020</strong>
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Units Sold</div>
+                  <div class="cat-kpi-val" id="cat-kpi-units">10 Units</div>
                 </div>
-                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0; border-bottom:1px solid var(--border);">
-                  <span>Daraja Callback Status:</span>
-                  <strong style="color:#1E824C;">✓ 0 Failed Transactions</strong>
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Stock Health</div>
+                  <div class="cat-kpi-val" id="cat-kpi-health" style="color:var(--success);">60% In-Stock</div>
                 </div>
-                <div style="display:flex; justify-content:space-between; padding: 0.4rem 0;">
-                  <span>Agronomist Prescriptions:</span>
-                  <strong style="color:var(--forest);">12 Active Chats</strong>
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Avg Pack Value</div>
+                  <div class="cat-kpi-val" id="cat-kpi-aov">KSh 2,802</div>
                 </div>
               </div>
             </div>
 
-            <div class="analytics-card">
-              <div class="analytics-card-title">
-                <span>🛡️ Store Security & Compliance</span>
+            <!-- 4 Visual Interactive Charts Grid -->
+            <div class="analytics-charts-grid">
+              
+              <!-- Chart 1: Revenue by Category (Doughnut) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>🍩 Revenue Share by Category</span>
+                  </div>
+                  <span class="chart-box-tag">KSh Value</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-category-revenue"></canvas>
+                </div>
               </div>
-              <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">
-                <p>• <strong>PCPB Regulatory Status:</strong> License Verified 2026</p>
-                <p style="margin-top:0.4rem;">• <strong>KEPHIS Seed Cert:</strong> High-germination lot approved</p>
-                <p style="margin-top:0.4rem;">• <strong>Session Encryption:</strong> AES-256 administrative lock active</p>
+
+              <!-- Chart 2: Category Stock Health (Bar Chart) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>📦 Stock Health by Category</span>
+                  </div>
+                  <span class="chart-box-tag">SKU Count</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-stock-health"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 3: Weekly Sales & Growth Trend (Line Chart) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>📈 7-Day Revenue Trend (M-Pesa STK)</span>
+                  </div>
+                  <span class="chart-box-tag">Daily Peak</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-sales-trend"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 4: County Dispatch Volume (Horizontal Bar) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>🚚 County Dispatch Volume</span>
+                  </div>
+                  <span class="chart-box-tag">Kenyan Counties</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-county-dispatch"></canvas>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ─── TAB 4: FINANCIAL & COMPLIANCE AUDIT ───────────────────── -->
+        <div id="tab-panel-financial" class="tab-content-panel">
+          <div style="padding: 1.15rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1rem;">
+            
+            <div class="chart-box-card">
+              <div class="chart-box-header">
+                <div class="chart-box-title">💳 M-Pesa Settlement Reconciliation</div>
+                <span class="chart-box-tag" style="background:#EAFAF1; color:#1E824C;">100% Cleared</span>
+              </div>
+              <div style="font-size:0.83rem; line-height:1.7;">
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:0.35rem 0;">
+                  <span>Till 876543 (Agrovet Ltd):</span>
+                  <strong>KSh 24,820</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:0.35rem 0;">
+                  <span>Paybill 543210 (Account Sales):</span>
+                  <strong>KSh 3,200</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:0.35rem 0;">
+                  <span>Daraja STK Push Success Rate:</span>
+                  <strong style="color:var(--success);">100% (No Chargebacks)</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:0.35rem 0;">
+                  <span>Pending Courier COD Reconciliation:</span>
+                  <strong style="color:var(--danger);">KSh 3,200 (Uasin Gishu)</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-box-card">
+              <div class="chart-box-header">
+                <div class="chart-box-title">🛡️ PCPB & KEPHIS Regulatory Ledger</div>
+                <span class="chart-box-tag">Audit 2026</span>
+              </div>
+              <div style="font-size:0.82rem; line-height:1.6; color:var(--text-muted);">
+                <p>• <strong>PCPB Premises License:</strong> PCPB/AGR/2024/7890 (Valid till Dec 2026)</p>
+                <p style="margin-top:0.35rem;">• <strong>KEPHIS Seed Merchant Reg:</strong> KEPHIS/SD/2024/4512 (Certified Hybrid Lots)</p>
+                <p style="margin-top:0.35rem;">• <strong>Pesticide Safety Records:</strong> Class II & III MSDS on file at Kirinyaga Rd HQ</p>
                 <div style="margin-top:0.85rem;">
-                  <button class="btn btn-outline-leaf btn-sm" onclick="alert('Regulatory compliance report generated.')">Download Compliance Audit</button>
+                  <button class="btn btn-outline-leaf btn-sm" onclick="alert('Exporting PCPB annual regulatory audit packet in PDF format.')">📥 Export PCPB Inspection PDF</button>
                 </div>
+              </div>
+            </div>
+
+            <div class="chart-box-card">
+              <div class="chart-box-header">
+                <div class="chart-box-title">📜 Administrative Activity Log</div>
+                <span class="chart-box-tag">Real-Time</span>
+              </div>
+              <div id="admin-audit-log" style="font-size:0.75rem; color:var(--text); line-height:1.6;">
+                <p>• <em>10:14 AM</em>: Admin logged into operations terminal via IP 192.168.1.1</p>
+                <p style="margin-top:0.25rem;">• <em>09:42 AM</em>: Order #ORD-9421 status updated to <strong>Delivered</strong></p>
+                <p style="margin-top:0.25rem;">• <em>08:15 AM</em>: M-Pesa STK verification confirmed for Grace Wanjiku (Nakuru)</p>
+                <p style="margin-top:0.25rem;">• <em>Yesterday</em>: PCPB certified batch synced with inventory database</p>
               </div>
             </div>
 
@@ -1193,6 +1435,99 @@
       </section>
 
     </main>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       MODAL 1: ORDER INSPECTION & PACKING SLIP
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="modal-order-details" class="admin-modal-backdrop" onclick="if(event.target === this) closeOrderModal();">
+    <div class="admin-modal-window">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="modal-order-title">Farmer Dispatch Packing Slip</h3>
+        <button class="admin-modal-close" onclick="closeOrderModal()">✕</button>
+      </div>
+
+      <div class="invoice-print-sheet" id="modal-order-content">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:1rem; gap:0.5rem; flex-wrap:wrap;">
+        <a id="modal-whatsapp-link" href="#" target="_blank" class="btn btn-whatsapp btn-sm" style="flex:1; justify-content:center;">
+          💬 WhatsApp Farmer Update
+        </a>
+        <button class="btn btn-outline-leaf btn-sm" onclick="window.print()" style="flex:1;">
+          🖨️ Print Packing Slip
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       MODAL 2: ADD NEW PRODUCT / SKU
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="modal-add-sku" class="admin-modal-backdrop" onclick="if(event.target === this) closeAddProductModal();">
+    <div class="admin-modal-window">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">+ Add New Product SKU</h3>
+        <button class="admin-modal-close" onclick="closeAddProductModal()">✕</button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); handleAddProductSubmit();">
+        <div class="admin-form-group">
+          <label class="admin-form-label">Product Name</label>
+          <input type="text" id="new-prod-name" class="admin-form-input" placeholder="e.g. Belt 480 SC Insecticide" required>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Category</label>
+            <select id="new-prod-category" class="admin-form-select" required>
+              <option value="crop-production">Crop Production</option>
+              <option value="seeds-fertilizers">Seeds & Fertilizers</option>
+              <option value="farm-tools">Farm Tools & Equipment</option>
+              <option value="planting-media">Planting Media</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Active Ingredient</label>
+            <input type="text" id="new-prod-active" class="admin-form-input" placeholder="e.g. Flubendiamide 480g/L">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Base Pack Size</label>
+            <input type="text" id="new-prod-pack" class="admin-form-input" placeholder="e.g. 500ml or 50kg" required>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Price (KSh)</label>
+            <input type="number" id="new-prod-price" class="admin-form-input" placeholder="e.g. 2450" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Stock Status</label>
+            <select id="new-prod-stock" class="admin-form-select">
+              <option value="in_stock">✓ In Stock</option>
+              <option value="low_stock">⚠️ Low Stock</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">PCPB / KEPHIS Reg No.</label>
+            <input type="text" id="new-prod-reg" class="admin-form-input" placeholder="e.g. PCPB(CR) 1290-A">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1rem;">
+          <button type="button" class="btn btn-outline-leaf btn-sm" onclick="closeAddProductModal()">Cancel</button>
+          <button type="submit" class="btn btn-leaf btn-sm">+ Save & Add to Live Store</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Scripts -->
@@ -1214,10 +1549,10 @@
         gate.style.display = 'none';
         app.style.display = 'flex';
         renderAdminDashboard();
+        setTimeout(initAllCharts, 100);
       } else {
         gate.style.display = 'flex';
         app.style.display = 'none';
-        // Auto-focus username
         setTimeout(() => {
           const userInput = document.getElementById('admin-user-input');
           if (userInput) userInput.focus();
@@ -1233,7 +1568,6 @@
       const user = userField.value.trim().toLowerCase();
       const pass = passField.value.trim();
 
-      // Required credentials check
       if (user === 'admin' && pass === 'agrovetltd') {
         sessionStorage.setItem(AUTH_SESSION_KEY, 'true');
         errBanner.style.display = 'none';
@@ -1241,7 +1575,7 @@
       } else {
         errBanner.style.display = 'block';
         errBanner.style.animation = 'none';
-        void errBanner.offsetWidth; // re-trigger animation
+        void errBanner.offsetWidth;
         errBanner.style.animation = 'authShake 0.35s ease-in-out';
         passField.value = '';
         passField.focus();
@@ -1276,29 +1610,27 @@
 
     function switchDashboardTab(tabName) {
       currentTab = tabName;
-      ['orders', 'products', 'analytics'].forEach(tab => {
+      ['orders', 'products', 'analytics', 'financial'].forEach(tab => {
         const btn = document.getElementById(`tab-btn-${tab}`);
         const panel = document.getElementById(`tab-panel-${tab}`);
         if (btn) btn.classList.toggle('active', tab === tabName);
         if (panel) panel.classList.toggle('active', tab === tabName);
       });
 
-      // Show/hide status filter dropdown based on tab
       const filterSelect = document.getElementById('admin-status-filter');
       if (filterSelect) {
         filterSelect.style.display = tabName === 'orders' ? 'inline-block' : 'none';
       }
 
-      // Update placeholder
       const searchInput = document.getElementById('admin-search-input');
       if (searchInput) {
-        if (tabName === 'orders') {
-          searchInput.placeholder = 'Search orders, phone, county...';
-        } else if (tabName === 'products') {
-          searchInput.placeholder = 'Search chemicals, seeds, ingredients...';
-        } else {
-          searchInput.placeholder = 'Search analytics records...';
-        }
+        if (tabName === 'orders') searchInput.placeholder = 'Search orders, phone, county...';
+        else if (tabName === 'products') searchInput.placeholder = 'Search chemicals, seeds, ingredients...';
+        else searchInput.placeholder = 'Search records & analytics...';
+      }
+
+      if (tabName === 'analytics') {
+        setTimeout(initAllCharts, 120);
       }
     }
 
@@ -1319,14 +1651,26 @@
     function renderAdminDashboard() {
       const orders = window.AgrovetApp.state.adminOrders;
       const totalRev = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+      const estProfit = Math.round(totalRev * 0.245);
+      const lowStockCount = (window.AGROVET_DATA ? window.AGROVET_DATA.products : [])
+        .filter(p => p.variants && p.variants[0].stockStatus !== 'in_stock').length;
 
-      // Update Slim Metrics
+      // Update Metric Ribbon
       const revEl = document.getElementById('metric-revenue');
+      const profitEl = document.getElementById('metric-profit');
       const ordEl = document.getElementById('metric-orders');
       const countTabEl = document.getElementById('tab-count-orders');
+      const stockEl = document.getElementById('metric-lowstock');
+      const skusEl = document.getElementById('metric-skus');
+      const countProdEl = document.getElementById('tab-count-products');
+
       if (revEl) revEl.textContent = window.AgrovetApp.formatKsh(totalRev);
+      if (profitEl) profitEl.textContent = window.AgrovetApp.formatKsh(estProfit);
       if (ordEl) ordEl.textContent = orders.length;
       if (countTabEl) countTabEl.textContent = orders.length;
+      if (stockEl) stockEl.textContent = lowStockCount + ' SKUs';
+      if (skusEl) skusEl.textContent = (window.AGROVET_DATA ? window.AGROVET_DATA.products.length : 10);
+      if (countProdEl) countProdEl.textContent = (window.AGROVET_DATA ? window.AGROVET_DATA.products.length : 10);
 
       renderOrdersTable();
       renderProductsTable();
@@ -1337,7 +1681,6 @@
       const tbody = document.getElementById('admin-orders-tbody');
       const mobileList = document.getElementById('admin-orders-mobile-list');
 
-      // Filter orders by search & status
       const filtered = allOrders.filter(ord => {
         const matchesStatus = (statusFilter === 'all') || (ord.status === statusFilter);
         const matchesQuery = !searchQuery || 
@@ -1350,7 +1693,7 @@
       });
 
       if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--text-muted);">No matching orders found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 2rem; color: var(--text-muted);">No matching orders found.</td></tr>`;
         mobileList.innerHTML = `<div style="text-align:center; padding: 2rem; color: var(--text-muted);">No matching orders found.</div>`;
         return;
       }
@@ -1375,35 +1718,43 @@
                 <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
               </select>
             </td>
+            <td>
+              <button class="btn btn-outline-leaf btn-sm" onclick="openOrderModal(${originalIndex})" style="padding:0.25rem 0.55rem; font-size:0.75rem;">
+                👁️ Invoice
+              </button>
+            </td>
           </tr>
         `;
       }).join('');
 
-      // Populate Mobile Card List (< 768px)
+      // Populate Mobile Card List
       mobileList.innerHTML = filtered.map((ord, idx) => {
         const originalIndex = allOrders.indexOf(ord);
         return `
-          <div class="mobile-order-card">
-            <div class="mobile-order-header">
+          <div class="mobile-order-card" style="background:#fff; border:1px solid var(--border-card); border-radius:10px; padding:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; border-bottom:1px dashed var(--border); padding-bottom:0.35rem;">
               <span class="order-id-badge">${ord.id}</span>
               <span style="font-size:0.75rem; color:var(--text-muted);">${ord.date}</span>
             </div>
-            <div class="mobile-order-row">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.3rem;">
               <span style="color:var(--text-muted);">Farmer:</span>
               <strong style="color:var(--forest);">${ord.customer} (${ord.county})</strong>
             </div>
-            <div class="mobile-order-row">
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.3rem;">
               <span style="color:var(--text-muted);">Phone & Code:</span>
               <span>${ord.phone} • <code style="font-weight:700;">${ord.mpesaCode}</code></span>
             </div>
-            <div class="mobile-order-row" style="align-items: center; margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem; padding-top:0.4rem; border-top:1px solid var(--border);">
               <span style="font-size: 1rem; font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(ord.total)}</span>
-              <select class="status-select-badge status-${ord.status}" onchange="changeOrderStatus(${originalIndex}, this.value)">
-                <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
-                <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
-                <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
-                <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
-              </select>
+              <div style="display:flex; gap:0.4rem;">
+                <button class="btn btn-outline-leaf btn-sm" onclick="openOrderModal(${originalIndex})" style="padding:0.25rem 0.45rem; font-size:0.72rem;">👁️ Details</button>
+                <select class="status-select-badge status-${ord.status}" onchange="changeOrderStatus(${originalIndex}, this.value)">
+                  <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                  <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+                  <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+                  <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
+                </select>
+              </div>
             </div>
           </div>
         `;
@@ -1427,13 +1778,13 @@
       }
 
       prodTbody.innerHTML = filtered.map(p => {
-        const v = p.variants[0];
+        const v = p.variants ? p.variants[0] : { packSize: 'Standard', price: 1000, stockStatus: 'in_stock' };
         const isLow = v.stockStatus !== 'in_stock';
         return `
           <tr>
             <td style="font-weight: 700; color: var(--forest);">${p.name}</td>
-            <td><span class="badge" style="background:var(--pale-2); color:var(--forest); font-size:0.75rem;">${p.categoryName}</span></td>
-            <td style="font-size: 0.8rem; color: var(--text-muted);">${p.activeIngredient || 'Standard Agronomic Spec'}</td>
+            <td><span class="badge" style="background:var(--pale-2); color:var(--forest); font-size:0.75rem;">${p.categoryName || 'General'}</span></td>
+            <td style="font-size: 0.8rem; color: var(--text-muted);">${p.activeIngredient || 'Agronomic Grade'}</td>
             <td><strong>${v.packSize}</strong></td>
             <td style="font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(v.price)}</td>
             <td>
@@ -1466,15 +1817,366 @@
         const newPrice = parseInt(newPriceStr.replace(/[^0-9]/g, ''), 10);
         if (!isNaN(newPrice) && newPrice > 0) {
           const product = window.AGROVET_DATA.products.find(p => p.id === productId);
-          if (product && product.variants[0]) {
+          if (product && product.variants && product.variants[0]) {
             product.variants[0].price = newPrice;
             renderProductsTable();
+            initAllCharts();
             window.AgrovetApp.showToast(`${productName} updated to ${window.AgrovetApp.formatKsh(newPrice)}`);
           }
-        } else {
-          alert('Please enter a valid price amount in KSh.');
         }
       }
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // MODAL HANDLERS (ORDER INSPECTION & ADD SKU)
+    // ═════════════════════════════════════════════════════════════════
+    function openOrderModal(index) {
+      const ord = window.AgrovetApp.state.adminOrders[index];
+      if (!ord) return;
+
+      const titleEl = document.getElementById('modal-order-title');
+      const contentEl = document.getElementById('modal-order-content');
+      const waLink = document.getElementById('modal-whatsapp-link');
+
+      titleEl.textContent = `Farmer Dispatch Slip #${ord.id}`;
+
+      contentEl.innerHTML = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.75rem;">
+          <div>
+            <h4 style="color:var(--forest); font-size:1.05rem; font-weight:800;">AGROVET LTD KENYA</h4>
+            <div style="color:var(--text-muted); font-size:0.75rem;">Kirinyaga Rd Agricultural Center, Nairobi • +254 700 000 000</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:800; color:var(--forest); font-family:monospace;">${ord.id}</div>
+            <div style="color:var(--text-muted); font-size:0.75rem;">${ord.date}</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem; background:var(--pale-2); padding:0.75rem; border-radius:6px;">
+          <div>
+            <strong style="color:var(--forest);">Farmer Recipient:</strong><br>
+            ${ord.customer}<br>
+            Phone: ${ord.phone}<br>
+            County: <strong>${ord.county}</strong>
+          </div>
+          <div>
+            <strong style="color:var(--forest);">Payment Verification:</strong><br>
+            Method: ${ord.paymentMethod}<br>
+            M-Pesa Code: <code style="font-weight:700;">${ord.mpesaCode}</code><br>
+            Status: <span class="badge badge-stock-in">${ord.status}</span>
+          </div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:1rem; font-size:0.8rem;">
+          <thead>
+            <tr style="background:var(--bg-section); border-bottom:2px solid var(--border-card); text-align:left;">
+              <th style="padding:0.4rem 0.6rem;">Item Description</th>
+              <th style="padding:0.4rem 0.6rem; text-align:center;">Qty</th>
+              <th style="padding:0.4rem 0.6rem; text-align:right;">Line Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:0.5rem 0.6rem;">Certified Farm Inputs Assortment (${ord.county} Regional Dispatch)</td>
+              <td style="padding:0.5rem 0.6rem; text-align:center;">${ord.items || 1}</td>
+              <td style="padding:0.5rem 0.6rem; text-align:right; font-weight:700;">${window.AgrovetApp.formatKsh(ord.total - 450)}</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:0.5rem 0.6rem;">Dedicated Courier Delivery (${ord.county} County Depot)</td>
+              <td style="padding:0.5rem 0.6rem; text-align:center;">1</td>
+              <td style="padding:0.5rem 0.6rem; text-align:right; font-weight:700;">KSh 450</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2" style="padding:0.6rem; text-align:right; font-size:0.95rem; color:var(--forest);">Grand Total Paid:</th>
+              <th style="padding:0.6rem; text-align:right; font-size:1.1rem; color:var(--forest); font-weight:800;">${window.AgrovetApp.formatKsh(ord.total)}</th>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; border-top:1px dashed var(--border); padding-top:0.6rem;">
+          Authentic PCPB & KEPHIS Certified Agricultural Inputs • Quality Guaranteed by Agrovet Ltd
+        </div>
+      `;
+
+      // Pre-fill WhatsApp notification
+      const phoneDigits = ord.phone.replace(/[^0-9]/g, '');
+      const waNumber = phoneDigits.startsWith('0') ? '254' + phoneDigits.slice(1) : phoneDigits;
+      const waMsg = encodeURIComponent(`Hello ${ord.customer}, this is Agrovet Ltd Nairobi confirming your farm order #${ord.id} (${window.AgrovetApp.formatKsh(ord.total)}) dispatched to ${ord.county} County. Delivery status is currently: ${ord.status}. For agronomist advice call +254 700 000 000.`);
+      waLink.href = `https://wa.me/${waNumber}?text=${waMsg}`;
+
+      document.getElementById('modal-order-details').classList.add('open');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('modal-order-details').classList.remove('open');
+    }
+
+    function openAddProductModal() {
+      document.getElementById('modal-add-sku').classList.add('open');
+    }
+
+    function closeAddProductModal() {
+      document.getElementById('modal-add-sku').classList.remove('open');
+    }
+
+    function handleAddProductSubmit() {
+      const name = document.getElementById('new-prod-name').value.trim();
+      const cat = document.getElementById('new-prod-category').value;
+      const active = document.getElementById('new-prod-active').value.trim();
+      const pack = document.getElementById('new-prod-pack').value.trim();
+      const price = parseInt(document.getElementById('new-prod-price').value, 10);
+      const stock = document.getElementById('new-prod-stock').value;
+      const reg = document.getElementById('new-prod-reg').value.trim();
+
+      const newId = 'p-' + Date.now();
+      const newProduct = {
+        id: newId,
+        name: name,
+        category: cat,
+        categoryName: cat === 'crop-production' ? 'Crop Production' : (cat === 'seeds-fertilizers' ? 'Seeds & Fertilizers' : (cat === 'farm-tools' ? 'Farm Tools & Equipment' : 'Planting Media')),
+        activeIngredient: active || 'Agronomic Formulation',
+        pcpbReg: reg || 'PCPB(CR) Pending',
+        variants: [
+          { packSize: pack, price: price, stockStatus: stock }
+        ]
+      };
+
+      if (!window.AGROVET_DATA.products) window.AGROVET_DATA.products = [];
+      window.AGROVET_DATA.products.unshift(newProduct);
+
+      closeAddProductModal();
+      renderAdminDashboard();
+      initAllCharts();
+      window.AgrovetApp.showToast(`New SKU "${name}" added to catalog!`);
+    }
+
+    function exportInventoryCsv() {
+      const prods = window.AGROVET_DATA ? window.AGROVET_DATA.products : [];
+      let csv = "Product ID,Product Name,Category,Active Ingredient,Pack Size,Price (KSh),Stock Status,PCPB Reg\n";
+      prods.forEach(p => {
+        const v = p.variants ? p.variants[0] : { packSize: '', price: 0, stockStatus: '' };
+        csv += `"${p.id}","${p.name}","${p.categoryName || ''}","${p.activeIngredient || ''}","${v.packSize}",${v.price},"${v.stockStatus}","${p.pcpbReg || ''}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `Agrovet_Inventory_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.AgrovetApp.showToast('Inventory CSV exported successfully!');
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // INTERACTIVE CHARTS ENGINE (CHART.JS INTEGRATION)
+    // ═════════════════════════════════════════════════════════════════
+    let chartCategoryRev = null;
+    let chartStockHealth = null;
+    let chartSalesTrend  = null;
+    let chartCountyDisp  = null;
+
+    function initAllCharts() {
+      if (typeof Chart === 'undefined') {
+        console.warn('Chart.js not loaded, falling back gracefully.');
+        return;
+      }
+
+      // ─── 1. Category Revenue Share (Doughnut) ─────────────────────
+      const ctxCat = document.getElementById('chart-category-revenue');
+      if (ctxCat) {
+        if (chartCategoryRev) chartCategoryRev.destroy();
+        chartCategoryRev = new Chart(ctxCat, {
+          type: 'doughnut',
+          data: {
+            labels: ['Herbicides & Fungicides', 'Insecticides (Dawa)', 'Hybrid Seeds', 'Fertilizers', 'Farm Sprayers & PPE', 'Planting Media'],
+            datasets: [{
+              data: [8900, 7450, 4720, 3200, 2450, 1300],
+              backgroundColor: ['#223F21', '#5FA30E', '#F4B943', '#2EAA43', '#3498DB', '#8E44AD'],
+              borderWidth: 2,
+              borderColor: '#FFFFFF'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } },
+              tooltip: {
+                callbacks: {
+                  label: function(item) {
+                    return ` ${item.label}: KSh ${item.raw.toLocaleString()}`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // ─── 2. Stock Health by Category (Grouped Bar) ────────────────
+      const ctxStock = document.getElementById('chart-stock-health');
+      if (ctxStock) {
+        if (chartStockHealth) chartStockHealth.destroy();
+        chartStockHealth = new Chart(ctxStock, {
+          type: 'bar',
+          data: {
+            labels: ['Crop Protect', 'Seeds/Fert', 'Farm Tools', 'Planting Media'],
+            datasets: [
+              { label: 'In Stock SKUs', data: [5, 3, 2, 2], backgroundColor: '#1E824C' },
+              { label: 'Low Stock Alerts', data: [2, 1, 1, 0], backgroundColor: '#D9381E' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { stacked: true, grid: { display: false } },
+              y: { stacked: true, beginAtZero: true, ticks: { stepSize: 2 } }
+            },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } }
+            }
+          }
+        });
+      }
+
+      // ─── 3. 7-Day Revenue Trend (Smooth Area Line) ────────────────
+      const ctxTrend = document.getElementById('chart-sales-trend');
+      if (ctxTrend) {
+        if (chartSalesTrend) chartSalesTrend.destroy();
+        chartSalesTrend = new Chart(ctxTrend, {
+          type: 'line',
+          data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'],
+            datasets: [{
+              label: 'Daily Revenue (KSh)',
+              data: [18400, 22100, 19800, 26500, 31200, 34800, 28020],
+              borderColor: '#223F21',
+              backgroundColor: 'rgba(95, 163, 14, 0.15)',
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: '#F4B943',
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: {
+                  callback: function(v) { return 'KSh ' + (v / 1000) + 'k'; }
+                }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(item) { return ` Revenue: KSh ${item.raw.toLocaleString()}`; }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // ─── 4. County Dispatch Volume (Horizontal Bar) ───────────────
+      const ctxCounty = document.getElementById('chart-county-dispatch');
+      if (ctxCounty) {
+        if (chartCountyDisp) chartCountyDisp.destroy();
+        chartCountyDisp = new Chart(ctxCounty, {
+          type: 'bar',
+          indexAxis: 'y',
+          data: {
+            labels: ['Kiambu', 'Nakuru', 'Uasin Gishu', 'Machakos', 'Murang\'a', 'Kisumu'],
+            datasets: [{
+              label: 'Dispatched Orders',
+              data: [12, 9, 7, 5, 4, 3],
+              backgroundColor: '#5FA30E',
+              borderRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { beginAtZero: true, ticks: { stepSize: 3 } }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+    }
+
+    // ─── Category Deep-Dive Focus Function ──────────────────────────
+    function setAnalyticsCategory(catSlug, btnEl) {
+      document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const titleEl = document.getElementById('cat-focus-title');
+      const descEl = document.getElementById('cat-focus-desc');
+      const revEl = document.getElementById('cat-kpi-rev');
+      const unitsEl = document.getElementById('cat-kpi-units');
+      const healthEl = document.getElementById('cat-kpi-health');
+      const aovEl = document.getElementById('cat-kpi-aov');
+
+      const categoryData = {
+        'all': {
+          title: 'All Categories Performance Overview',
+          desc: 'Consolidated agricultural inputs analytics across Nairobi, Central and Rift Valley branches.',
+          rev: 'KSh 28,020',
+          units: '10 Units',
+          health: '60% In-Stock',
+          aov: 'KSh 2,802'
+        },
+        'crop-production': {
+          title: 'Crop Production & Agro-Chemicals (Dawa)',
+          desc: 'Systemic Herbicides, Insecticides & Fungicides under PCPB Kenya compliance regulations.',
+          rev: 'KSh 16,350',
+          units: '6 Units',
+          health: '71% In-Stock',
+          aov: 'KSh 2,725'
+        },
+        'seeds-fertilizers': {
+          title: 'Certified Planting Seeds & Fertilizers',
+          desc: 'KEPHIS tested hybrid maize seed lots and certified granular/foliar nutrition solutions.',
+          rev: 'KSh 7,920',
+          units: '3 Units',
+          health: '75% In-Stock',
+          aov: 'KSh 2,640'
+        },
+        'farm-tools': {
+          title: 'Farm Tools, Sprayers & Chemical PPE',
+          desc: 'High-pressure knapsack sprayers, safety goggles, and propagation tools.',
+          rev: 'KSh 2,450',
+          units: '1 Unit',
+          health: '50% In-Stock',
+          aov: 'KSh 2,450'
+        },
+        'planting-media': {
+          title: 'Sterile Planting Media (Peat Moss & Coco Peat)',
+          desc: 'Nursery seedling root development media imported and tested for pH neutrality.',
+          rev: 'KSh 1,300',
+          units: '1 Unit',
+          health: '100% In-Stock',
+          aov: 'KSh 1,300'
+        }
+      };
+
+      const d = categoryData[catSlug] || categoryData['all'];
+      titleEl.textContent = d.title;
+      descEl.textContent = d.desc;
+      revEl.textContent = d.rev;
+      unitsEl.textContent = d.units;
+      healthEl.textContent = d.health;
+      aovEl.textContent = d.aov;
     }
 
     // ─── Initialize on Page Load ─────────────────────────────────────
