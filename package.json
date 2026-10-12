@@ -9,6 +9,7 @@
     "test": "node scripts/test-db-and-auth.js",
     "test:backend": "node scripts/test-serverless-backend.js",
     "test:polling": "node scripts/test-order-status-polling.js",
+    "verify:daraja": "node scripts/verify-daraja-credentials.js",
     "dev": "node server.js",
     "start": "node server.js"
   },

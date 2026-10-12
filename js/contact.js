@@ -20,9 +20,13 @@
     root.AGROVET_CONTACT = config;
     if (typeof document !== 'undefined') {
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => config.hydrate());
+        document.addEventListener('DOMContentLoaded', () => {
+          config.hydrate();
+          config.syncWithServer();
+        });
       } else {
         config.hydrate();
+        config.syncWithServer();
       }
     }
   }
@@ -111,6 +115,26 @@
       doc.querySelectorAll('.contact-till-num, #checkout-till-display').forEach(el => {
         el.textContent = AGROVET_CONTACT.tillNumber;
       });
+    },
+
+    // Sync live configuration dynamically from /api/public-config
+    syncWithServer: function () {
+      if (typeof fetch === 'undefined') return;
+      fetch('/api/public-config')
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (!data || !data.success) return;
+          if (data.tillNumber) {
+            AGROVET_CONTACT.tillNumber = data.tillNumber;
+            AGROVET_CONTACT.hasTillNumber = Boolean(data.hasTillNumber);
+          }
+          if (data.phoneDisplay) AGROVET_CONTACT.phoneDisplay = data.phoneDisplay;
+          if (data.whatsappNumber) AGROVET_CONTACT.whatsappNumber = data.whatsappNumber;
+          if (data.email) AGROVET_CONTACT.email = data.email;
+          if (data.darajaEnv) AGROVET_CONTACT.darajaEnv = data.darajaEnv;
+          AGROVET_CONTACT.hydrate();
+        })
+        .catch(() => {});
     }
   };
 

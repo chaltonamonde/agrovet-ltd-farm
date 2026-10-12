@@ -44,6 +44,7 @@ const adminHandler = require('./api/admin');
 const mpesaStkHandler = require('./api/mpesa-stk');
 const mpesaCallbackHandler = require('./api/mpesa-callback');
 const orderStatusHandler = require('./api/order-status');
+const publicConfigHandler = require('./api/public-config');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=UTF-8',
@@ -96,6 +97,8 @@ const server = http.createServer(async (req, res) => {
           await mpesaCallbackHandler(req, res);
         } else if (pathname.startsWith('/api/order-status')) {
           await orderStatusHandler(req, res);
+        } else if (pathname.startsWith('/api/public-config')) {
+          await publicConfigHandler(req, res);
         } else {
           await ordersHandler(req, res);
         }

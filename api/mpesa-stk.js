@@ -14,20 +14,35 @@ function getDarajaConfig() {
   const consumerKey = (process.env.DARAJA_CONSUMER_KEY || process.env.MPESA_CONSUMER_KEY || '').trim();
   const consumerSecret = (process.env.DARAJA_CONSUMER_SECRET || process.env.MPESA_CONSUMER_SECRET || '').trim();
   const passkey = (process.env.DARAJA_PASSKEY || process.env.MPESA_PASSKEY || '').trim();
-  const shortcode = (process.env.DARAJA_BUSINESS_SHORTCODE || process.env.MPESA_SHORTCODE || process.env.MPESA_TILL_NUMBER || '174379').trim();
+  const shortcode = (process.env.DARAJA_BUSINESS_SHORTCODE || process.env.MPESA_SHORTCODE || '174379').trim();
+  const tillNumber = (process.env.MPESA_TILL_NUMBER || process.env.DARAJA_TILL_NUMBER || '').trim();
   const callbackUrl = (process.env.DARAJA_CALLBACK_URL || process.env.MPESA_CALLBACK_URL || 'https://agrovet.ltd/api/mpesa-callback').trim();
 
   const baseUrl = isProd
     ? 'https://api.safaricom.co.ke'
     : 'https://sandbox.safaricom.co.ke';
 
+  // Buy Goods Till vs Paybill configuration:
+  // For Paybill: Shortcode = Paybill, PartyB = Paybill, TransactionType = CustomerPayBillOnline
+  // For Buy Goods: Shortcode = Store/HO Shortcode, PartyB = Till Number, TransactionType = CustomerBuyGoodsOnline
+  const rawTxType = (process.env.DARAJA_TRANSACTION_TYPE || process.env.MPESA_TRANSACTION_TYPE || '').trim();
+  const isBuyGoods = rawTxType === 'CustomerBuyGoodsOnline' ||
+    (Boolean(tillNumber) && tillNumber !== shortcode && shortcode !== '174379');
+
+  const transactionType = isBuyGoods ? 'CustomerBuyGoodsOnline' : 'CustomerPayBillOnline';
+  const partyB = (isBuyGoods && tillNumber) ? tillNumber : shortcode;
+
   return {
     isProd,
+    env,
     baseUrl,
     consumerKey,
     consumerSecret,
     passkey,
     shortcode,
+    tillNumber,
+    partyB,
+    transactionType,
     callbackUrl,
   };
 }
@@ -146,17 +161,14 @@ module.exports = async function handler(req, res) {
       ? `${config.callbackUrl}${config.callbackUrl.includes('?') ? '&' : '?'}orderId=${encodeURIComponent(orderId)}`
       : config.callbackUrl;
 
-    const isBuyGoods = process.env.MPESA_TRANSACTION_TYPE === 'CustomerBuyGoodsOnline';
-    const transactionType = isBuyGoods ? 'CustomerBuyGoodsOnline' : 'CustomerPayBillOnline';
-
     const stkPayload = {
       BusinessShortCode: config.shortcode,
       Password: password,
       Timestamp: timestamp,
-      TransactionType: transactionType,
+      TransactionType: config.transactionType,
       Amount: numericAmount,
       PartyA: formattedPhone,
-      PartyB: config.shortcode,
+      PartyB: config.partyB,
       PhoneNumber: formattedPhone,
       CallBackURL: callbackTarget,
       AccountReference: (process.env.DARAJA_ACCOUNT_REFERENCE || 'AgrovetLtd').slice(0, 12),
