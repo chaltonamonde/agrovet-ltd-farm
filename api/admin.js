@@ -156,10 +156,16 @@ module.exports = async function handler(req, res) {
       templateName = 'admin-login.html';
     }
 
-    const templatePath = path.join(process.cwd(), 'templates', templateName);
+    const candidatePaths = [
+      path.join(__dirname, '..', 'templates', templateName),
+      path.join(process.cwd(), 'templates', templateName),
+      path.join(__dirname, 'templates', templateName),
+      path.join(process.cwd(), 'api', 'templates', templateName),
+    ];
+    const templatePath = candidatePaths.find((p) => fs.existsSync(p));
 
     try {
-      if (fs.existsSync(templatePath)) {
+      if (templatePath && fs.existsSync(templatePath)) {
         const html = fs.readFileSync(templatePath, 'utf8');
         res.setHeader('Content-Type', 'text/html; charset=UTF-8');
         res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');

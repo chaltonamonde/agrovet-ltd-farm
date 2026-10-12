@@ -163,13 +163,31 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
+const os = require('os');
+
+function getLocalIpAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return 'localhost';
+}
+
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+const HOST = '0.0.0.0';
+const localIp = getLocalIpAddress();
+
+server.listen(PORT, HOST, () => {
   console.log(`\n======================================================`);
   console.log(` 🌾 Agrovet Ltd Store & Real-Time Orders Server Active`);
-  console.log(` Storefront: http://localhost:${PORT}`);
-  console.log(` Operations Admin: http://localhost:${PORT}/admin`);
-  console.log(` Orders API: http://localhost:${PORT}/api/orders`);
-  console.log(` Database: ${process.env.DATABASE_URL ? 'Connected to PostgreSQL' : 'Offline local mode (Set DATABASE_URL to connect)'}`);
+  console.log(` Local:          http://localhost:${PORT}`);
+  console.log(` Phone (Wi-Fi):  http://${localIp}:${PORT}`);
+  console.log(` Admin (Phone):  http://${localIp}:${PORT}/admin`);
+  console.log(` Orders API:     http://${localIp}:${PORT}/api/orders`);
+  console.log(` Database:       ${process.env.DATABASE_URL ? 'Connected to PostgreSQL' : 'Offline local mode (Set DATABASE_URL to connect)'}`);
   console.log(`======================================================\n`);
 });
