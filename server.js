@@ -43,8 +43,10 @@ const ordersHandler = require('./api/orders');
 const adminHandler = require('./api/admin');
 const mpesaStkHandler = require('./api/mpesa-stk');
 const mpesaCallbackHandler = require('./api/mpesa-callback');
+const mpesaQueryHandler = require('./api/mpesa-query');
 const orderStatusHandler = require('./api/order-status');
 const publicConfigHandler = require('./api/public-config');
+const healthHandler = require('./api/health');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=UTF-8',
@@ -63,7 +65,7 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   let pathname = parsedUrl.pathname;
 
-  // API Routes: /api/orders, /api/admin, /api/mpesa-stk, /api/mpesa-callback
+  // API Routes: /api/orders, /api/admin, /api/mpesa-stk, /api/mpesa-callback, /api/health, /api/mpesa-query
   if (pathname.startsWith('/api/')) {
     let bodyData = '';
     req.on('data', (chunk) => {
@@ -89,7 +91,11 @@ const server = http.createServer(async (req, res) => {
       };
 
       try {
-        if (pathname.startsWith('/api/admin')) {
+        if (pathname.startsWith('/api/health')) {
+          await healthHandler(req, res);
+        } else if (pathname.startsWith('/api/mpesa-query')) {
+          await mpesaQueryHandler(req, res);
+        } else if (pathname.startsWith('/api/admin')) {
           await adminHandler(req, res);
         } else if (pathname.startsWith('/api/mpesa-stk')) {
           await mpesaStkHandler(req, res);

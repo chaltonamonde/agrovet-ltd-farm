@@ -76,72 +76,82 @@ module.exports = async function handler(req, res) {
       let updated = false;
       let paidOrder = null;
 
-      // 1. Try matching by CheckoutRequestID
+      // 1. Locate existing pending order first to verify expected amount and prevent duplicate processing
+      let existingOrder = null;
       if (CheckoutRequestID) {
-        const updateRes = await query(
-          `UPDATE orders
-           SET payment_status = 'Paid',
-               mpesa_code = $1,
-               notes = COALESCE(notes, '') || ' | M-Pesa STK Paid: KSh ' || $2 || ' (' || $3 || ')',
-               updated_at = NOW()
-           WHERE checkout_request_id = $4
-           RETURNING *;`,
-          [mpesaReceipt, paidAmount, transactionDate, CheckoutRequestID]
-        );
-        if (updateRes.rowCount > 0) {
-          paidOrder = updateRes.rows[0];
-          console.log(`[DB Order Updated] Order #${paidOrder.id} marked as Paid via CheckoutRequestID.`);
-          updated = true;
-        }
+        const findRes = await query(`SELECT * FROM orders WHERE checkout_request_id = $1 LIMIT 1;`, [CheckoutRequestID]);
+        if (findRes.rowCount > 0) existingOrder = findRes.rows[0];
       }
-
-      // 2. Fallback: match by queryOrderId
-      if (!updated && queryOrderId) {
-        const updateRes = await query(
-          `UPDATE orders
-           SET payment_status = 'Paid',
-               mpesa_code = $1,
-               notes = COALESCE(notes, '') || ' | M-Pesa STK Paid: KSh ' || $2,
-               updated_at = NOW()
-           WHERE id = $3
-           RETURNING *;`,
-          [mpesaReceipt, paidAmount, queryOrderId]
-        );
-        if (updateRes.rowCount > 0) {
-          paidOrder = updateRes.rows[0];
-          console.log(`[DB Order Updated] Order #${paidOrder.id} marked as Paid via query orderId.`);
-          updated = true;
-        }
+      if (!existingOrder && queryOrderId) {
+        const findRes = await query(`SELECT * FROM orders WHERE id = $1 LIMIT 1;`, [queryOrderId]);
+        if (findRes.rowCount > 0) existingOrder = findRes.rows[0];
       }
-
-      // 3. Fallback: match by phone number and pending status within the last 2 hours
-      if (!updated && phoneNumber) {
+      if (!existingOrder && phoneNumber) {
         const phoneFormatted = phoneNumber.startsWith('254') ? '0' + phoneNumber.slice(3) : phoneNumber;
-        const updateRes = await query(
-          `UPDATE orders
-           SET payment_status = 'Paid',
-               mpesa_code = $1,
-               notes = COALESCE(notes, '') || ' | M-Pesa STK Paid (Matched by phone)',
-               updated_at = NOW()
-           WHERE (phone LIKE $2 OR phone LIKE $3)
+        const findRes = await query(
+          `SELECT * FROM orders 
+           WHERE (phone LIKE $1 OR phone LIKE $2)
              AND payment_status IN ('Pending', 'Pending STK PIN')
              AND created_at >= NOW() - INTERVAL '2 hours'
-           RETURNING *;`,
-          [mpesaReceipt, `%${phoneFormatted.slice(-9)}%`, `%${phoneNumber.slice(-9)}%`]
+           ORDER BY created_at DESC LIMIT 1;`,
+          [`%${phoneFormatted.slice(-9)}%`, `%${phoneNumber.slice(-9)}%`]
         );
-        if (updateRes.rowCount > 0) {
-          paidOrder = updateRes.rows[0];
-          console.log(`[DB Order Updated] Order #${paidOrder.id} marked as Paid via Phone matching.`);
-          updated = true;
+        if (findRes.rowCount > 0) existingOrder = findRes.rows[0];
+      }
+
+      if (existingOrder) {
+        // Idempotency check: if already marked Paid, acknowledge without duplicate processing
+        if (existingOrder.payment_status === 'Paid') {
+          console.log(`[Daraja Idempotent Callback] Order #${existingOrder.id} is already marked as Paid. Skipping duplicate notification.`);
+          return res.status(200).json({ ResultCode: 0, ResultDesc: 'Already processed' });
+        }
+
+        const expectedTotal = parseFloat(existingOrder.total) || 0;
+        const actualPaid = parseFloat(paidAmount) || 0;
+
+        // PAY-01: Verify amount paid matches or exceeds the order total
+        if (actualPaid < expectedTotal && expectedTotal > 0) {
+          console.warn(`[SECURITY ALERT] Underpayment on Order #${existingOrder.id}: Expected KSh ${expectedTotal}, received KSh ${actualPaid}`);
+          const flagRes = await query(
+            `UPDATE orders
+             SET payment_status = 'Partial Payment Flagged',
+                 mpesa_code = $1,
+                 notes = COALESCE(notes, '') || ' | UNDERPAYMENT FLAGGED: Received KSh ' || $2 || ' vs Expected KSh ' || $3 || ' (' || $4 || ')',
+                 updated_at = NOW()
+             WHERE id = $5 AND payment_status != 'Paid'
+             RETURNING *;`,
+            [mpesaReceipt, actualPaid, expectedTotal, transactionDate, existingOrder.id]
+          );
+          if (flagRes.rowCount > 0) {
+            paidOrder = flagRes.rows[0];
+            updated = true;
+          }
+        } else {
+          // Amount verified: mark as Paid
+          const updateRes = await query(
+            `UPDATE orders
+             SET payment_status = 'Paid',
+                 mpesa_code = $1,
+                 notes = COALESCE(notes, '') || ' | M-Pesa STK Paid: KSh ' || $2 || ' (' || $3 || ')',
+                 updated_at = NOW()
+             WHERE id = $4 AND payment_status != 'Paid'
+             RETURNING *;`,
+            [mpesaReceipt, actualPaid, transactionDate, existingOrder.id]
+          );
+          if (updateRes.rowCount > 0) {
+            paidOrder = updateRes.rows[0];
+            console.log(`[DB Order Updated] Order #${paidOrder.id} marked as Paid (Amount verified: KSh ${actualPaid} >= KSh ${expectedTotal}).`);
+            updated = true;
+          }
         }
       }
 
-      if (paidOrder) {
+      if (paidOrder && paidOrder.payment_status === 'Paid') {
         // Dispatch instant payment receipt notification to merchant and customer
         sendOrderNotification({ order: paidOrder, eventType: 'PAYMENT_RECEIVED' }).catch((notifErr) => {
           console.warn('[Daraja Payment Notification Warning]', notifErr.message);
         });
-      } else {
+      } else if (!existingOrder) {
         console.warn(`[Daraja Warning] Could not find matching pending order for Receipt: ${mpesaReceipt}. Recording in audit log.`);
       }
     } catch (dbErr) {

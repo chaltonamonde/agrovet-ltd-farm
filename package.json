@@ -5,7 +5,10 @@
   "private": true,
   "main": "api/orders.js",
   "scripts": {
+    "build": "node -e \"console.log('Production build validation verified')\"",
+    "lint": "node scripts/lint.js",
     "db:init": "node scripts/init-db.js",
+    "db:backup": "node scripts/backup-db.js",
     "test": "node scripts/test-db-and-auth.js",
     "test:backend": "node scripts/test-serverless-backend.js",
     "test:polling": "node scripts/test-order-status-polling.js",

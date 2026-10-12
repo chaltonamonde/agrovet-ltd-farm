@@ -69,7 +69,9 @@ module.exports = async function handler(req, res) {
 
       const countyFilter = req.query && req.query.county;
       const statusFilter = req.query && req.query.status;
-      const limit = parseInt(req.query && req.query.limit, 10) || 100;
+      const page = Math.max(1, parseInt(req.query && req.query.page, 10) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(req.query && req.query.limit, 10) || 50));
+      const offset = (page - 1) * limit;
 
       let sql = 'SELECT * FROM orders WHERE 1=1';
       const params = [];
@@ -84,8 +86,10 @@ module.exports = async function handler(req, res) {
         sql += ` AND payment_status = $${params.length}`;
       }
 
-      sql += ` ORDER BY created_at DESC LIMIT $${params.length + 1}`;
       params.push(limit);
+      sql += ` ORDER BY created_at DESC LIMIT $${params.length}`;
+      params.push(offset);
+      sql += ` OFFSET $${params.length}`;
 
       const result = await query(sql, params);
 

@@ -4,6 +4,16 @@
  * administrators (jjjanuaries@gmail.com) and customers via Resend REST API.
  */
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 /**
  * Generates responsive HTML email template for farm order dispatch
  */
@@ -11,8 +21,8 @@ function buildOrderEmailHtml({ order, eventType }) {
   const isPaid = eventType === 'PAYMENT_RECEIVED' || order.payment_status === 'Paid' || order.status === 'Paid';
   const badgeColor = isPaid ? '#10b981' : '#f59e0b';
   const badgeText = isPaid
-    ? `✅ PAID VIA M-PESA (${order.mpesa_code || order.mpesaCode || 'CONFIRMED'})`
-    : `⏳ ${order.payment_status || order.status || 'PENDING'}`;
+    ? `✅ PAID VIA M-PESA (${escapeHtml(order.mpesa_code || order.mpesaCode || 'CONFIRMED')})`
+    : `⏳ ${escapeHtml(order.payment_status || order.status || 'PENDING')}`;
 
   const cleanPhone = String(order.phone || '').replace(/[^0-9]/g, '');
   const waPhone = cleanPhone.startsWith('0') ? '254' + cleanPhone.slice(1) : cleanPhone;
@@ -29,10 +39,10 @@ function buildOrderEmailHtml({ order, eventType }) {
         (it) => `
         <tr style="border-bottom: 1px solid #e5e7eb;">
           <td style="padding: 10px 8px; font-weight: 600; color: #111827;">
-            ${it.name || 'Certified Input'}
-            ${it.packSize ? `<span style="display: block; font-size: 12px; color: #6b7280; font-weight: normal;">Pack: ${it.packSize}</span>` : ''}
+            ${escapeHtml(it.name || 'Certified Input')}
+            ${it.packSize ? `<span style="display: block; font-size: 12px; color: #6b7280; font-weight: normal;">Pack: ${escapeHtml(it.packSize)}</span>` : ''}
           </td>
-          <td style="padding: 10px 8px; text-align: center; color: #374151;">${it.qty || it.quantity || 1}</td>
+          <td style="padding: 10px 8px; text-align: center; color: #374151;">${Number(it.qty || it.quantity || 1)}</td>
           <td style="padding: 10px 8px; text-align: right; color: #374151;">KSh ${Number(it.price || 0).toLocaleString()}</td>
           <td style="padding: 10px 8px; text-align: right; font-weight: 600; color: #1b4332;">KSh ${(Number(it.price || 0) * Number(it.qty || it.quantity || 1)).toLocaleString()}</td>
         </tr>`
@@ -91,31 +101,31 @@ function buildOrderEmailHtml({ order, eventType }) {
       <table style="width: 100%; font-size: 14px;">
         <tr>
           <td style="color: #6b7280; padding: 4px 0; width: 35%;">Farmer / Client:</td>
-          <td style="font-weight: 600; color: #111827;">${order.customer_name || order.customer || 'Customer'}</td>
+          <td style="font-weight: 600; color: #111827;">${escapeHtml(order.customer_name || order.customer || 'Customer')}</td>
         </tr>
         <tr>
           <td style="color: #6b7280; padding: 4px 0;">Phone Hotline:</td>
           <td style="font-weight: 600; color: #111827;">
-            <a href="tel:${order.phone}" style="color: #047857; text-decoration: none;">${order.phone}</a>
+            <a href="tel:${escapeHtml(order.phone)}" style="color: #047857; text-decoration: none;">${escapeHtml(order.phone)}</a>
           </td>
         </tr>
         <tr>
           <td style="color: #6b7280; padding: 4px 0;">Dispatch County:</td>
-          <td style="font-weight: 600; color: #111827;">${order.county || 'N/A'}</td>
+          <td style="font-weight: 600; color: #111827;">${escapeHtml(order.county || 'N/A')}</td>
         </tr>
         <tr>
           <td style="color: #6b7280; padding: 4px 0;">Pickup / Town Hub:</td>
-          <td style="color: #111827;">${order.town || 'Main Town'}</td>
+          <td style="color: #111827;">${escapeHtml(order.town || 'Main Town')}</td>
         </tr>
         ${order.address_landmark || order.landmark ? `
         <tr>
           <td style="color: #6b7280; padding: 4px 0;">Delivery Landmark:</td>
-          <td style="color: #4b5563;">${order.address_landmark || order.landmark}</td>
+          <td style="color: #4b5563;">${escapeHtml(order.address_landmark || order.landmark)}</td>
         </tr>` : ''}
         ${order.notes ? `
         <tr>
           <td style="color: #6b7280; padding: 4px 0;">Farmer Notes:</td>
-          <td style="color: #4b5563; font-style: italic;">"${order.notes}"</td>
+          <td style="color: #4b5563; font-style: italic;">"${escapeHtml(order.notes)}"</td>
         </tr>` : ''}
       </table>
     </div>
