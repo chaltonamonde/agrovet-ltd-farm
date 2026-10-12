@@ -44,18 +44,20 @@ if (!process.env.ADMIN_PASSWORD || !process.env.SESSION_SECRET) {
 
 // Configured admin credentials
 const ADMIN_USER = (process.env.ADMIN_USERNAME || 'Chalton').trim();
-const ADMIN_PASS = (process.env.ADMIN_PASSWORD || '').trim();
-const SESSION_SECRET = (process.env.SESSION_SECRET || '').trim();
+const ADMIN_PASS = (process.env.ADMIN_PASSWORD || 'chalton5825$').trim();
+const SESSION_SECRET = (process.env.SESSION_SECRET || 'e4c6b8f3912a7d45e099182acde127bcf89123490abc1249876543210abcdef0').trim();
 const SESSION_EXPIRY_MS = (parseInt(process.env.SESSION_EXPIRY_HOURS, 10) || 8) * 3600 * 1000;
 
 if (!SESSION_SECRET && process.env.NODE_ENV === 'production') {
   console.error('[SECURITY CRITICAL] SESSION_SECRET must be configured in production!');
 }
 
-// Compute or read bcrypt password hash
+// Compute or read bcrypt password hash ($2b$10$wi/YK1msBKtamJZPeDKiouVXFwTA7YLKCVFvsUKsIqS1uXOPhBQHu is bcrypt hash for 'chalton5825$')
 let cachedAdminHash = (process.env.ADMIN_PASSWORD_HASH || '').trim();
 if (!cachedAdminHash && ADMIN_PASS) {
   cachedAdminHash = bcrypt.hashSync(ADMIN_PASS, 10);
+} else if (!cachedAdminHash) {
+  cachedAdminHash = '$2b$10$wi/YK1msBKtamJZPeDKiouVXFwTA7YLKCVFvsUKsIqS1uXOPhBQHu';
 }
 
 /**
