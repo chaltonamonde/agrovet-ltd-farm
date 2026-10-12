@@ -1,0 +1,17 @@
+{
+  "name": "agrovet-ltd",
+  "version": "1.0.0",
+  "description": "Agrovet Ltd Kenya — Certified Farm Inputs Storefront and Real-Time Order Management",
+  "private": true,
+  "main": "api/orders.js",
+  "scripts": {
+    "db:init": "node scripts/init-db.js",
+    "test": "node scripts/test-db-and-auth.js",
+    "test:backend": "node scripts/test-serverless-backend.js",
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "pg": "^8.23.1"
+  }
+}

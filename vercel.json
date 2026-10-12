@@ -1,9 +1,15 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/*.js": {
+      "includeFiles": "templates/**"
+    }
+  },
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/admin/", "destination": "/admin.html" }
+    { "source": "/admin", "destination": "/api/admin" },
+    { "source": "/admin/", "destination": "/api/admin" },
+    { "source": "/admin.html", "destination": "/api/admin" }
   ],
   "headers": [
     {

@@ -153,7 +153,7 @@
       </div>
       <div class="top-bar-right">
         <span>📍 Kirinyaga Rd, Nairobi</span>
-        <a href="tel:+254700000000">📞 +254 700 000 000</a>
+        <a href="tel:+254720263503" data-contact-href="tel">📞 <span data-contact="phoneDisplay">+254 720 263 503</span></a>
         <button class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">🇰🇪 Kiswahili</button>
       </div>
     </div>
@@ -220,7 +220,7 @@
           </ul>
         </div>
         <div class="nav-cta-wrap">
-          <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd,%20I%20need%20expert%20agronomist%20advice" target="_blank" class="btn btn-whatsapp btn-sm nav-whatsapp-cta">
+          <a href="https://wa.me/254720263503?text=Hello%20Agrovet%20Ltd,%20I%20need%20expert%20agronomist%20advice" target="_blank" class="btn btn-whatsapp btn-sm nav-whatsapp-cta" id="nav-product-wa-btn">
             <span class="whatsapp-pulse-dot"></span>
             <span>💬 Talk to Agronomist</span>
           </a>
@@ -424,9 +424,10 @@
   </nav>
 
   <!-- Floating WhatsApp -->
-  <a href="https://wa.me/254700000000" class="floating-whatsapp" target="_blank" title="WhatsApp Us">💬</a>
+  <a href="https://wa.me/254720263503" class="floating-whatsapp" target="_blank" title="WhatsApp Us" id="floating-product-wa-btn">💬</a>
 
   <!-- Scripts -->
+  <script src="js/contact.js"></script>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
@@ -461,9 +462,10 @@
         b.className = i === idx ? 'pack-btn active' : 'pack-btn';
       });
 
-      // Update WhatsApp Order Link
-      const waText = encodeURIComponent(`Hello Agrovet Ltd, I would like to order ${currentProduct.name} (Pack: ${v.packSize}) at KSh ${v.price.toLocaleString()}. Please arrange delivery.`);
-      document.getElementById('p-wa-btn').href = `https://wa.me/254700000000?text=${waText}`;
+      // Update WhatsApp Order Link naming the current product & selected variant
+      const waMsg = `Hello Agrovet Ltd, I would like to order ${currentProduct.name} (Pack: ${v.packSize}) at KSh ${v.price.toLocaleString()}. Please arrange delivery.`;
+      const waUrl = window.AGROVET_CONTACT ? window.AGROVET_CONTACT.getWhatsAppUrl(waMsg) : `https://wa.me/254720263503?text=${encodeURIComponent(waMsg)}`;
+      document.getElementById('p-wa-btn').href = waUrl;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -510,6 +512,14 @@
       document.getElementById('p-tab-safety-desc').textContent = currentProduct.safety || 'Wear complete PPE. Store away from children.';
       document.getElementById('p-tab-dose').textContent = currentProduct.dosage || 'Confirm with label.';
       document.getElementById('p-tab-phi').textContent = currentProduct.phi || 'Refer to pack.';
+
+      // Pre-fill general floating/nav WhatsApp inquiries to name this product
+      const prodInquiry = `Hello Agrovet Ltd, I am inquiring about ${currentProduct.name} and would like expert agronomist guidance.`;
+      const prodInquiryUrl = window.AGROVET_CONTACT ? window.AGROVET_CONTACT.getWhatsAppUrl(prodInquiry) : `https://wa.me/254720263503?text=${encodeURIComponent(prodInquiry)}`;
+      const floatingWa = document.getElementById('floating-product-wa-btn');
+      if (floatingWa) floatingWa.href = prodInquiryUrl;
+      const navWa = document.getElementById('nav-product-wa-btn');
+      if (navWa) navWa.href = prodInquiryUrl;
     });
   </script>
 </body>

@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard & Store Manager | Agrovet Ltd Kenya</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css?v=2026-v4">
+
+  <!-- Chart.js for High-Performance Visual Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg-page:     #E6DFCD;
+      --bg-section:  #DDD5C0;
+      --bg-card:     #F2EDDF;
+      --bg-header:   #EFE9D9;
+      --border:      #C9BFA6;
+      --text:        #2A2A1E;
+      --text-muted:  #5E5A48;
+      --leaf-text:   #3F7A08;
+      --forest:      #223F21;
+      --forest-2:    #265626;
+      --ink-green:   #2D4D28;
+      --leaf:        #5FA30E;
+      --leaf-2:      #78B534;
+      --gold:        #F4B943;
+      --gold-hover:  #e5a930;
+      --pale:        #DDD5C0;
+      --pale-2:      #F2EDDF;
+      --danger:      #D9381E;
+      --success:     #1E824C;
+      --border-card: #C9BFA6;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md:   0 4px 14px rgba(0,0,0,0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background-color: var(--bg-page) !important;
+      color: var(--text) !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       SECURITY LOCK GATE OVERLAY
+       Cryptographically signed server-side administrative authentication
+       ═════════════════════════════════════════════════════════════════ */
+    #admin-auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: linear-gradient(145deg, #182C18 0%, #223F21 55%, #142413 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      color: #fff;
+    }
+
+    .auth-gate-card {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 2px solid var(--gold);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 440px;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+      position: relative;
+      animation: gateCardPop 0.35s ease-out;
+    }
+
+    @keyframes gateCardPop {
+      from { opacity: 0; transform: scale(0.94) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .auth-gate-header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .auth-badge-shield {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      background: linear-gradient(135deg, var(--forest), var(--ink-green));
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .auth-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--forest);
+      letter-spacing: -0.02em;
+    }
+
+    .auth-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      line-height: 1.4;
+    }
+
+    .auth-form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .auth-form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .auth-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-input-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 0.75rem 2.6rem 0.75rem 2.5rem;
+      border: 1.5px solid var(--border-card);
+      border-radius: 10px;
+      background: #FFFFFF;
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(34, 63, 33, 0.15);
+    }
+
+    .auth-toggle-pwd {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      border-radius: 6px;
+    }
+
+    .auth-toggle-pwd:hover {
+      color: var(--forest);
+    }
+
+    .auth-error-banner {
+      display: none;
+      background: #FDEDEC;
+      border: 1px solid #F5B7B1;
+      color: var(--danger);
+      padding: 0.7rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      text-align: center;
+      animation: authShake 0.3s ease-in-out;
+    }
+
+    @keyframes authShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .auth-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--forest), var(--ink-green));
+      color: #FFFFFF;
+      border: none;
+      padding: 0.85rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(34, 63, 33, 0.25);
+    }
+
+    .auth-submit-btn:hover {
+      background: linear-gradient(135deg, var(--forest-2), var(--forest));
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(34, 63, 33, 0.35);
+    }
+
+    .auth-footer-note {
+      text-align: center;
+      margin-top: 1.25rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       ADMIN DASHBOARD APP & TOP NAVBAR
+       ═════════════════════════════════════════════════════════════════ */
+    #admin-dashboard-app {
+      display: none;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-top-navbar {
+      background: var(--forest);
+      color: #fff;
+      padding: 0.65rem 1.25rem;
+      border-bottom: 3px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .admin-navbar-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .admin-brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .admin-brand-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid var(--gold);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+    }
+
+    .admin-brand-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .admin-brand-sub {
+      font-size: 0.68rem;
+      color: rgba(255, 255, 255, 0.75);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .admin-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(95, 163, 14, 0.2);
+      border: 1px solid var(--leaf);
+      color: #8CE03E;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 99px;
+    }
+
+    .admin-status-dot {
+      width: 7px;
+      height: 7px;
+      background: #8CE03E;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #8CE03E;
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .admin-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .admin-user-tag {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      border-radius: 99px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-admin-nav {
+      background: var(--bg-card);
+      color: var(--forest);
+      border: 1px solid var(--border-card);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn-admin-nav:hover {
+      background: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    .btn-admin-lock {
+      background: rgba(217, 56, 30, 0.15);
+      border: 1px solid rgba(217, 56, 30, 0.5);
+      color: #FFB4A8;
+    }
+
+    .btn-admin-lock:hover {
+      background: var(--danger);
+      color: #FFFFFF;
+      border-color: var(--danger);
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       MAIN WRAPPER & EXECUTIVE METRIC RIBBON
+       ═════════════════════════════════════════════════════════════════ */
+    .admin-main-wrap {
+      flex: 1;
+      max-width: 1380px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0.85rem 1rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    /* Executive 5-Metric Ribbon */
+    .metric-ribbon {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+    }
+
+    .metric-card-slim {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 0.75rem 0.95rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .metric-card-slim::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+    }
+
+    .card-border-revenue::before { background: var(--leaf); }
+    .card-border-profit::before  { background: #1E824C; }
+    .card-border-orders::before  { background: #2EAA43; }
+    .card-border-stock::before   { background: var(--danger); }
+    .card-border-skus::before    { background: var(--gold); }
+
+    .metric-slim-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-slim-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--forest);
+      line-height: 1.15;
+    }
+
+    .metric-slim-foot {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       WORKSPACE CARD & SEGMENTED TABS
+       ═════════════════════════════════════════════════════════════════ */
+    .workspace-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .workspace-toolbar {
+      padding: 0.75rem 1rem;
+      background: var(--pale-2);
+      border-bottom: 1px solid var(--border-card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+    }
+
+    .segmented-tabs {
+      display: inline-flex;
+      background: var(--bg-section);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--forest);
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      color: var(--forest);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+
+    .tab-counter {
+      background: rgba(34, 63, 33, 0.12);
+      color: var(--forest);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 99px;
+    }
+
+    .tab-btn.active .tab-counter {
+      background: var(--forest);
+      color: #FFFFFF;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .admin-search-box {
+      position: relative;
+      min-width: 220px;
+      max-width: 300px;
+      flex: 1;
+    }
+
+    .admin-search-box input {
+      width: 100%;
+      padding: 0.42rem 0.75rem 0.42rem 2rem;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      background: #FFFFFF;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    .admin-search-box input:focus {
+      outline: none;
+      border-color: var(--forest);
+    }
+
+    .admin-search-icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      pointer-events: none;
+    }
+
+    .status-filter-select {
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      background: #FFFFFF;
+      padding: 0.42rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--forest);
+      cursor: pointer;
+    }
+
+    .btn-action-primary {
+      background: var(--leaf);
+      color: #FFFFFF;
+      border: none;
+      padding: 0.42rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.15s ease;
+    }
+
+    .btn-action-primary:hover {
+      background: var(--leaf-2);
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       TAB CONTENT PANELS & DATA TABLES
+       ═════════════════════════════════════════════════════════════════ */
+    .tab-content-panel {
+      display: none;
+    }
+
+    .tab-content-panel.active {
+      display: block;
+    }
+
+    .data-table-container {
+      width: 100%;
+      overflow-x: auto;
+      max-height: calc(100vh - 280px);
+      min-height: 280px;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .admin-table thead th {
+      background: var(--bg-section);
+      color: var(--forest);
+      font-weight: 800;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.7rem 0.9rem;
+      border-bottom: 2px solid var(--border-card);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .admin-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s ease;
+    }
+
+    .admin-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.45);
+    }
+
+    .admin-table td {
+      padding: 0.65rem 0.9rem;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .order-id-badge {
+      font-family: monospace;
+      font-weight: 800;
+      color: var(--forest);
+      background: rgba(34, 63, 33, 0.08);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .mpesa-code-pill {
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--forest);
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.78rem;
+    }
+
+    .status-select-badge {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.28rem 0.5rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: #FFFFFF;
+      cursor: pointer;
+    }
+
+    .status-select-badge.status-Pending    { border-color: #E67E22; color: #B95D0A; background: #FEF5E7; }
+    .status-select-badge.status-Processing { border-color: #2980B9; color: #1A5276; background: #EBF5FB; }
+    .status-select-badge.status-Dispatched { border-color: var(--leaf); color: var(--leaf-text); background: #F4FBF0; }
+    .status-select-badge.status-Delivered  { border-color: #27AE60; color: #1E824C; background: #EAFAF1; }
+
+    /* ═════════════════════════════════════════════════════════════════
+       CHARTS & CATEGORY ANALYTICS GRID (NEW POWERFUL ENGINE)
+       ═════════════════════════════════════════════════════════════════ */
+    .charts-dashboard-wrap {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Category Quick-Filter Bar */
+    .category-filter-ribbon {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 0.6rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .category-pill-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .cat-filter-btn {
+      background: var(--bg-section);
+      border: 1px solid var(--border-card);
+      border-radius: 99px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--forest);
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .cat-filter-btn:hover, .cat-filter-btn.active {
+      background: var(--forest);
+      color: #FFFFFF;
+      border-color: var(--forest);
+    }
+
+    /* 4-Chart Interactive Grid */
+    .analytics-charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .chart-box-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chart-box-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--forest);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .chart-box-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 99px;
+      background: var(--pale-2);
+      color: var(--forest);
+      border: 1px solid var(--border-card);
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      height: 220px;
+      width: 100%;
+    }
+
+    /* Category Deep-Dive Focus Card */
+    .cat-deepdive-card {
+      background: #FFFFFF;
+      border: 2px solid var(--forest);
+      border-radius: 12px;
+      padding: 1.15rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .cat-kpis-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .cat-kpi-subcard {
+      background: var(--pale-2);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      text-align: center;
+    }
+
+    .cat-kpi-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .cat-kpi-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--forest);
+      margin-top: 0.15rem;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       MODAL STYLES (INSPECTION, ADD SKU, EDIT PRICE)
+       ═════════════════════════════════════════════════════════════════ */
+    .admin-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .admin-modal-backdrop.open {
+      display: flex;
+    }
+
+    .admin-modal-window {
+      background: var(--bg-card);
+      border: 2px solid var(--forest);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      padding: 1.5rem;
+      animation: gateCardPop 0.25s ease-out;
+    }
+
+    .admin-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border-card);
+    }
+
+    .admin-modal-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--forest);
+    }
+
+    .admin-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-weight: bold;
+    }
+
+    .admin-form-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .admin-form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+    }
+
+    .admin-form-input, .admin-form-select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      background: #FFFFFF;
+      color: var(--text);
+    }
+
+    /* Printable Packing Slip / Invoice Format */
+    .invoice-print-sheet {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      font-size: 0.82rem;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVENESS & ZERO OVERFLOW
+       ═════════════════════════════════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .metric-ribbon {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .analytics-charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .metric-ribbon {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+      }
+      .metric-slim-value {
+        font-size: 1.3rem;
+      }
+      .cat-kpis-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .workspace-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .segmented-tabs {
+        width: 100%;
+        display: flex;
+      }
+      .tab-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.35rem 0.4rem;
+        font-size: 0.72rem;
+      }
+      .toolbar-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .admin-search-box {
+        min-width: 100%;
+      }
+      .desktop-table-view {
+        display: none;
+      }
+      .mobile-orders-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .metric-ribbon {
+        grid-template-columns: 1fr 1fr;
+      }
+      .admin-brand-title {
+        font-size: 1rem;
+      }
+      .btn-admin-nav span {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       ADMIN DASHBOARD APP (EXECUTIVE SINGLE-SCREEN COMMAND CENTER)
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="admin-dashboard-app">
+
+    <!-- Top Sticky Executive Navigation Bar -->
+    <header class="admin-top-navbar">
+      <div class="admin-navbar-inner">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+          <a href="/admin" class="admin-brand-cluster">
+            <div class="admin-brand-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div class="admin-brand-titles">
+              <span class="admin-brand-title">AGROVET <span style="color: var(--gold);">ADMIN</span></span>
+              <span class="admin-brand-sub">Operations Command • Kirinyaga Rd HQ</span>
+            </div>
+          </a>
+
+          <div class="admin-status-pill">
+            <span class="admin-status-dot"></span>
+            <span>M-Pesa Daraja Online</span>
+          </div>
+
+          <div id="admin-db-status-pill" class="admin-status-pill" style="cursor: pointer;" onclick="fetchLiveOrdersFromDb(true)" title="Click to manually refresh orders from PostgreSQL">
+            <span id="admin-db-status-dot" class="admin-status-dot" style="background:#F4B943;"></span>
+            <span id="admin-db-status-text">Checking PostgreSQL...</span>
+          </div>
+        </div>
+
+        <div class="admin-nav-actions">
+          <button class="btn-admin-nav" onclick="fetchLiveOrdersFromDb(true)" title="Refresh orders from PostgreSQL database">
+            <span>🔄</span>
+            <span>Sync Orders</span>
+          </button>
+
+          <div class="admin-user-tag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>admin (Kirinyaga HQ)</span>
+          </div>
+
+          <button class="btn-admin-nav" onclick="window.AgrovetApp.exportOrdersCsv()" title="Download CSV report">
+            <span>📥</span>
+            <span>Orders CSV</span>
+          </button>
+
+          <button class="btn-admin-nav" onclick="exportInventoryCsv()" title="Download Inventory report">
+            <span>📊</span>
+            <span>Stock CSV</span>
+          </button>
+
+          <a href="index.html" target="_blank" class="btn-admin-nav" title="View Customer Storefront">
+            <span>Live Store ↗</span>
+          </a>
+
+          <button class="btn-admin-nav btn-admin-lock" onclick="handleAdminLogout()" title="Lock terminal session">
+            <span>🔒</span>
+            <span>Lock</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Body -->
+    <main class="admin-main-wrap">
+
+      <!-- Executive 5-Metric Ribbon -->
+      <section class="metric-ribbon">
+        <div class="metric-card-slim card-border-revenue">
+          <div>
+            <div class="metric-slim-label">Today's Sales Revenue</div>
+            <div id="metric-revenue" class="metric-slim-value">KSh 28,020</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span style="color: #1E824C; font-weight: 700;">+24%</span>
+            <span>M-Pesa STK push</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-profit">
+          <div>
+            <div class="metric-slim-label">Est. Gross Profit</div>
+            <div id="metric-profit" class="metric-slim-value" style="color: #1E824C;">KSh 6,865</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span style="color: #1E824C; font-weight: 700;">24.5%</span>
+            <span>avg agrovet margin</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-orders">
+          <div>
+            <div class="metric-slim-label">County Orders</div>
+            <div id="metric-orders" class="metric-slim-value">4</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span>Active across 4 Counties</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-stock">
+          <div>
+            <div class="metric-slim-label">Stock Alerts</div>
+            <div id="metric-lowstock" class="metric-slim-value" style="color: var(--danger);">4 SKUs</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span style="color: var(--danger); font-weight: 700;">Action:</span>
+            <span>Supplier re-order</span>
+          </div>
+        </div>
+
+        <div class="metric-card-slim card-border-skus">
+          <div>
+            <div class="metric-slim-label">Catalog SKUs</div>
+            <div id="metric-skus" class="metric-slim-value">10</div>
+          </div>
+          <div class="metric-slim-foot">
+            <span>PCPB & KEPHIS Compliant</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Unified Executive Tabbed Workspace -->
+      <section class="workspace-card">
+
+        <!-- Toolbar: Segmented Tabs & Filters -->
+        <div class="workspace-toolbar">
+          <div class="segmented-tabs" role="tablist">
+            <button class="tab-btn active" id="tab-btn-orders" onclick="switchDashboardTab('orders')">
+              <span>📦 Orders & Dispatch</span>
+              <span id="tab-count-orders" class="tab-counter">4</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-products" onclick="switchDashboardTab('products')">
+              <span>🌱 Inventory & Prices</span>
+              <span id="tab-count-products" class="tab-counter">10</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-analytics" onclick="switchDashboardTab('analytics')">
+              <span>📈 Category Analytics & Charts</span>
+            </button>
+            <button class="tab-btn" id="tab-btn-financial" onclick="switchDashboardTab('financial')">
+              <span>💼 Financial & Audit</span>
+            </button>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="admin-search-box">
+              <span class="admin-search-icon">🔍</span>
+              <input type="text" id="admin-search-input" placeholder="Search orders, phone, county..." oninput="handleDashboardSearch(this.value)">
+            </div>
+
+            <select id="admin-status-filter" class="status-filter-select" onchange="handleStatusFilter(this.value)">
+              <option value="all">All Statuses</option>
+              <option value="Pending">⏳ Pending</option>
+              <option value="Processing">🔄 Processing</option>
+              <option value="Dispatched">🚚 Dispatched</option>
+              <option value="Delivered">✓ Delivered</option>
+            </select>
+
+            <button class="btn-action-primary" onclick="openAddProductModal()">
+              <span>+ Add SKU</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ─── TAB 1: ORDERS & DISPATCH PIPELINE ─────────────────────── -->
+        <div id="tab-panel-orders" class="tab-content-panel active">
+          
+          <!-- Desktop Data Table View -->
+          <div class="data-table-container desktop-table-view">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date & Time</th>
+                  <th>Customer Name</th>
+                  <th>Phone Number</th>
+                  <th>Delivery County</th>
+                  <th>Order Total</th>
+                  <th>M-Pesa Receipt</th>
+                  <th>Fulfillment Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-tbody"></tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Card List View (< 768px) -->
+          <div id="admin-orders-mobile-list" class="mobile-orders-grid"></div>
+
+        </div>
+
+        <!-- ─── TAB 2: INVENTORY & PRODUCT PRICING ─────────────────────── -->
+        <div id="tab-panel-products" class="tab-content-panel">
+          <div class="data-table-container">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Active Ingredient</th>
+                  <th>Pack Size</th>
+                  <th>Current Price</th>
+                  <th>Stock Status</th>
+                  <th>Quick Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ─── TAB 3: CATEGORY ANALYTICS & INTERACTIVE CHARTS ─────────── -->
+        <div id="tab-panel-analytics" class="tab-content-panel">
+          <div class="charts-dashboard-wrap">
+            
+            <!-- Category Selector Ribbon -->
+            <div class="category-filter-ribbon">
+              <div style="font-size:0.8rem; font-weight:800; color:var(--forest);">
+                <span>🌱 Focus Category:</span>
+              </div>
+              <div class="category-pill-group">
+                <button class="cat-filter-btn active" onclick="setAnalyticsCategory('all', this)">All Categories</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('crop-production', this)">Crop Production (Dawa)</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('seeds-fertilizers', this)">Seeds & Fertilizers</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('farm-tools', this)">Farm Tools & Sprayers</button>
+                <button class="cat-filter-btn" onclick="setAnalyticsCategory('planting-media', this)">Planting Media</button>
+              </div>
+            </div>
+
+            <!-- Category Deep-Dive Focus Card -->
+            <div class="cat-deepdive-card" id="category-deepdive-box">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h3 id="cat-focus-title" style="font-size:1.15rem; color:var(--forest); font-weight:800;">All Categories Performance Overview</h3>
+                  <p id="cat-focus-desc" style="font-size:0.75rem; color:var(--text-muted);">Consolidated agricultural inputs analytics across Nairobi, Central and Rift Valley branches.</p>
+                </div>
+                <span id="cat-focus-badge" class="chart-box-tag" style="background:#EBF5FB; color:#1A5276; border-color:#AED6F1;">PCPB / KEPHIS Audited</span>
+              </div>
+
+              <div class="cat-kpis-row">
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Category Revenue</div>
+                  <div class="cat-kpi-val" id="cat-kpi-rev">KSh 28,020</div>
+                </div>
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Units Sold</div>
+                  <div class="cat-kpi-val" id="cat-kpi-units">10 Units</div>
+                </div>
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Stock Health</div>
+                  <div class="cat-kpi-val" id="cat-kpi-health" style="color:var(--success);">60% In-Stock</div>
+                </div>
+                <div class="cat-kpi-subcard">
+                  <div class="cat-kpi-label">Avg Pack Value</div>
+                  <div class="cat-kpi-val" id="cat-kpi-aov">KSh 2,802</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Visual Interactive Charts Grid -->
+            <div class="analytics-charts-grid">
+              
+              <!-- Chart 1: Revenue by Category (Doughnut) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>🍩 Revenue Share by Category</span>
+                  </div>
+                  <span class="chart-box-tag">KSh Value</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-category-revenue"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 2: Category Stock Health (Bar Chart) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>📦 Stock Health by Category</span>
+                  </div>
+                  <span class="chart-box-tag">SKU Count</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-stock-health"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 3: Weekly Sales & Growth Trend (Line Chart) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>📈 7-Day Revenue Trend (M-Pesa STK)</span>
+                  </div>
+                  <span class="chart-box-tag">Daily Peak</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-sales-trend"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 4: County Dispatch Volume (Horizontal Bar) -->
+              <div class="chart-box-card">
+                <div class="chart-box-header">
+                  <div class="chart-box-title">
+                    <span>🚚 County Dispatch Volume</span>
+                  </div>
+                  <span class="chart-box-tag">Kenyan Counties</span>
+                </div>
+                <div class="chart-canvas-wrap">
+                  <canvas id="chart-county-dispatch"></canvas>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ─── TAB 4: FINANCIAL & COMPLIANCE AUDIT ───────────────────── -->
+        <div id="tab-panel-financial" class="tab-content-panel">
+          <div style="padding: 1.15rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1rem;">
+            
+            <div class="chart-box-card">
+              <div class="chart-box-header">
+                <div class="chart-box-title">💳 M-Pesa Settlement Reconciliation</div>
+                <span class="chart-box-tag" style="background:#EAFAF1; color:#1E824C;">100% Cleared</span>
+              </div>
+              <div style="font-size:0.83rem; line-height:1.7;">
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:0.35rem 0;">
+                  <span>Till Reconciliation (Agrovet Ltd):</span>
+                  <strong>KSh 24,820</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:0.35rem 0;">
+                  <span>Paybill Reconciliation (Account Sales):</span>
+                  <strong>KSh 3,200</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding:0.35rem 0;">
+                  <span>Daraja STK Push Success Rate:</span>
+                  <strong style="color:var(--success);">100% (No Chargebacks)</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:0.35rem 0;">
+                  <span>Pending Courier COD Reconciliation:</span>
+                  <strong style="color:var(--danger);">KSh 3,200 (Uasin Gishu)</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-box-card">
+              <div class="chart-box-header">
+                <div class="chart-box-title">🛡️ PCPB & KEPHIS Regulatory Ledger</div>
+                <span class="chart-box-tag">Audit 2026</span>
+              </div>
+              <div style="font-size:0.82rem; line-height:1.6; color:var(--text-muted);">
+                <p>• <strong>PCPB Premises License:</strong> PCPB/AGR/2024/7890 (Valid till Dec 2026)</p>
+                <p style="margin-top:0.35rem;">• <strong>KEPHIS Seed Merchant Reg:</strong> KEPHIS/SD/2024/4512 (Certified Hybrid Lots)</p>
+                <p style="margin-top:0.35rem;">• <strong>Pesticide Safety Records:</strong> Class II & III MSDS on file at Kirinyaga Rd HQ</p>
+                <div style="margin-top:0.85rem;">
+                  <button class="btn btn-outline-leaf btn-sm" onclick="alert('Exporting PCPB annual regulatory audit packet in PDF format.')">📥 Export PCPB Inspection PDF</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="chart-box-card">
+              <div class="chart-box-header">
+                <div class="chart-box-title">📜 Administrative Activity Log</div>
+                <span class="chart-box-tag">Real-Time</span>
+              </div>
+              <div id="admin-audit-log" style="font-size:0.75rem; color:var(--text); line-height:1.6;">
+                <p>• <em>10:14 AM</em>: Admin logged into operations terminal via IP 192.168.1.1</p>
+                <p style="margin-top:0.25rem;">• <em>09:42 AM</em>: Order #ORD-9421 status updated to <strong>Delivered</strong></p>
+                <p style="margin-top:0.25rem;">• <em>08:15 AM</em>: M-Pesa STK verification confirmed for Grace Wanjiku (Nakuru)</p>
+                <p style="margin-top:0.25rem;">• <em>Yesterday</em>: PCPB certified batch synced with inventory database</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       MODAL 1: ORDER INSPECTION & PACKING SLIP
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="modal-order-details" class="admin-modal-backdrop" onclick="if(event.target === this) closeOrderModal();">
+    <div class="admin-modal-window">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="modal-order-title">Farmer Dispatch Packing Slip</h3>
+        <button class="admin-modal-close" onclick="closeOrderModal()">✕</button>
+      </div>
+
+      <div class="invoice-print-sheet" id="modal-order-content">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:1rem; gap:0.5rem; flex-wrap:wrap;">
+        <a id="modal-whatsapp-link" href="#" target="_blank" class="btn btn-whatsapp btn-sm" style="flex:1; justify-content:center;">
+          💬 WhatsApp Farmer Update
+        </a>
+        <button class="btn btn-outline-leaf btn-sm" onclick="window.print()" style="flex:1;">
+          🖨️ Print Packing Slip
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       MODAL 2: ADD NEW PRODUCT / SKU
+       ═════════════════════════════════════════════════════════════════ -->
+  <div id="modal-add-sku" class="admin-modal-backdrop" onclick="if(event.target === this) closeAddProductModal();">
+    <div class="admin-modal-window">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">+ Add New Product SKU</h3>
+        <button class="admin-modal-close" onclick="closeAddProductModal()">✕</button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); handleAddProductSubmit();">
+        <div class="admin-form-group">
+          <label class="admin-form-label">Product Name</label>
+          <input type="text" id="new-prod-name" class="admin-form-input" placeholder="e.g. Belt 480 SC Insecticide" required>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Category</label>
+            <select id="new-prod-category" class="admin-form-select" required>
+              <option value="crop-production">Crop Production</option>
+              <option value="seeds-fertilizers">Seeds & Fertilizers</option>
+              <option value="farm-tools">Farm Tools & Equipment</option>
+              <option value="planting-media">Planting Media</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Active Ingredient</label>
+            <input type="text" id="new-prod-active" class="admin-form-input" placeholder="e.g. Flubendiamide 480g/L">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Base Pack Size</label>
+            <input type="text" id="new-prod-pack" class="admin-form-input" placeholder="e.g. 500ml or 50kg" required>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Price (KSh)</label>
+            <input type="number" id="new-prod-price" class="admin-form-input" placeholder="e.g. 2450" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Stock Status</label>
+            <select id="new-prod-stock" class="admin-form-select">
+              <option value="in_stock">✓ In Stock</option>
+              <option value="low_stock">⚠️ Low Stock</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">PCPB / KEPHIS Reg No.</label>
+            <input type="text" id="new-prod-reg" class="admin-form-input" placeholder="e.g. PCPB(CR) 1290-A">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1rem;">
+          <button type="button" class="btn btn-outline-leaf btn-sm" onclick="closeAddProductModal()">Cancel</button>
+          <button type="submit" class="btn btn-leaf btn-sm">+ Save & Add to Live Store</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/contact.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ═════════════════════════════════════════════════════════════════
+    // AUTHENTICATION & SECURITY CONTROLLER
+    // ═════════════════════════════════════════════════════════════════
+    // SERVER-SIDE VERIFIED SESSION CONTROLLER
+    // Access is guarded server-side before this HTML is ever transmitted.
+    // ═════════════════════════════════════════════════════════════════
+    const AUTH_SESSION_KEY = 'agrovet_admin_auth_token';
+
+    async function handleAdminLogout() {
+      try {
+        await fetch('/api/admin?action=logout', { method: 'POST' });
+      } catch (e) {
+        console.warn('[Logout API Error]', e);
+      }
+      sessionStorage.removeItem(AUTH_SESSION_KEY);
+      window.location.href = '/admin';
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // TAB MANAGEMENT & SEARCH CONTROLLER
+    // ═════════════════════════════════════════════════════════════════
+    let currentTab = 'orders';
+    let searchQuery = '';
+    let statusFilter = 'all';
+
+    function switchDashboardTab(tabName) {
+      currentTab = tabName;
+      ['orders', 'products', 'analytics', 'financial'].forEach(tab => {
+        const btn = document.getElementById(`tab-btn-${tab}`);
+        const panel = document.getElementById(`tab-panel-${tab}`);
+        if (btn) btn.classList.toggle('active', tab === tabName);
+        if (panel) panel.classList.toggle('active', tab === tabName);
+      });
+
+      const filterSelect = document.getElementById('admin-status-filter');
+      if (filterSelect) {
+        filterSelect.style.display = tabName === 'orders' ? 'inline-block' : 'none';
+      }
+
+      const searchInput = document.getElementById('admin-search-input');
+      if (searchInput) {
+        if (tabName === 'orders') searchInput.placeholder = 'Search orders, phone, county...';
+        else if (tabName === 'products') searchInput.placeholder = 'Search chemicals, seeds, ingredients...';
+        else searchInput.placeholder = 'Search records & analytics...';
+      }
+
+      if (tabName === 'analytics') {
+        setTimeout(initAllCharts, 120);
+      }
+    }
+
+    function handleDashboardSearch(val) {
+      searchQuery = val.toLowerCase().trim();
+      if (currentTab === 'orders') renderOrdersTable();
+      if (currentTab === 'products') renderProductsTable();
+    }
+
+    function handleStatusFilter(val) {
+      statusFilter = val;
+      renderOrdersTable();
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // DATA RENDERING (ORDERS & PRODUCTS)
+    // ═════════════════════════════════════════════════════════════════
+    function renderAdminDashboard() {
+      const orders = window.AgrovetApp.state.adminOrders;
+      const totalRev = orders.reduce((sum, o) => sum + (o.total || 0), 0);
+      const estProfit = Math.round(totalRev * 0.245);
+      const lowStockCount = (window.AGROVET_DATA ? window.AGROVET_DATA.products : [])
+        .filter(p => p.variants && p.variants[0].stockStatus !== 'in_stock').length;
+
+      // Update Metric Ribbon
+      const revEl = document.getElementById('metric-revenue');
+      const profitEl = document.getElementById('metric-profit');
+      const ordEl = document.getElementById('metric-orders');
+      const countTabEl = document.getElementById('tab-count-orders');
+      const stockEl = document.getElementById('metric-lowstock');
+      const skusEl = document.getElementById('metric-skus');
+      const countProdEl = document.getElementById('tab-count-products');
+
+      if (revEl) revEl.textContent = window.AgrovetApp.formatKsh(totalRev);
+      if (profitEl) profitEl.textContent = window.AgrovetApp.formatKsh(estProfit);
+      if (ordEl) ordEl.textContent = orders.length;
+      if (countTabEl) countTabEl.textContent = orders.length;
+      if (stockEl) stockEl.textContent = lowStockCount + ' SKUs';
+      if (skusEl) skusEl.textContent = (window.AGROVET_DATA ? window.AGROVET_DATA.products.length : 10);
+      if (countProdEl) countProdEl.textContent = (window.AGROVET_DATA ? window.AGROVET_DATA.products.length : 10);
+
+      renderOrdersTable();
+      renderProductsTable();
+    }
+
+    function renderOrdersTable() {
+      const allOrders = window.AgrovetApp.state.adminOrders;
+      const tbody = document.getElementById('admin-orders-tbody');
+      const mobileList = document.getElementById('admin-orders-mobile-list');
+
+      const filtered = allOrders.filter(ord => {
+        const matchesStatus = (statusFilter === 'all') || (ord.status === statusFilter);
+        const matchesQuery = !searchQuery || 
+          ord.id.toLowerCase().includes(searchQuery) ||
+          ord.customer.toLowerCase().includes(searchQuery) ||
+          ord.phone.toLowerCase().includes(searchQuery) ||
+          ord.county.toLowerCase().includes(searchQuery) ||
+          ord.mpesaCode.toLowerCase().includes(searchQuery);
+        return matchesStatus && matchesQuery;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 2rem; color: var(--text-muted);">No matching orders found.</td></tr>`;
+        mobileList.innerHTML = `<div style="text-align:center; padding: 2rem; color: var(--text-muted);">No matching orders found.</div>`;
+        return;
+      }
+
+      // Populate Desktop Table
+      tbody.innerHTML = filtered.map((ord, idx) => {
+        const originalIndex = allOrders.indexOf(ord);
+        return `
+          <tr>
+            <td><span class="order-id-badge">${ord.id}</span></td>
+            <td style="color: var(--text-muted); font-size: 0.8rem;">${ord.date}</td>
+            <td style="font-weight: 700; color: var(--forest);">${ord.customer}</td>
+            <td><a href="tel:${ord.phone}" style="color: inherit; text-decoration: none;">${ord.phone}</a></td>
+            <td><strong>${ord.county}</strong></td>
+            <td style="font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(ord.total)}</td>
+            <td><span class="mpesa-code-pill">${ord.mpesaCode}</span></td>
+            <td>
+              <select class="status-select-badge status-${ord.status}" onchange="changeOrderStatus(${originalIndex}, this.value)">
+                <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+                <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+                <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
+              </select>
+            </td>
+            <td>
+              <button class="btn btn-outline-leaf btn-sm" onclick="openOrderModal(${originalIndex})" style="padding:0.25rem 0.55rem; font-size:0.75rem;">
+                👁️ Invoice
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Populate Mobile Card List
+      mobileList.innerHTML = filtered.map((ord, idx) => {
+        const originalIndex = allOrders.indexOf(ord);
+        return `
+          <div class="mobile-order-card" style="background:#fff; border:1px solid var(--border-card); border-radius:10px; padding:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; border-bottom:1px dashed var(--border); padding-bottom:0.35rem;">
+              <span class="order-id-badge">${ord.id}</span>
+              <span style="font-size:0.75rem; color:var(--text-muted);">${ord.date}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.3rem;">
+              <span style="color:var(--text-muted);">Farmer:</span>
+              <strong style="color:var(--forest);">${ord.customer} (${ord.county})</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:0.3rem;">
+              <span style="color:var(--text-muted);">Phone & Code:</span>
+              <span>${ord.phone} • <code style="font-weight:700;">${ord.mpesaCode}</code></span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem; padding-top:0.4rem; border-top:1px solid var(--border);">
+              <span style="font-size: 1rem; font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(ord.total)}</span>
+              <div style="display:flex; gap:0.4rem;">
+                <button class="btn btn-outline-leaf btn-sm" onclick="openOrderModal(${originalIndex})" style="padding:0.25rem 0.45rem; font-size:0.72rem;">👁️ Details</button>
+                <select class="status-select-badge status-${ord.status}" onchange="changeOrderStatus(${originalIndex}, this.value)">
+                  <option value="Pending" ${ord.status === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                  <option value="Processing" ${ord.status === 'Processing' ? 'selected' : ''}>🔄 Processing</option>
+                  <option value="Dispatched" ${ord.status === 'Dispatched' ? 'selected' : ''}>🚚 Dispatched</option>
+                  <option value="Delivered" ${ord.status === 'Delivered' ? 'selected' : ''}>✓ Delivered</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderProductsTable() {
+      const products = window.AGROVET_DATA ? window.AGROVET_DATA.products : [];
+      const prodTbody = document.getElementById('admin-products-tbody');
+
+      const filtered = products.filter(p => {
+        if (!searchQuery) return true;
+        return p.name.toLowerCase().includes(searchQuery) ||
+               p.categoryName.toLowerCase().includes(searchQuery) ||
+               (p.activeIngredient && p.activeIngredient.toLowerCase().includes(searchQuery));
+      });
+
+      if (!filtered.length) {
+        prodTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);">No products match your search.</td></tr>`;
+        return;
+      }
+
+      prodTbody.innerHTML = filtered.map(p => {
+        const v = p.variants ? p.variants[0] : { packSize: 'Standard', price: 1000, stockStatus: 'in_stock' };
+        const isLow = v.stockStatus !== 'in_stock';
+        return `
+          <tr>
+            <td style="font-weight: 700; color: var(--forest);">${p.name}</td>
+            <td><span class="badge" style="background:var(--pale-2); color:var(--forest); font-size:0.75rem;">${p.categoryName || 'General'}</span></td>
+            <td style="font-size: 0.8rem; color: var(--text-muted);">${p.activeIngredient || 'Agronomic Grade'}</td>
+            <td><strong>${v.packSize}</strong></td>
+            <td style="font-weight: 800; color: var(--forest);">${window.AgrovetApp.formatKsh(v.price)}</td>
+            <td>
+              <span class="badge ${isLow ? 'badge-stock-low' : 'badge-stock-in'}">
+                ${isLow ? '⚠️ Low Stock' : '✓ In Stock'}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-outline-leaf btn-sm" onclick="editProductPrice('${p.id}', '${p.name}', ${v.price})">
+                ✏️ Edit Price
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function changeOrderStatus(index, newStatus) {
+      const ord = window.AgrovetApp.state.adminOrders[index];
+      if (ord) {
+        ord.status = newStatus;
+        ord.paymentStatus = newStatus;
+        localStorage.setItem('agrovet_orders', JSON.stringify(window.AgrovetApp.state.adminOrders));
+        renderOrdersTable();
+        window.AgrovetApp.showToast(`Order #${ord.id} updated to ${newStatus}`, '✓');
+
+        // Persist status change to PostgreSQL database in real-time
+        try {
+          const token = sessionStorage.getItem(AUTH_SESSION_KEY);
+          const headers = { 'Content-Type': 'application/json' };
+          if (token && token !== 'offline_admin') {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+          await fetch('/api/orders', {
+            method: 'PATCH',
+            headers,
+            body: JSON.stringify({ id: ord.id, status: newStatus })
+          });
+          console.log(`[PostgreSQL Status Sync] Order #${ord.id} marked as ${newStatus}`);
+        } catch (err) {
+          console.warn('[PostgreSQL Sync Error] Status saved locally:', err.message);
+        }
+      }
+    }
+
+    function editProductPrice(productId, productName, currentPrice) {
+      const newPriceStr = prompt(`Update price for ${productName}:\nCurrent price is KSh ${currentPrice}. Enter new price (KSh):`, currentPrice);
+      if (newPriceStr !== null) {
+        const newPrice = parseInt(newPriceStr.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(newPrice) && newPrice > 0) {
+          const product = window.AGROVET_DATA.products.find(p => p.id === productId);
+          if (product && product.variants && product.variants[0]) {
+            product.variants[0].price = newPrice;
+            renderProductsTable();
+            initAllCharts();
+            window.AgrovetApp.showToast(`${productName} updated to ${window.AgrovetApp.formatKsh(newPrice)}`);
+          }
+        }
+      }
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // MODAL HANDLERS (ORDER INSPECTION & ADD SKU)
+    // ═════════════════════════════════════════════════════════════════
+    function openOrderModal(index) {
+      const ord = window.AgrovetApp.state.adminOrders[index];
+      if (!ord) return;
+
+      const titleEl = document.getElementById('modal-order-title');
+      const contentEl = document.getElementById('modal-order-content');
+      const waLink = document.getElementById('modal-whatsapp-link');
+
+      titleEl.textContent = `Farmer Dispatch Slip #${ord.id}`;
+
+      // Build itemized rows from real order items if present
+      let itemsTableRows = '';
+      const itemsList = Array.isArray(ord.items) ? ord.items : [];
+      if (itemsList.length > 0) {
+        itemsTableRows = itemsList.map(item => `
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:0.5rem 0.6rem;">${item.name || item.title || 'Farm Input'} ${item.packSize ? `(${item.packSize})` : ''}</td>
+            <td style="padding:0.5rem 0.6rem; text-align:center;">${item.qty || 1}</td>
+            <td style="padding:0.5rem 0.6rem; text-align:right; font-weight:700;">${window.AgrovetApp.formatKsh((item.price || 0) * (item.qty || 1))}</td>
+          </tr>
+        `).join('');
+      } else {
+        itemsTableRows = `
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:0.5rem 0.6rem;">Certified Farm Inputs (${ord.county} Regional Dispatch)</td>
+            <td style="padding:0.5rem 0.6rem; text-align:center;">${ord.itemCount || 1}</td>
+            <td style="padding:0.5rem 0.6rem; text-align:right; font-weight:700;">${window.AgrovetApp.formatKsh(ord.subtotal || ord.total)}</td>
+          </tr>
+        `;
+      }
+
+      const shippingFee = parseFloat(ord.deliveryFee) || 0;
+      const shippingRow = (shippingFee > 0) ? `
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.5rem 0.6rem;">Dedicated Courier Delivery (${ord.county} — ${ord.town || 'County Drop'})</td>
+          <td style="padding:0.5rem 0.6rem; text-align:center;">1</td>
+          <td style="padding:0.5rem 0.6rem; text-align:right; font-weight:700;">${window.AgrovetApp.formatKsh(shippingFee)}</td>
+        </tr>
+      ` : `
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.5rem 0.6rem;">Nationwide Courier Shipping (${ord.county})</td>
+          <td style="padding:0.5rem 0.6rem; text-align:center;">1</td>
+          <td style="padding:0.5rem 0.6rem; text-align:right; font-weight:700; color:#1E824C;">FREE (Orders > KSh 10,000)</td>
+        </tr>
+      `;
+
+      contentEl.innerHTML = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.75rem;">
+          <div>
+            <h4 style="color:var(--forest); font-size:1.05rem; font-weight:800;">AGROVET LTD KENYA</h4>
+            <div style="color:var(--text-muted); font-size:0.75rem;">Kirinyaga Rd Agricultural Center, Nairobi • +254 720 263 503</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:800; color:var(--forest); font-family:monospace;">${ord.id}</div>
+            <div style="color:var(--text-muted); font-size:0.75rem;">${ord.date}</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem; background:var(--pale-2); padding:0.75rem; border-radius:6px;">
+          <div>
+            <strong style="color:var(--forest);">Farmer Recipient:</strong><br>
+            ${ord.customer || ord.customerName}<br>
+            Phone: <a href="tel:${ord.phone}" style="color:inherit; font-weight:700;">${ord.phone}</a><br>
+            Location: <strong>${ord.county}</strong> — ${ord.town || 'Town Drop Center'}
+            ${ord.notes ? `<div style="margin-top:0.35rem; font-size:0.75rem; color:var(--forest);">📝 <em>${ord.notes}</em></div>` : ''}
+          </div>
+          <div>
+            <strong style="color:var(--forest);">Payment & Settlement:</strong><br>
+            Method: ${ord.paymentMethod}<br>
+            M-Pesa Code: <code style="font-weight:700;">${ord.mpesaCode}</code><br>
+            Status: <span class="badge badge-stock-in">${ord.status}</span>
+          </div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; margin-bottom:1rem; font-size:0.8rem;">
+          <thead>
+            <tr style="background:var(--bg-section); border-bottom:2px solid var(--border-card); text-align:left;">
+              <th style="padding:0.4rem 0.6rem;">Item Description</th>
+              <th style="padding:0.4rem 0.6rem; text-align:center;">Qty</th>
+              <th style="padding:0.4rem 0.6rem; text-align:right;">Line Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsTableRows}
+            ${shippingRow}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2" style="padding:0.6rem; text-align:right; font-size:0.95rem; color:var(--forest);">Grand Total:</th>
+              <th style="padding:0.6rem; text-align:right; font-size:1.1rem; color:var(--forest); font-weight:800;">${window.AgrovetApp.formatKsh(ord.total)}</th>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; border-top:1px dashed var(--border); padding-top:0.6rem;">
+          Authentic PCPB & KEPHIS Certified Agricultural Inputs • Quality Guaranteed by Agrovet Ltd
+        </div>
+      `;
+
+      const phoneDigits = ord.phone.replace(/[^0-9]/g, '');
+      const waNumber = phoneDigits.startsWith('0') ? '254' + phoneDigits.slice(1) : phoneDigits;
+      const hotlineDisplay = (window.AGROVET_CONTACT && window.AGROVET_CONTACT.phoneDisplay) ? window.AGROVET_CONTACT.phoneDisplay : '+254 720 263 503';
+      const waMsg = encodeURIComponent(`Hello ${ord.customer}, this is Agrovet Ltd Nairobi confirming your farm order #${ord.id} (${window.AgrovetApp.formatKsh(ord.total)}) dispatched to ${ord.county} (${ord.town || ''}). Delivery status is currently: ${ord.status}. For agronomist advice call ${hotlineDisplay}.`);
+      waLink.href = `https://wa.me/${waNumber}?text=${waMsg}`;
+
+      document.getElementById('modal-order-details').classList.add('open');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('modal-order-details').classList.remove('open');
+    }
+
+    function openAddProductModal() {
+      document.getElementById('modal-add-sku').classList.add('open');
+    }
+
+    function closeAddProductModal() {
+      document.getElementById('modal-add-sku').classList.remove('open');
+    }
+
+    function handleAddProductSubmit() {
+      const name = document.getElementById('new-prod-name').value.trim();
+      const cat = document.getElementById('new-prod-category').value;
+      const active = document.getElementById('new-prod-active').value.trim();
+      const pack = document.getElementById('new-prod-pack').value.trim();
+      const price = parseInt(document.getElementById('new-prod-price').value, 10);
+      const stock = document.getElementById('new-prod-stock').value;
+      const reg = document.getElementById('new-prod-reg').value.trim();
+
+      const newId = 'p-' + Date.now();
+      const newProduct = {
+        id: newId,
+        name: name,
+        category: cat,
+        categoryName: cat === 'crop-production' ? 'Crop Production' : (cat === 'seeds-fertilizers' ? 'Seeds & Fertilizers' : (cat === 'farm-tools' ? 'Farm Tools & Equipment' : 'Planting Media')),
+        activeIngredient: active || 'Agronomic Formulation',
+        pcpbReg: reg || 'PCPB(CR) Pending',
+        variants: [
+          { packSize: pack, price: price, stockStatus: stock }
+        ]
+      };
+
+      if (!window.AGROVET_DATA.products) window.AGROVET_DATA.products = [];
+      window.AGROVET_DATA.products.unshift(newProduct);
+
+      closeAddProductModal();
+      renderAdminDashboard();
+      initAllCharts();
+      window.AgrovetApp.showToast(`New SKU "${name}" added to catalog!`);
+    }
+
+    function exportInventoryCsv() {
+      const prods = window.AGROVET_DATA ? window.AGROVET_DATA.products : [];
+      let csv = "Product ID,Product Name,Category,Active Ingredient,Pack Size,Price (KSh),Stock Status,PCPB Reg\n";
+      prods.forEach(p => {
+        const v = p.variants ? p.variants[0] : { packSize: '', price: 0, stockStatus: '' };
+        csv += `"${p.id}","${p.name}","${p.categoryName || ''}","${p.activeIngredient || ''}","${v.packSize}",${v.price},"${v.stockStatus}","${p.pcpbReg || ''}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `Agrovet_Inventory_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.AgrovetApp.showToast('Inventory CSV exported successfully!');
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // INTERACTIVE CHARTS ENGINE (CHART.JS INTEGRATION)
+    // ═════════════════════════════════════════════════════════════════
+    let chartCategoryRev = null;
+    let chartStockHealth = null;
+    let chartSalesTrend  = null;
+    let chartCountyDisp  = null;
+
+    function initAllCharts() {
+      if (typeof Chart === 'undefined') {
+        console.warn('Chart.js not loaded, falling back gracefully.');
+        return;
+      }
+
+      // ─── 1. Category Revenue Share (Doughnut) ─────────────────────
+      const ctxCat = document.getElementById('chart-category-revenue');
+      if (ctxCat) {
+        if (chartCategoryRev) chartCategoryRev.destroy();
+        chartCategoryRev = new Chart(ctxCat, {
+          type: 'doughnut',
+          data: {
+            labels: ['Herbicides & Fungicides', 'Insecticides (Dawa)', 'Hybrid Seeds', 'Fertilizers', 'Farm Sprayers & PPE', 'Planting Media'],
+            datasets: [{
+              data: [8900, 7450, 4720, 3200, 2450, 1300],
+              backgroundColor: ['#223F21', '#5FA30E', '#F4B943', '#2EAA43', '#3498DB', '#8E44AD'],
+              borderWidth: 2,
+              borderColor: '#FFFFFF'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } },
+              tooltip: {
+                callbacks: {
+                  label: function(item) {
+                    return ` ${item.label}: KSh ${item.raw.toLocaleString()}`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // ─── 2. Stock Health by Category (Grouped Bar) ────────────────
+      const ctxStock = document.getElementById('chart-stock-health');
+      if (ctxStock) {
+        if (chartStockHealth) chartStockHealth.destroy();
+        chartStockHealth = new Chart(ctxStock, {
+          type: 'bar',
+          data: {
+            labels: ['Crop Protect', 'Seeds/Fert', 'Farm Tools', 'Planting Media'],
+            datasets: [
+              { label: 'In Stock SKUs', data: [5, 3, 2, 2], backgroundColor: '#1E824C' },
+              { label: 'Low Stock Alerts', data: [2, 1, 1, 0], backgroundColor: '#D9381E' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { stacked: true, grid: { display: false } },
+              y: { stacked: true, beginAtZero: true, ticks: { stepSize: 2 } }
+            },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } }
+            }
+          }
+        });
+      }
+
+      // ─── 3. 7-Day Revenue Trend (Smooth Area Line) ────────────────
+      const ctxTrend = document.getElementById('chart-sales-trend');
+      if (ctxTrend) {
+        if (chartSalesTrend) chartSalesTrend.destroy();
+        chartSalesTrend = new Chart(ctxTrend, {
+          type: 'line',
+          data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'],
+            datasets: [{
+              label: 'Daily Revenue (KSh)',
+              data: [18400, 22100, 19800, 26500, 31200, 34800, 28020],
+              borderColor: '#223F21',
+              backgroundColor: 'rgba(95, 163, 14, 0.15)',
+              fill: true,
+              tension: 0.35,
+              pointBackgroundColor: '#F4B943',
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: {
+                  callback: function(v) { return 'KSh ' + (v / 1000) + 'k'; }
+                }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(item) { return ` Revenue: KSh ${item.raw.toLocaleString()}`; }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // ─── 4. County Dispatch Volume (Horizontal Bar) ───────────────
+      const ctxCounty = document.getElementById('chart-county-dispatch');
+      if (ctxCounty) {
+        if (chartCountyDisp) chartCountyDisp.destroy();
+        chartCountyDisp = new Chart(ctxCounty, {
+          type: 'bar',
+          indexAxis: 'y',
+          data: {
+            labels: ['Kiambu', 'Nakuru', 'Uasin Gishu', 'Machakos', 'Murang\'a', 'Kisumu'],
+            datasets: [{
+              label: 'Dispatched Orders',
+              data: [12, 9, 7, 5, 4, 3],
+              backgroundColor: '#5FA30E',
+              borderRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { beginAtZero: true, ticks: { stepSize: 3 } }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+    }
+
+    // ─── Category Deep-Dive Focus Function ──────────────────────────
+    function setAnalyticsCategory(catSlug, btnEl) {
+      document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const titleEl = document.getElementById('cat-focus-title');
+      const descEl = document.getElementById('cat-focus-desc');
+      const revEl = document.getElementById('cat-kpi-rev');
+      const unitsEl = document.getElementById('cat-kpi-units');
+      const healthEl = document.getElementById('cat-kpi-health');
+      const aovEl = document.getElementById('cat-kpi-aov');
+
+      const categoryData = {
+        'all': {
+          title: 'All Categories Performance Overview',
+          desc: 'Consolidated agricultural inputs analytics across Nairobi, Central and Rift Valley branches.',
+          rev: 'KSh 28,020',
+          units: '10 Units',
+          health: '60% In-Stock',
+          aov: 'KSh 2,802'
+        },
+        'crop-production': {
+          title: 'Crop Production & Agro-Chemicals (Dawa)',
+          desc: 'Systemic Herbicides, Insecticides & Fungicides under PCPB Kenya compliance regulations.',
+          rev: 'KSh 16,350',
+          units: '6 Units',
+          health: '71% In-Stock',
+          aov: 'KSh 2,725'
+        },
+        'seeds-fertilizers': {
+          title: 'Certified Planting Seeds & Fertilizers',
+          desc: 'KEPHIS tested hybrid maize seed lots and certified granular/foliar nutrition solutions.',
+          rev: 'KSh 7,920',
+          units: '3 Units',
+          health: '75% In-Stock',
+          aov: 'KSh 2,640'
+        },
+        'farm-tools': {
+          title: 'Farm Tools, Sprayers & Chemical PPE',
+          desc: 'High-pressure knapsack sprayers, safety goggles, and propagation tools.',
+          rev: 'KSh 2,450',
+          units: '1 Unit',
+          health: '50% In-Stock',
+          aov: 'KSh 2,450'
+        },
+        'planting-media': {
+          title: 'Sterile Planting Media (Peat Moss & Coco Peat)',
+          desc: 'Nursery seedling root development media imported and tested for pH neutrality.',
+          rev: 'KSh 1,300',
+          units: '1 Unit',
+          health: '100% In-Stock',
+          aov: 'KSh 1,300'
+        }
+      };
+
+      const d = categoryData[catSlug] || categoryData['all'];
+      titleEl.textContent = d.title;
+      descEl.textContent = d.desc;
+      revEl.textContent = d.rev;
+      unitsEl.textContent = d.units;
+      healthEl.textContent = d.health;
+      aovEl.textContent = d.aov;
+    }
+
+    // ─── Real-Time PostgreSQL Synchronization ────────────────────────
+    let dbPollTimer = null;
+
+    async function fetchLiveOrdersFromDb(showFeedback = false) {
+      const pill = document.getElementById('admin-db-status-pill');
+      const dot = document.getElementById('admin-db-status-dot');
+      const text = document.getElementById('admin-db-status-text');
+
+      try {
+        const token = sessionStorage.getItem(AUTH_SESSION_KEY);
+        const headers = (token && token !== 'offline_admin') ? { 'Authorization': `Bearer ${token}` } : {};
+        const response = await fetch('/api/orders?limit=150', { headers });
+        if (response.status === 401) {
+          console.warn('[Session Expired] Redirecting to administrator login...');
+          window.location.href = '/admin';
+          return;
+        }
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.live && Array.isArray(data.orders)) {
+            if (dot) dot.style.background = '#2EAA43';
+            if (text) text.textContent = `PostgreSQL Live (${data.count} Orders)`;
+            if (pill) pill.title = 'Connected to PostgreSQL database. Real-time multi-county order updates active.';
+
+            if (data.orders.length > 0) {
+              window.AgrovetApp.state.adminOrders = data.orders;
+              localStorage.setItem('agrovet_orders', JSON.stringify(data.orders));
+              renderAdminDashboard();
+              if (typeof initAllCharts === 'function') initAllCharts();
+            }
+
+            if (showFeedback) {
+              window.AgrovetApp.showToast(`PostgreSQL Synced: ${data.count} orders loaded`, '🟢');
+            }
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('[PostgreSQL Sync Warning] Server unreachable, using local storage cache:', err.message);
+      }
+
+      if (dot) dot.style.background = '#F4B943';
+      if (text) text.textContent = 'Local Cache Mode';
+      if (pill) pill.title = 'DATABASE_URL not configured. Orders stored in local browser cache.';
+      if (showFeedback) {
+        window.AgrovetApp.showToast('Using local storage order cache', '🟡');
+      }
+    }
+
+    // ─── Initialize on Page Load ─────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAdminDashboard();
+      fetchLiveOrdersFromDb(false);
+      setTimeout(initAllCharts, 100);
+      // Auto-poll PostgreSQL for new orders every 25 seconds for the Nairobi warehouse team
+      if (dbPollTimer) clearInterval(dbPollTimer);
+      dbPollTimer = setInterval(() => {
+        fetchLiveOrdersFromDb(false);
+      }, 25000);
+    });
+  </script>
+</body>
+</html>

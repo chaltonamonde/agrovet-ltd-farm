@@ -192,7 +192,7 @@
           <span class="live-dot-pulse"></span> Live Farm View
         </span>
         <span>📍 Kirinyaga Rd, Nairobi</span>
-        <a href="tel:+254700000000">📞 +254 700 000 000</a>
+        <a href="tel:+254720263503" data-contact-href="tel">📞 <span data-contact="phoneDisplay">+254 720 263 503</span></a>
         <button id="lang-switch-toggle" class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">
           🇰🇪 Kiswahili
         </button>
@@ -274,12 +274,12 @@
             <div class="form-row-2col">
               <div class="form-group">
                 <label class="form-label" for="cust-name">Farmer / Business Name *</label>
-                <input type="text" id="cust-name" class="form-input" placeholder="e.g. Samuel Mwangi" value="Samuel Mwangi">
+                <input type="text" id="cust-name" class="form-input" placeholder="e.g. Samuel Mwangi">
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="cust-phone">Safaricom Mobile Number *</label>
-                <input type="tel" id="cust-phone" class="form-input" placeholder="e.g. 0712 345 678" value="0712345678">
+                <input type="tel" id="cust-phone" class="form-input" placeholder="e.g. 0712 345 678">
               </div>
             </div>
 
@@ -290,7 +290,7 @@
 
             <div class="form-group">
               <label class="form-label" for="cust-town">Town, Market Center or Farm Landmark *</label>
-              <input type="text" id="cust-town" class="form-input" placeholder="e.g. Naivasha town near Total station / Kiambu stage" value="Limuru Town near Post Office">
+              <input type="text" id="cust-town" class="form-input" placeholder="e.g. Naivasha town near Total station / Kiambu stage">
             </div>
 
             <div class="form-group">
@@ -324,8 +324,8 @@
               <label class="payment-card-option" onclick="selectPayMethod('mpesa-manual', this)">
                 <input type="radio" name="pay-method" value="mpesa-manual">
                 <div>
-                  <strong style="color: var(--forest); font-size: 0.95rem;">Manual Lipa na M-Pesa (Buy Goods Till / Paybill)</strong>
-                  <p style="font-size: 0.8rem; color: var(--text); margin-top: 0.15rem;">Pay to Till <strong>876543</strong> or Paybill <strong>543210</strong> (Agrovet Ltd).</p>
+                  <strong style="color: var(--forest); font-size: 0.95rem;">Manual Lipa na M-Pesa (Buy Goods Till)</strong>
+                  <p style="font-size: 0.8rem; color: var(--text); margin-top: 0.15rem;">Pay to Buy Goods Till: <strong id="checkout-till-display">Till number coming soon</strong> (Agrovet Ltd).</p>
                 </div>
               </label>
 
@@ -427,7 +427,7 @@
           <span>Payable Amount: </span>
           <strong id="mpesa-modal-total" style="font-family: var(--font-heading); font-size: 1.3rem; color: var(--forest);">KSh 0</strong>
         </div>
-        <input type="tel" id="mpesa-phone-input" placeholder="0712345678" value="0712345678" style="width: 100%; border: 1.5px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.75rem 1.25rem; font-size: 1rem; margin-bottom: 1rem;">
+        <input type="tel" id="mpesa-phone-input" placeholder="e.g. 0712 345 678" style="width: 100%; border: 1.5px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.75rem 1.25rem; font-size: 1rem; margin-bottom: 1rem;">
         <button class="btn btn-leaf btn-lg" onclick="window.AgrovetApp.simulateMpesa()" style="width: 100%; background: #2EAA43;">
           Send STK Push Prompt →
         </button>
@@ -447,6 +447,7 @@
   </div>
 
   <!-- Scripts -->
+  <script src="js/contact.js"></script>
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
@@ -533,6 +534,14 @@
         return;
       }
 
+      const town = document.getElementById('cust-town')?.value.trim() || 'Town Center';
+      const notes = document.getElementById('cust-notes')?.value.trim() || '';
+      const county = window.AgrovetApp.state.selectedCounty || 'Nairobi';
+      const subtotal = window.AgrovetApp.state.cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      const countyObj = window.AGROVET_DATA.counties.find(c => c.county.toLowerCase() === county.toLowerCase());
+      const shipping = (subtotal >= 10000) ? 0 : (countyObj ? countyObj.fee : 200);
+      const grandTotal = subtotal + shipping;
+
       if (selectedPayment === 'whatsapp') {
         orderViaWhatsApp();
         return;
@@ -543,28 +552,101 @@
       } else if (selectedPayment === 'pod') {
         // Record Pay on Delivery order
         const randId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
-        window.AgrovetApp.state.adminOrders.unshift({
+        const orderRecord = {
           id: randId,
           date: new Date().toISOString().split('T')[0],
           customer: name,
           phone: phone,
-          county: window.AgrovetApp.state.selectedCounty,
-          total: window.AgrovetApp.state.cart.reduce((s, i) => s + (i.price * i.qty), 0),
+          county: county,
+          town: town,
+          deliveryFee: shipping,
+          subtotal: subtotal,
+          total: grandTotal,
           paymentMethod: 'Pay on Delivery',
           mpesaCode: 'Pending POD',
           status: 'Processing',
-          items: window.AgrovetApp.state.cart.length
-        });
+          items: [...window.AgrovetApp.state.cart],
+          itemCount: window.AgrovetApp.state.cart.length,
+          notes: notes
+        };
+
+        window.AgrovetApp.state.adminOrders.unshift(orderRecord);
         localStorage.setItem('agrovet_orders', JSON.stringify(window.AgrovetApp.state.adminOrders));
-        window.AgrovetApp.state.cart = [];
+
+        // Persist to PostgreSQL database in real time
+        if (window.AgrovetApp.submitOrderToDatabase) {
+          window.AgrovetApp.submitOrderToDatabase({
+            id: randId,
+            customer_name: name,
+            phone: phone,
+            county: county,
+            town: town,
+            delivery_fee: shipping,
+            subtotal: subtotal,
+            total: grandTotal,
+            payment_method: 'Pay on Delivery',
+            payment_status: 'Processing',
+            mpesa_code: 'Pending POD',
+            items: window.AgrovetApp.state.cart,
+            notes: notes,
+            order_source: 'web'
+          });
+        }
+
         window.AgrovetApp.state.cart = [];
         localStorage.setItem('agrovet_cart', '[]');
         renderFullCartTable();
         alert(`Order Placed Successfully! Order #${randId}. Our dispatch team will call you to confirm rider delivery.`);
       } else if (selectedPayment === 'pickup') {
-        alert('Pickup Order Confirmed! Your items will be packaged and ready for collection at Kirinyaga Road, Agricultural Center, Shop No. 12.');
+        const randId = 'ORD-PK-' + Math.floor(1000 + Math.random() * 9000);
+        const orderRecord = {
+          id: randId,
+          date: new Date().toISOString().split('T')[0],
+          customer: name,
+          phone: phone,
+          county: 'Nairobi',
+          town: 'Kirinyaga Road Shop #12',
+          deliveryFee: 0,
+          subtotal: subtotal,
+          total: subtotal,
+          paymentMethod: 'Store Collection / Shop Pickup',
+          mpesaCode: 'Pending Store Pay',
+          status: 'Processing',
+          items: [...window.AgrovetApp.state.cart],
+          itemCount: window.AgrovetApp.state.cart.length,
+          notes: notes
+        };
+
+        window.AgrovetApp.state.adminOrders.unshift(orderRecord);
+        localStorage.setItem('agrovet_orders', JSON.stringify(window.AgrovetApp.state.adminOrders));
+
+        if (window.AgrovetApp.submitOrderToDatabase) {
+          window.AgrovetApp.submitOrderToDatabase({
+            id: randId,
+            customer_name: name,
+            phone: phone,
+            county: 'Nairobi',
+            town: 'Kirinyaga Road Shop #12',
+            delivery_fee: 0,
+            subtotal: subtotal,
+            total: subtotal,
+            payment_method: 'Store Collection / Shop Pickup',
+            payment_status: 'Processing',
+            mpesa_code: 'Pending Store Pay',
+            items: window.AgrovetApp.state.cart,
+            notes: notes,
+            order_source: 'web'
+          });
+        }
+
+        window.AgrovetApp.state.cart = [];
+        localStorage.setItem('agrovet_cart', '[]');
+        renderFullCartTable();
+        alert(`Pickup Order #${randId} Confirmed! Your items will be packaged and ready for collection at Kirinyaga Road, Agricultural Center, Shop No. 12.`);
       } else {
-        alert('Manual M-Pesa Instructions: Go to M-Pesa > Lipa na M-Pesa > Buy Goods Till: 876543 (Agrovet Ltd). Enter amount and send confirmation to WhatsApp (+254 700 000 000).');
+        const tillMsg = (window.AGROVET_CONTACT ? window.AGROVET_CONTACT.tillNumber : 'Till number coming soon');
+        const phoneMsg = (window.AGROVET_CONTACT ? window.AGROVET_CONTACT.phoneDisplay : '+254 720 263 503');
+        alert(`Manual M-Pesa Instructions: Go to M-Pesa > Lipa na M-Pesa > Buy Goods Till: ${tillMsg} (Agrovet Ltd). Enter amount and send confirmation to WhatsApp (${phoneMsg}).`);
       }
     }
 
@@ -578,7 +660,7 @@
       const name = document.getElementById('cust-name')?.value.trim() || 'Kenyan Farmer';
       const phone = document.getElementById('cust-phone')?.value.trim() || 'Not provided';
       const county = window.AgrovetApp.state.selectedCounty || 'Nairobi';
-      const address = document.getElementById('cust-address')?.value.trim() || 'Town Parcel Office';
+      const town = document.getElementById('cust-town')?.value.trim() || 'Town Parcel Office';
       const notes = document.getElementById('cust-notes')?.value.trim() || '';
 
       const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
@@ -597,26 +679,53 @@
         `*JUMLA KUU: KSh ${grandTotal.toLocaleString()}*\n\n` +
         `👤 *Mteja:* ${name}\n` +
         `📞 *Simu:* ${phone}\n` +
-        `📍 *Kaunti / Eneo:* ${county} — ${address}\n` +
+        `📍 *Kaunti / Eneo:* ${county} — ${town}\n` +
         (notes ? `📝 *Maelezo ya Ziada:* ${notes}\n` : '') +
-        `\nTafadhali thibitisha upatikanaji na maelezo ya malipo (Lipa na M-Pesa Till 876543 au Paybill 543210).`;
+        `\nTafadhali thibitisha upatikanaji na maelezo ya malipo (Lipa na M-Pesa Buy Goods Till: ${(window.AGROVET_CONTACT ? window.AGROVET_CONTACT.tillNumber : 'Till number coming soon')}).`;
 
       const randId = 'ORD-WA-' + Math.floor(1000 + Math.random() * 9000);
-      window.AgrovetApp.state.adminOrders.unshift({
+      const orderRecord = {
         id: randId,
         date: new Date().toISOString().split('T')[0],
         customer: name,
         phone: phone,
         county: county,
+        town: town,
+        deliveryFee: shipping,
+        subtotal: subtotal,
         total: grandTotal,
         paymentMethod: 'WhatsApp Direct Order',
         mpesaCode: 'Pending WhatsApp Confirmation',
         status: 'Processing',
-        items: cart.length
-      });
+        items: [...cart],
+        itemCount: cart.length,
+        notes: notes
+      };
+
+      window.AgrovetApp.state.adminOrders.unshift(orderRecord);
       localStorage.setItem('agrovet_orders', JSON.stringify(window.AgrovetApp.state.adminOrders));
 
-      const waUrl = `https://wa.me/254700000000?text=${encodeURIComponent(waMessage)}`;
+      // Asynchronously persist to PostgreSQL orders database
+      if (window.AgrovetApp.submitOrderToDatabase) {
+        window.AgrovetApp.submitOrderToDatabase({
+          id: randId,
+          customer_name: name,
+          phone: phone,
+          county: county,
+          town: town,
+          delivery_fee: shipping,
+          subtotal: subtotal,
+          total: grandTotal,
+          payment_method: 'WhatsApp Direct Order',
+          payment_status: 'Processing',
+          mpesa_code: 'Pending WhatsApp Confirmation',
+          items: cart,
+          notes: notes,
+          order_source: 'whatsapp'
+        });
+      }
+
+      const waUrl = window.AGROVET_CONTACT ? window.AGROVET_CONTACT.getWhatsAppUrl(waMessage) : `https://wa.me/254720263503?text=${encodeURIComponent(waMessage)}`;
       window.open(waUrl, '_blank');
 
       window.AgrovetApp.state.cart = [];
@@ -675,7 +784,7 @@
   </nav>
 
   <!-- Floating WhatsApp Button -->
-  <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd,%20I%20have%20an%20inquiry%20regarding%20my%20cart%20order" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+  <a href="https://wa.me/254720263503?text=Hello%20Agrovet%20Ltd,%20I%20have%20an%20inquiry%20regarding%20my%20cart%20order" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
     <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
       <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.201.3-.778.978-.954 1.179-.176.2-.352.225-.653.075-.301-.15-1.272-.469-2.423-1.495-.897-.8-1.503-1.789-1.68-2.09-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.2.05-.376-.025-.526-.075-.15-.678-1.636-.929-2.24-.244-.588-.493-.508-.678-.518-.176-.009-.377-.011-.578-.011s-.527.075-.803.376c-.276.301-1.054 1.03-1.054 2.511 0 1.481 1.079 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.721.229 1.377.197 1.895.12.578-.087 1.78-.727 2.031-1.43.251-.703.251-1.305.176-1.43-.075-.125-.276-.201-.577-.351z"/>
       <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.177L2.05 22l4.98-1.305A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.633 0-3.15-.49-4.421-1.332l-.317-.207-2.956.775.789-2.882-.228-.363A8.17 8.17 0 0 1 3.8 12c0-4.521 3.679-8.2 8.2-8.2 4.521 0 8.2 3.679 8.2 8.2 0 4.521-3.679 8.2-8.2 8.2z"/>

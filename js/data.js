@@ -4,20 +4,21 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 window.AGROVET_DATA = {
-  // ─── Business Info ─────────────────────────────────────────────
+  // ─── Business Info (Synced with Central Config js/contact.js) ──
   business: {
-    name: "Agrovet Ltd",
+    name: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.businessName : "Agrovet Ltd"),
     domain: "agrovet.ltd",
-    phone1: "+254 700 000 000",
-    phone2: "+254 711 000 000",
-    whatsapp: "+254700000000",
-    email: "info@agrovet.ltd",
-    address: "Kirinyaga Road, Agricultural Center, Shop No. 12, Nairobi, Kenya",
+    phone1: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.phoneDisplay : "+254 720 263 503"),
+    phone2: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.phoneDisplay : "+254 720 263 503"),
+    whatsapp: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.phoneTel : "+254720263503"),
+    whatsappNumber: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.whatsappNumber : "254720263503"),
+    email: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.email : "jjjanuaries@gmail.com"),
+    address: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.fullAddress : "Kirinyaga Road, Agricultural Center, Shop No. 12, Nairobi, Kenya"),
     pcpbLicense: "PCPB/AGR/2024/7890",
     kephisReg: "KEPHIS/SD/2024/4512",
-    paybill: "543210",
-    tillNumber: "876543",
-    hours: "Mon – Sat: 7:00 AM – 6:00 PM | Sun & Holidays: 9:00 AM – 1:00 PM",
+    paybill: "Paybill coming soon",
+    tillNumber: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.tillNumber : "Till number coming soon"),
+    hours: (typeof AGROVET_CONTACT !== 'undefined' ? AGROVET_CONTACT.hours : "Mon – Sat: 7:00 AM – 6:00 PM | Sun & Holidays: 9:00 AM – 1:00 PM"),
     freeDeliveryThreshold: 10000
   },
 
@@ -584,12 +585,12 @@ window.AGROVET_DATA = {
     { id: 2, q: "How long does delivery take after ordering?", a: "Nairobi and Kiambu orders are delivered same day or within 24 hours. Upcountry county deliveries typically take 1 to 2 business days. Remote counties take 3–4 days.", cat: "Delivery" },
     { id: 3, q: "Can I pick up my order directly from your Nairobi shop?", a: "Yes. Select 'Pick up at shop' at checkout. Our shop is located at Kirinyaga Road, Agricultural Center, Shop No. 12, Nairobi. Pickup is 100% free with zero handling charges.", cat: "Delivery" },
     { id: 4, q: "How does the M-Pesa STK Push payment work?", a: "When you choose M-Pesa at checkout and enter your Safaricom mobile number, our Daraja API instantly sends a payment pop-up prompt to your phone. Enter your secret M-Pesa PIN, and the order confirms automatically in seconds.", cat: "Payments" },
-    { id: 5, q: "Can I pay via Lipa na M-Pesa Paybill or Till Number manually?", a: "Yes! If you prefer manual payment or experience network delays with STK Push, pay to Paybill 543210 (Account: Your Order Number) or Till Number 876543, then share the confirmation code on WhatsApp.", cat: "Payments" },
+    { id: 5, q: "Can I pay via Lipa na M-Pesa Paybill or Till Number manually?", a: "Yes! If you prefer manual payment or experience network delays with STK Push, contact us or pay to our Buy Goods Till Number (Till number coming soon), then share the confirmation code on WhatsApp.", cat: "Payments" },
     { id: 6, q: "Do you offer 'Pay on Delivery'?", a: "Pay on Delivery is available for all addresses within Nairobi and metropolitan Kiambu (Thika, Ruiru, Kikuyu). For upcountry deliveries, payment is confirmed prior to parcel dispatch.", cat: "Payments" },
     { id: 7, q: "Are all your agrochemicals genuine and registered with the PCPB?", a: "100% genuine. Agrovet Ltd is fully licensed by the Pest Control Products Board under Dealer Licence PCPB/AGR/2024/7890. We source exclusively from authorized manufacturers and official distributors.", cat: "Quality" },
     { id: 8, q: "Do you stock certified seeds with KEPHIS germination test seals?", a: "Yes. Every seed packet we stock carries official KEPHIS certification, lot numbers, and verified germination rates (minimum 90–95%). We store all seeds in climate-controlled conditions.", cat: "Quality" },
     { id: 9, q: "Do you provide bulk or wholesale prices for farmer cooperatives and large estates?", a: "Yes! We offer tiered wholesale pricing for farmer groups, youth cooperatives, self-help groups, and commercial farms ordering in bulk. Click 'Request Bulk Quote' or message us on WhatsApp.", cat: "Pricing" },
-    { id: 10, q: "Can I consult an agronomist before buying a pesticide or fertilizer?", a: "Yes, our licensed agronomists are on standby Monday to Saturday from 7:00 AM to 6:00 PM. Send photos of your crop symptoms to WhatsApp (+254 700 000 000) for instant advice.", cat: "Agronomy" },
+    { id: 10, q: "Can I consult an agronomist before buying a pesticide or fertilizer?", a: "Yes, our licensed agronomists are on standby Monday to Saturday from 7:00 AM to 6:00 PM. Send photos of your crop symptoms to WhatsApp (+254 720 263 503) for instant advice.", cat: "Agronomy" },
     { id: 11, q: "What should I do if a product is showing 'Out of Stock'?", a: "Click the 'Notify Me When Available' button on the product page. You will receive an instant SMS or WhatsApp notification as soon as our warehouse restocks.", cat: "Orders" },
     { id: 12, q: "What is your return and refund policy?", a: "Unopened products in their original factory seal can be returned within 7 days for a replacement or full refund. Opened chemical containers cannot be accepted back due to safety regulations.", cat: "Orders" },
     { id: 13, q: "How can I track my dispatched order?", a: "Once your package is booked with the courier, you receive an automated SMS and WhatsApp update containing your courier parcel waybill number and contact details of the destination depot.", cat: "Delivery" },
@@ -609,7 +610,7 @@ window.AGROVET_DATA = {
     { id: 27, q: "How does your 'Shop by Problem & Crop' tool work?", a: "Simply select your crop (e.g. Tomatoes) and the pest symptom you see (e.g. Blight or Tuta Absoluta). Our system automatically identifies the approved chemical solution with dosage guidelines.", cat: "Agronomy" },
     { id: 28, q: "How is my personal information protected under Kenyan law?", a: "Agrovet Ltd adheres strictly to the Kenya Data Protection Act 2019. We never share customer phone numbers or order history with third parties without consent.", cat: "Privacy" },
     { id: 29, q: "Can I save my favourite products to a wishlist for next planting season?", a: "Yes! Click the heart icon on any product card to save it to your wishlist. Your saved items remain stored on your device for fast reordering next season.", cat: "Orders" },
-    { id: 30, q: "How do I apply for agronomist advice or soil testing partnerships?", a: "Email us at info@agrovet.ltd or visit our Kirinyaga Road shop. We collaborate with accredited soil testing laboratories in Nairobi to help farmers optimize input costs.", cat: "General" }
+    { id: 30, q: "How do I apply for agronomist advice or soil testing partnerships?", a: "Email us at jjjanuaries@gmail.com or visit our Kirinyaga Road shop. We collaborate with accredited soil testing laboratories in Nairobi to help farmers optimize input costs.", cat: "General" }
   ],
 
   // ─── Blog Posts ────────────────────────────────────────────────

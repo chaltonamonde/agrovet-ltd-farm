@@ -26,9 +26,9 @@
   if (state.adminOrders.length === 0) {
     state.adminOrders = [
       { id: "ORD-9421", date: "2024-10-10", customer: "John Kamau", phone: "0722123456", county: "Kiambu", total: 4720, paymentMethod: "M-Pesa STK", mpesaCode: "QJK84920KD", status: "Delivered", items: 3 },
-      { id: "ORD-9422", date: "2024-10-10", customer: "Grace Wanjiku", phone: "0711987654", county: "Nakuru", total: 8900, paymentMethod: "M-Pesa STK", mpesaCode: "QJK84931PL", status: "Dispatched", items: 2 },
+      { id: "ORD-9422", date: "2024-10-10", customer: "Grace Wanjiku", phone: "0712987654", county: "Nakuru", total: 8900, paymentMethod: "M-Pesa STK", mpesaCode: "QJK84931PL", status: "Dispatched", items: 2 },
       { id: "ORD-9423", date: "2024-10-10", customer: "David Omondi", phone: "0733456789", county: "Kisumu", total: 11200, paymentMethod: "M-Pesa STK", mpesaCode: "QJK84945MN", status: "Processing", items: 4 },
-      { id: "ORD-9424", date: "2024-10-09", customer: "Peter Kiprono", phone: "0700112233", county: "Uasin Gishu", total: 3200, paymentMethod: "Pay on Delivery", mpesaCode: "N/A", status: "Pending", items: 1 }
+      { id: "ORD-9424", date: "2024-10-09", customer: "Peter Kiprono", phone: "0723112233", county: "Uasin Gishu", total: 3200, paymentMethod: "Pay on Delivery", mpesaCode: "N/A", status: "Pending", items: 1 }
     ];
     localStorage.setItem('agrovet_orders', JSON.stringify(state.adminOrders));
   }
@@ -351,7 +351,7 @@
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
               <button class="btn btn-gold btn-sm" onclick="window.AgrovetApp.addToCart('${product.id}', 0, 1)">Prescribe & Add to Cart (${formatKsh(product.variants[0].price)})</button>
               <a href="product.html?slug=${product.slug}" class="btn btn-outline-white btn-sm">Full Product Specs</a>
-              <a href="https://wa.me/${window.AGROVET_DATA.business.whatsapp}?text=Hello%20Agronomist,%20I%20have%20${encodeURIComponent(problem.pest)}%20on%20my%20${encodeURIComponent(problem.crop)}" target="_blank" class="btn btn-whatsapp btn-sm">Chat with Agronomist</a>
+              <a href="https://wa.me/${(window.AGROVET_CONTACT ? window.AGROVET_CONTACT.whatsappNumber : '254720263503')}?text=Hello%20Agronomist,%20I%20have%20${encodeURIComponent(problem.pest)}%20on%20my%20${encodeURIComponent(problem.crop)}" target="_blank" class="btn btn-whatsapp btn-sm">Chat with Agronomist</a>
             </div>
           </div>
         `;
@@ -507,12 +507,31 @@
     modal.classList.add('active');
   }
 
-  function simulateMpesaPayment() {
+  // ─── PostgreSQL Database Synchronization Helper ─────────────────
+  async function submitOrderToDatabase(orderData) {
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+      if (response.ok) {
+        const result = await response.json();
+        console.log('[PostgreSQL Live Sync] Order saved:', result);
+        return result;
+      }
+    } catch (err) {
+      console.warn('[PostgreSQL Live Sync] Offline fallback (order cached in local storage):', err.message);
+    }
+    return null;
+  }
+
+  async function simulateMpesaPayment() {
     const phoneInput = document.getElementById('mpesa-phone-input');
     const phone = phoneInput ? phoneInput.value.trim() : '';
 
     if (!phone || phone.length < 9) {
-      showToast('Please enter a valid Safaricom phone number (e.g. 0712345678)', '⚠️');
+      showToast('Please enter a valid Safaricom phone number (e.g. 0712 345 678)', '⚠️');
       return;
     }
 
@@ -523,25 +542,80 @@
     if (promptStep) promptStep.style.display = 'none';
     if (waitingStep) waitingStep.style.display = 'block';
 
-    // Simulate STK Push delay (3 seconds)
+    // Extract customer and destination fields from form
+    const custNameInput = document.getElementById('cust-name');
+    const custTownInput = document.getElementById('cust-town');
+    const custNotesInput = document.getElementById('cust-notes');
+    const custName = (custNameInput && custNameInput.value.trim()) || "Web Customer";
+    const custTown = (custTownInput && custTownInput.value.trim()) || "Town Parcel Office";
+    const custNotes = (custNotesInput && custNotesInput.value.trim()) || "";
+
+    const subtotal = getCartSubtotal();
+    const countyObj = window.AGROVET_DATA ? window.AGROVET_DATA.counties.find(c => c.county.toLowerCase() === (state.selectedCounty || '').toLowerCase()) : null;
+    const deliveryFee = (subtotal >= 10000) ? 0 : (countyObj ? countyObj.fee : 200);
+    const totalAmount = subtotal + deliveryFee;
+
+    const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+
+    // 1. Submit pending order to PostgreSQL database
+    await submitOrderToDatabase({
+      id: orderId,
+      customer_name: custName,
+      phone: phone,
+      county: state.selectedCounty || 'Nairobi',
+      town: custTown,
+      delivery_fee: deliveryFee,
+      subtotal: subtotal,
+      total: totalAmount,
+      payment_method: "M-Pesa STK Push",
+      payment_status: "Pending STK PIN",
+      mpesa_code: "STK_INITIATED",
+      items: [...state.cart],
+      notes: custNotes,
+      order_source: 'web'
+    });
+
+    // 2. Dispatch real STK Push to Safaricom Daraja API
+    try {
+      const stkRes = await fetch('/api/mpesa-stk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          phone,
+          amount: totalAmount,
+          customerName: custName
+        })
+      });
+      const stkData = await stkRes.json();
+      if (stkRes.ok && stkData.success) {
+        showToast('📲 STK PIN prompt sent to your phone!', '🟢');
+      } else {
+        console.warn('[STK Gateway Notice]', stkData.error || stkData);
+      }
+    } catch (err) {
+      console.warn('[STK Network Note]', err.message);
+    }
+
+    // 3. Complete checkout animation and update client state
     setTimeout(() => {
       if (waitingStep) waitingStep.style.display = 'none';
       if (successStep) successStep.style.display = 'block';
 
-      // Generate random transaction code
       const randCode = 'QJK' + Math.floor(1000000 + Math.random() * 9000000);
       const codeEl = document.getElementById('mpesa-tx-code');
       if (codeEl) codeEl.textContent = randCode;
 
-      // Add to admin orders
-      const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
       const newOrder = {
         id: orderId,
         date: new Date().toISOString().split('T')[0],
-        customer: "Web Customer",
+        customer: custName,
         phone: phone,
-        county: state.selectedCounty,
-        total: getCartSubtotal(),
+        county: state.selectedCounty || 'Nairobi',
+        town: custTown,
+        deliveryFee: deliveryFee,
+        subtotal: subtotal,
+        total: totalAmount,
         paymentMethod: "M-Pesa STK Push",
         mpesaCode: randCode,
         status: "Processing",
@@ -554,8 +628,8 @@
       // Clear cart
       state.cart = [];
       saveCart();
-      showToast(`M-Pesa Payment Confirmed! Receipt: ${randCode}`, '🎉');
-    }, 3200);
+      showToast(`M-Pesa Order #${orderId} Initiated!`, '🎉');
+    }, 2800);
   }
 
   function closeMpesaModal() {
@@ -945,7 +1019,8 @@
     switchAdminRole,
     updateOrderStatus,
     exportOrdersCsv,
-    simulateCsvImport
+    simulateCsvImport,
+    submitOrderToDatabase
   };
 
 })();
