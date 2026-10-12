@@ -167,15 +167,19 @@ module.exports = async function handler(req, res) {
     }
 
     const candidatePaths = [
+      path.join(__dirname, 'templates', templateName),
       path.join(__dirname, '..', 'templates', templateName),
       path.join(process.cwd(), 'templates', templateName),
-      path.join(__dirname, 'templates', templateName),
       path.join(process.cwd(), 'api', 'templates', templateName),
+      path.resolve(__dirname, 'templates', templateName),
+      path.resolve(__dirname, '..', 'templates', templateName),
     ];
-    const templatePath = candidatePaths.find((p) => fs.existsSync(p));
+    const templatePath = candidatePaths.find((p) => {
+      try { return fs.existsSync(p); } catch { return false; }
+    });
 
     try {
-      if (templatePath && fs.existsSync(templatePath)) {
+      if (templatePath) {
         const html = fs.readFileSync(templatePath, 'utf8');
         res.setHeader('Content-Type', 'text/html; charset=UTF-8');
         res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
@@ -184,9 +188,15 @@ module.exports = async function handler(req, res) {
         }
         res.statusCode = 200;
         return res.end(html);
+      } else {
+        console.error('[Admin Guard Error] Template not found:', templateName, 'Candidate paths:', candidatePaths, 'cwd:', process.cwd(), '__dirname:', __dirname);
+        res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+        return res.status(500).send(`<!DOCTYPE html><html><head><title>Admin Loading Error</title></head><body style="font-family:sans-serif;padding:2rem;text-align:center;"><h2>Agrovet Admin Portal Initialization</h2><p>Template "${templateName}" could not be located on serverless instance.</p><p><a href="/admin">Click to retry</a></p></body></html>`);
       }
     } catch (err) {
       console.error('[Admin Guard Template Error]', err);
+      res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+      return res.status(500).send(`<!DOCTYPE html><html><body><h2>Admin Portal Error</h2><p>${err.message}</p></body></html>`);
     }
   }
 
