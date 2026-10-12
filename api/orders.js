@@ -6,6 +6,8 @@
 
 const { getPool, getConnectionString, ensureSchema, query } = require('./_db');
 const { verifySessionToken, extractToken } = require('./admin');
+const { checkOrderRateLimit } = require('./_rate-limit');
+const { sendOrderNotification } = require('./_notify');
 
 module.exports = async function handler(req, res) {
   // CORS & Header setup
@@ -136,6 +138,16 @@ module.exports = async function handler(req, res) {
   // POST: Record New Incoming Order in PostgreSQL
   // ─────────────────────────────────────────────────────────────────
   if (req.method === 'POST') {
+    // Rate Limiting Guard: 15 orders per IP per 5 minutes
+    const rateLimitCheck = checkOrderRateLimit(req, res);
+    if (!rateLimitCheck.allowed) {
+      return res.status(rateLimitCheck.status).json({
+        success: false,
+        error: rateLimitCheck.error,
+        retryAfter: rateLimitCheck.retryAfter,
+      });
+    }
+
     let body = req.body;
     if (typeof body === 'string') {
       try {
@@ -242,6 +254,11 @@ module.exports = async function handler(req, res) {
 
       const result = await query(insertQuery, values);
       const row = result.rows[0];
+
+      // Dispatch order notification asynchronously (non-blocking)
+      sendOrderNotification({ order: row, eventType: 'ORDER_CREATED' }).catch((notifErr) => {
+        console.warn('[Notification Warning]', notifErr.message);
+      });
 
       return res.status(201).json({
         success: true,

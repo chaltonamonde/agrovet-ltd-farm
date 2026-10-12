@@ -32,7 +32,7 @@ async function runTests() {
   const orderPayload = {
     id: testOrderId,
     customer_name: 'Wycliffe Ochieng',
-    phone: '0720263503',
+    phone: process.env.TEST_PHONE || '0110677149',
     county: 'Kisumu',
     town: 'Kondele Hub',
     landmark: 'Behind Kondele Police Station',
@@ -75,7 +75,7 @@ async function runTests() {
       method: 'POST',
       body: {
         orderId: testOrderId,
-        phone: '0720263503',
+        phone: process.env.TEST_PHONE || '0110677149',
         amount: 5500,
       },
       headers: {}
@@ -118,7 +118,7 @@ async function runTests() {
             { Name: "MpesaReceiptNumber", Value: mockReceipt },
             { Name: "Balance" },
             { Name: "TransactionDate", Value: 20261012163500 },
-            { Name: "PhoneNumber", Value: 254720263503 }
+            { Name: "PhoneNumber", Value: 254110677149 }
           ]
         }
       }

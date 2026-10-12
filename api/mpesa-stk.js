@@ -5,6 +5,7 @@
  */
 
 const { query } = require('./_db');
+const { checkStkRateLimit } = require('./_rate-limit');
 
 // Helpers for environment variable fallback
 function getDarajaConfig() {
@@ -136,6 +137,16 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({
       success: false,
       error: `Invalid Safaricom phone format "${phone}". Expected Kenyan format (e.g., 0720263503 or +254720263503).`,
+    });
+  }
+
+  // Rate Limiting Guard: 5 attempts per IP / 3 per phone number per 60s
+  const rateLimitResult = checkStkRateLimit(req, formattedPhone, res);
+  if (!rateLimitResult.allowed) {
+    return res.status(rateLimitResult.status).json({
+      success: false,
+      error: rateLimitResult.error,
+      retryAfter: rateLimitResult.retryAfter,
     });
   }
 

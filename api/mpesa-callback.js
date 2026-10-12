@@ -6,6 +6,7 @@
  */
 
 const { query } = require('./_db');
+const { sendOrderNotification } = require('./_notify');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -73,6 +74,7 @@ module.exports = async function handler(req, res) {
 
     try {
       let updated = false;
+      let paidOrder = null;
 
       // 1. Try matching by CheckoutRequestID
       if (CheckoutRequestID) {
@@ -83,11 +85,12 @@ module.exports = async function handler(req, res) {
                notes = COALESCE(notes, '') || ' | M-Pesa STK Paid: KSh ' || $2 || ' (' || $3 || ')',
                updated_at = NOW()
            WHERE checkout_request_id = $4
-           RETURNING id;`,
+           RETURNING *;`,
           [mpesaReceipt, paidAmount, transactionDate, CheckoutRequestID]
         );
         if (updateRes.rowCount > 0) {
-          console.log(`[DB Order Updated] Order #${updateRes.rows[0].id} marked as Paid via CheckoutRequestID.`);
+          paidOrder = updateRes.rows[0];
+          console.log(`[DB Order Updated] Order #${paidOrder.id} marked as Paid via CheckoutRequestID.`);
           updated = true;
         }
       }
@@ -101,11 +104,12 @@ module.exports = async function handler(req, res) {
                notes = COALESCE(notes, '') || ' | M-Pesa STK Paid: KSh ' || $2,
                updated_at = NOW()
            WHERE id = $3
-           RETURNING id;`,
+           RETURNING *;`,
           [mpesaReceipt, paidAmount, queryOrderId]
         );
         if (updateRes.rowCount > 0) {
-          console.log(`[DB Order Updated] Order #${updateRes.rows[0].id} marked as Paid via query orderId.`);
+          paidOrder = updateRes.rows[0];
+          console.log(`[DB Order Updated] Order #${paidOrder.id} marked as Paid via query orderId.`);
           updated = true;
         }
       }
@@ -122,16 +126,22 @@ module.exports = async function handler(req, res) {
            WHERE (phone LIKE $2 OR phone LIKE $3)
              AND payment_status IN ('Pending', 'Pending STK PIN')
              AND created_at >= NOW() - INTERVAL '2 hours'
-           RETURNING id;`,
+           RETURNING *;`,
           [mpesaReceipt, `%${phoneFormatted.slice(-9)}%`, `%${phoneNumber.slice(-9)}%`]
         );
         if (updateRes.rowCount > 0) {
-          console.log(`[DB Order Updated] Order #${updateRes.rows[0].id} marked as Paid via Phone matching.`);
+          paidOrder = updateRes.rows[0];
+          console.log(`[DB Order Updated] Order #${paidOrder.id} marked as Paid via Phone matching.`);
           updated = true;
         }
       }
 
-      if (!updated) {
+      if (paidOrder) {
+        // Dispatch instant payment receipt notification to merchant and customer
+        sendOrderNotification({ order: paidOrder, eventType: 'PAYMENT_RECEIVED' }).catch((notifErr) => {
+          console.warn('[Daraja Payment Notification Warning]', notifErr.message);
+        });
+      } else {
         console.warn(`[Daraja Warning] Could not find matching pending order for Receipt: ${mpesaReceipt}. Recording in audit log.`);
       }
     } catch (dbErr) {

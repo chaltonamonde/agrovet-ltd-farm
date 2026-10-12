@@ -7,6 +7,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { checkAdminLoginRateLimit, recordAdminFailedLogin, clearAdminFailedLogin } = require('./_rate-limit');
 
 // Auto-load .env.local or .env if process.env is missing admin config
 if (!process.env.ADMIN_PASSWORD || !process.env.SESSION_SECRET) {
@@ -177,6 +178,16 @@ module.exports = async function handler(req, res) {
   // 1. POST /api/admin/login (or ?action=login)
   // ─────────────────────────────────────────────────────────────────
   if (req.method === 'POST' && (action === 'login' || !action || action === 'admin')) {
+    // Brute Force Guard: Max 5 failed attempts per IP per 15 minutes
+    const rateLimitCheck = checkAdminLoginRateLimit(req, res);
+    if (!rateLimitCheck.allowed) {
+      return res.status(rateLimitCheck.status).json({
+        success: false,
+        error: rateLimitCheck.error,
+        retryAfter: rateLimitCheck.retryAfter,
+      });
+    }
+
     let body = req.body;
     if (typeof body === 'string') {
       try {
@@ -202,6 +213,7 @@ module.exports = async function handler(req, res) {
       password === 'agrovetltd2026';
 
     if (!validUser || !validPass) {
+      recordAdminFailedLogin(req);
       // Small simulated delay to prevent brute-force attacks
       await new Promise((r) => setTimeout(r, 400));
       return res.status(401).json({
@@ -209,6 +221,9 @@ module.exports = async function handler(req, res) {
         error: 'Invalid administrator ID or security password.',
       });
     }
+
+    // Reset failed login counter on successful authentication
+    clearAdminFailedLogin(req);
 
     const token = createSessionToken(username, 'owner');
 

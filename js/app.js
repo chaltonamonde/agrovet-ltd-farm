@@ -504,6 +504,12 @@
     const totalDisplay = document.getElementById('mpesa-modal-total');
     if (totalDisplay) totalDisplay.textContent = formatKsh(grandTotal);
 
+    const phoneInput = document.getElementById('mpesa-phone-input');
+    const custPhoneInput = document.getElementById('cust-phone');
+    if (phoneInput && !phoneInput.value.trim()) {
+      phoneInput.value = (custPhoneInput && custPhoneInput.value.trim()) || '0110677149';
+    }
+
     modal.classList.add('active');
   }
 
@@ -550,10 +556,15 @@
 
   async function simulateMpesaPayment() {
     const phoneInput = document.getElementById('mpesa-phone-input');
-    const phone = phoneInput ? phoneInput.value.trim() : '';
+    let phone = phoneInput ? phoneInput.value.trim() : '';
 
-    if (!phone || phone.length < 9) {
-      showToast('Please enter a valid Safaricom phone number (e.g. 0712 345 678)', '⚠️');
+    if (!phone) {
+      phone = '0110677149';
+      if (phoneInput) phoneInput.value = phone;
+    }
+
+    if (phone.length < 9) {
+      showToast('Please enter a valid Safaricom phone number (e.g. 0110 677 149)', '⚠️');
       return;
     }
 
