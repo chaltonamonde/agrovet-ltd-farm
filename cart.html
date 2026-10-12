@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shopping Cart & Checkout | Agrovet Ltd Kenya</title>
   <meta name="description" content="Review your farm input order, calculate county delivery rates, and complete payment with M-Pesa Daraja STK Push or Pay on Delivery.">
-  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <link rel="stylesheet" href="css/style.css?v=2026-v4">
   <style>
     .checkout-layout {
       display: grid;
@@ -185,12 +185,17 @@
   <div class="top-bar">
     <div class="container">
       <div class="top-bar-left">
-        <span>🚚 Nationwide delivery across all 47 counties • Order online or call</span>
+        <span data-i18n="topBar">🚚 Nationwide delivery across all 47 counties in Kenya • Fast Courier Dispatch</span>
       </div>
       <div class="top-bar-right">
+        <span class="live-status-pill" title="Live Kenyan Farm Scenery Active">
+          <span class="live-dot-pulse"></span> Live Farm View
+        </span>
         <span>📍 Kirinyaga Rd, Nairobi</span>
         <a href="tel:+254700000000">📞 +254 700 000 000</a>
-        <button class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">🇰🇪 Kiswahili</button>
+        <button id="lang-switch-toggle" class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">
+          🇰🇪 Kiswahili
+        </button>
       </div>
     </div>
   </div>
@@ -198,10 +203,11 @@
   <header class="site-header">
     <div class="main-header">
       <div class="container">
-        <a href="index.html" class="brand-logo">
+        <a href="index.html" class="brand-logo" title="Agrovet Ltd Home">
           <div class="brand-symbol">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M12 8c2.5 0 4 1.5 4 4 0 3-4 6-4 6s-4-3-4-6c0-2.5 1.5-4 4-4z" fill="var(--gold)" stroke="none"/>
             </svg>
           </div>
           <div class="brand-text">
@@ -212,9 +218,29 @@
 
         <div class="header-actions">
           <a href="shop.html" class="action-link">← Back to Catalogue</a>
+          <button class="cart-btn-trigger" onclick="window.AgrovetApp.openCart()" aria-label="Open Shopping Cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span class="cart-count-badge">0</span>
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- Mobile Quick Taskbar Strip -->
+    <nav class="mobile-taskbar-strip" aria-label="Mobile Navigation Bar">
+      <div class="mobile-taskbar-scroll">
+        <a href="index.html" class="mobile-taskbar-pill">🏠 Home</a>
+        <a href="about.html" class="mobile-taskbar-pill">📖 About Us</a>
+        <a href="shop.html" class="mobile-taskbar-pill">🏷️ Categories</a>
+        <a href="shop.html" class="mobile-taskbar-pill highlight">🛒 Shop Now <span class="hot-badge">HOT</span></a>
+        <a href="blog.html" class="mobile-taskbar-pill">📰 Blog</a>
+        <a href="contact.html" class="mobile-taskbar-pill">📞 Contact</a>
+      </div>
+    </nav>
   </header>
 
   <!-- Cart & Checkout Container -->
@@ -287,6 +313,14 @@
                 </div>
               </label>
 
+              <label class="payment-card-option" onclick="selectPayMethod('whatsapp', this)">
+                <input type="radio" name="pay-method" value="whatsapp">
+                <div>
+                  <strong style="color: #128C7E; font-size: 1rem;">💬 Order via WhatsApp (Direct Agronomist Dispatch)</strong>
+                  <p style="font-size: 0.8rem; color: var(--text); margin-top: 0.15rem;">Instant dispatch coordination with Kirinyaga Road staff. Ideal for direct Buy Goods Till / Paybill payments.</p>
+                </div>
+              </label>
+
               <label class="payment-card-option" onclick="selectPayMethod('mpesa-manual', this)">
                 <input type="radio" name="pay-method" value="mpesa-manual">
                 <div>
@@ -346,6 +380,10 @@
 
             <button id="place-order-btn" class="btn btn-gold btn-lg" onclick="handlePlaceOrder()" style="width: 100%; margin-top: 1.5rem; font-size: 1.1rem;">
               Complete Order via M-Pesa ⚡
+            </button>
+
+            <button type="button" class="btn btn-whatsapp btn-lg" onclick="orderViaWhatsApp()" style="width: 100%; margin-top: 0.65rem; font-size: 1.05rem;">
+              💬 Complete Order via WhatsApp
             </button>
 
             <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; font-size: 0.75rem; color: var(--text-muted);">
@@ -422,6 +460,8 @@
       const btn = document.getElementById('place-order-btn');
       if (method === 'mpesa-stk') {
         btn.textContent = 'Complete Order via M-Pesa ⚡';
+      } else if (method === 'whatsapp') {
+        btn.textContent = 'Send Order to WhatsApp Agronomist 💬';
       } else if (method === 'pod') {
         btn.textContent = 'Confirm Pay on Delivery Order →';
       } else if (method === 'pickup') {
@@ -493,7 +533,10 @@
         return;
       }
 
-      if (selectedPayment === 'mpesa-stk') {
+      if (selectedPayment === 'whatsapp') {
+        orderViaWhatsApp();
+        return;
+      } else if (selectedPayment === 'mpesa-stk') {
         const phoneInput = document.getElementById('mpesa-phone-input');
         if (phoneInput) phoneInput.value = phone;
         window.AgrovetApp.openMpesaModal();
@@ -525,6 +568,64 @@
       }
     }
 
+    function orderViaWhatsApp() {
+      const cart = window.AgrovetApp.state.cart;
+      if (!cart || cart.length === 0) {
+        window.AgrovetApp.showToast('Please add items to your cart before proceeding', '⚠️');
+        return;
+      }
+
+      const name = document.getElementById('cust-name')?.value.trim() || 'Kenyan Farmer';
+      const phone = document.getElementById('cust-phone')?.value.trim() || 'Not provided';
+      const county = window.AgrovetApp.state.selectedCounty || 'Nairobi';
+      const address = document.getElementById('cust-address')?.value.trim() || 'Town Parcel Office';
+      const notes = document.getElementById('cust-notes')?.value.trim() || '';
+
+      const subtotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      const countyObj = window.AGROVET_DATA.counties.find(c => c.county.toLowerCase() === county.toLowerCase());
+      const shipping = (subtotal >= 10000) ? 0 : (countyObj ? countyObj.fee : 200);
+      const grandTotal = subtotal + shipping;
+
+      const itemsList = cart.map(i => `• ${i.qty}x ${i.name} (${i.packSize}) @ KSh ${i.price.toLocaleString()} = KSh ${(i.price * i.qty).toLocaleString()}`).join('\n');
+
+      const waMessage = 
+        `*AGROVET LTD (agrovet.ltd) — ODA MPYA YA PEMBEJEO*\n\n` +
+        `Habari, ningependa kuagiza bidhaa hizi:\n` +
+        `${itemsList}\n\n` +
+        `Subtotal: KSh ${subtotal.toLocaleString()}\n` +
+        `Usafirishaji (${county}): ${shipping === 0 ? 'BURE (Free Shipping)' : 'KSh ' + shipping.toLocaleString()}\n` +
+        `*JUMLA KUU: KSh ${grandTotal.toLocaleString()}*\n\n` +
+        `👤 *Mteja:* ${name}\n` +
+        `📞 *Simu:* ${phone}\n` +
+        `📍 *Kaunti / Eneo:* ${county} — ${address}\n` +
+        (notes ? `📝 *Maelezo ya Ziada:* ${notes}\n` : '') +
+        `\nTafadhali thibitisha upatikanaji na maelezo ya malipo (Lipa na M-Pesa Till 876543 au Paybill 543210).`;
+
+      const randId = 'ORD-WA-' + Math.floor(1000 + Math.random() * 9000);
+      window.AgrovetApp.state.adminOrders.unshift({
+        id: randId,
+        date: new Date().toISOString().split('T')[0],
+        customer: name,
+        phone: phone,
+        county: county,
+        total: grandTotal,
+        paymentMethod: 'WhatsApp Direct Order',
+        mpesaCode: 'Pending WhatsApp Confirmation',
+        status: 'Processing',
+        items: cart.length
+      });
+      localStorage.setItem('agrovet_orders', JSON.stringify(window.AgrovetApp.state.adminOrders));
+
+      const waUrl = `https://wa.me/254700000000?text=${encodeURIComponent(waMessage)}`;
+      window.open(waUrl, '_blank');
+
+      window.AgrovetApp.state.cart = [];
+      localStorage.setItem('agrovet_cart', '[]');
+      renderFullCartTable();
+      window.AgrovetApp.updateBadge();
+      window.AgrovetApp.showToast(`Order #${randId} sent to WhatsApp! Connecting to agronomist...`, '✅');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       renderFullCartTable();
       // Listen for cart changes
@@ -538,5 +639,47 @@
       };
     });
   </script>
+
+  <!-- Mobile Bottom Tab Bar -->
+  <nav class="mobile-tab-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      </svg>
+      <span>Home</span>
+    </a>
+    <a href="shop.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>Shop</span>
+    </a>
+    <a href="cart.html" class="tab-bar-item active" aria-label="Open Cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="tab-badge cart-count-badge">0</span>
+      <span>Cart</span>
+    </a>
+    <a href="contact.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+      </svg>
+      <span>Contact</span>
+    </a>
+  </nav>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd,%20I%20have%20an%20inquiry%20regarding%20my%20cart%20order" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.201.3-.778.978-.954 1.179-.176.2-.352.225-.653.075-.301-.15-1.272-.469-2.423-1.495-.897-.8-1.503-1.789-1.68-2.09-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.2.05-.376-.025-.526-.075-.15-.678-1.636-.929-2.24-.244-.588-.493-.508-.678-.518-.176-.009-.377-.011-.578-.011s-.527.075-.803.376c-.276.301-1.054 1.03-1.054 2.511 0 1.481 1.079 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.721.229 1.377.197 1.895.12.578-.087 1.78-.727 2.031-1.43.251-.703.251-1.305.176-1.43-.075-.125-.276-.201-.577-.351z"/>
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.177L2.05 22l4.98-1.305A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.633 0-3.15-.49-4.421-1.332l-.317-.207-2.956.775.789-2.882-.228-.363A8.17 8.17 0 0 1 3.8 12c0-4.521 3.679-8.2 8.2-8.2 4.521 0 8.2 3.679 8.2 8.2 0 4.521-3.679 8.2-8.2 8.2z"/>
+    </svg>
+  </a>
 </body>
 </html>

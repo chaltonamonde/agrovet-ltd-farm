@@ -17,6 +17,7 @@ yarn-error.log*
 
 # Environment & local settings
 .env*
+!.env.example
 .vercel
 .turbo
 

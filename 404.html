@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Page Not Found | Agrovet Ltd Kenya</title>
+  <meta name="description" content="The page or agricultural product you requested could not be found on Agrovet Ltd. Search our catalogue of certified seeds, crop protection chemicals, and sprayers.">
+
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=2026-v4">
+
+  <!-- Critical Warm Cream Theme Inlined -->
+  <style>
+    :root {
+      --bg-page:     #E6DFCD;
+      --bg-section:  #DDD5C0;
+      --bg-card:     #F2EDDF;
+      --bg-header:   #EFE9D9;
+      --border:      #C9BFA6;
+      --text:        #2A2A1E;
+      --text-muted:  #5E5A48;
+      --leaf-text:   #3F7A08;
+      --forest:      #223F21;
+      --forest-2:    #265626;
+      --ink-green:   #2D4D28;
+      --leaf:        #5FA30E;
+      --leaf-2:      #78B534;
+      --gold:        #F4B943;
+      --gold-hover:  #e5a930;
+      --pale:        #DDD5C0;
+      --pale-2:      #F2EDDF;
+      --page:        #E6DFCD;
+      --card:        #F2EDDF;
+      --idle:        #B5AA90;
+      --whatsapp:    #25D366;
+      --danger:      #D9381E;
+      --success:     #1E824C;
+      --border-card: #C9BFA6;
+    }
+    html {
+      background-color: #E6DFCD !important;
+    }
+    body {
+      background-color: transparent !important;
+      color: #2A2A1E !important;
+      position: relative;
+    }
+    .site-header {
+      background-color: rgba(242, 237, 223, 0.96) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      box-shadow: 0 4px 20px rgba(34, 63, 33, 0.08) !important;
+      border-bottom: 1px solid rgba(201, 191, 166, 0.5) !important;
+    }
+    .error-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card, 16px);
+      padding: 3.5rem 2rem;
+      text-align: center;
+      max-width: 720px;
+      margin: 2rem auto;
+      box-shadow: 0 8px 30px rgba(34, 63, 33, 0.07);
+    }
+    .error-code {
+      font-size: 5.5rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--forest);
+      letter-spacing: -0.04em;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 0 var(--gold);
+    }
+    .error-search-box {
+      max-width: 500px;
+      margin: 2rem auto;
+      position: relative;
+    }
+    .error-search-box input {
+      width: 100%;
+      padding: 0.95rem 1.25rem 0.95rem 3rem;
+      border-radius: 99px;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      font-size: 1rem;
+      color: var(--text);
+      outline: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .error-search-box input:focus {
+      border-color: var(--leaf);
+      box-shadow: 0 4px 18px rgba(95, 163, 14, 0.18);
+    }
+    .error-search-icon {
+      position: absolute;
+      left: 1.15rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .error-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .quick-categories-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.9rem;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-size: 0.85rem;
+      color: var(--forest);
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .quick-categories-pill:hover {
+      background: var(--leaf);
+      color: #ffffff;
+      border-color: var(--leaf);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Live Dynamic Farm Background -->
+  <div class="live-farm-bg-layer" aria-hidden="true">
+    <div class="live-farm-bg-media"></div>
+    <div class="live-farm-bg-atmosphere"></div>
+  </div>
+
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="top-bar-left">
+        <span data-i18n="topBar">🚚 Nationwide delivery across all 47 counties in Kenya • Fast Courier Dispatch</span>
+      </div>
+      <div class="top-bar-right">
+        <span class="live-status-pill" title="Live Kenyan Farm Scenery Active">
+          <span class="live-dot-pulse"></span> Live Farm View
+        </span>
+        <span>📍 Kirinyaga Rd, Nairobi</span>
+        <a href="tel:+254700000000">📞 +254 700 000 000</a>
+        <button id="lang-switch-toggle" class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">
+          🇰🇪 Kiswahili
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Site Header -->
+  <header class="site-header">
+    <div class="main-header">
+      <div class="container">
+        
+        <!-- Logo -->
+        <a href="index.html" class="brand-logo" title="Agrovet Ltd Home">
+          <div class="brand-symbol">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M12 8c2.5 0 4 1.5 4 4 0 3-4 6-4 6s-4-3-4-6c0-2.5 1.5-4 4-4z" fill="var(--gold)" stroke="none"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">AGROVET <span>LTD</span></span>
+            <span class="brand-tagline">KENYA'S FARM INPUTS SPECIALIST</span>
+          </div>
+        </a>
+
+        <!-- Live Search Bar -->
+        <div class="search-wrapper">
+          <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search crops, chemicals, seeds, sprayers, pests..." aria-label="Search inputs">
+            <button class="search-btn" aria-label="Submit search">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+          <div id="search-dropdown" class="search-dropdown"></div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <div class="help-widget">
+            <div class="help-label">Agronomist Hotline:</div>
+            <a href="tel:+254700000000" class="help-phone">+254 700 000 000</a>
+          </div>
+
+          <button class="cart-btn-trigger" onclick="window.AgrovetApp.openCart()" aria-label="Open Shopping Cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span class="cart-count-badge">0</span>
+          </button>
+
+          <button id="mobile-menu-toggle" class="menu-toggle-btn" aria-label="Toggle navigation menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Search Bar -->
+    <div class="mobile-search-bar">
+      <div class="search-box">
+        <input type="text" class="search-input" placeholder="Search crops, chemicals, seeds, sprayers..." aria-label="Search inputs mobile">
+        <button class="search-btn" aria-label="Submit search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Quick Taskbar Strip -->
+    <nav class="mobile-taskbar-strip" aria-label="Mobile Navigation Bar">
+      <div class="mobile-taskbar-scroll">
+        <a href="index.html" class="mobile-taskbar-pill">🏠 Home</a>
+        <a href="about.html" class="mobile-taskbar-pill">📖 About Us</a>
+        <a href="shop.html" class="mobile-taskbar-pill">🏷️ Categories</a>
+        <a href="shop.html" class="mobile-taskbar-pill highlight">🛒 Shop Now <span class="hot-badge">HOT</span></a>
+        <a href="blog.html" class="mobile-taskbar-pill">📰 Blog</a>
+        <a href="contact.html" class="mobile-taskbar-pill">📞 Contact</a>
+      </div>
+    </nav>
+
+    <!-- Desktop Navigation Bar -->
+    <nav class="nav-bar">
+      <div class="container">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <a href="shop.html" class="nav-category-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span data-i18n="allCategories">ALL CATEGORIES</span>
+          </a>
+
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="shop.html" class="nav-link">Shop Store</a></li>
+            <li><a href="about.html" class="nav-link">About Us</a></li>
+            <li><a href="blog.html" class="nav-link">Agronomy Guides</a></li>
+            <li><a href="contact.html" class="nav-link">Contact & Location</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-cta-wrap">
+          <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd,%20I%20am%20looking%20for%20a%20product" target="_blank" class="btn btn-whatsapp btn-sm nav-whatsapp-cta">
+            <span class="whatsapp-pulse-dot"></span>
+            <span>💬 Talk to Agronomist</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 404 Main Section -->
+  <main class="section section-page">
+    <div class="container">
+      
+      <div class="error-card">
+        <span class="label-caps" style="color: var(--danger); font-weight: 800; letter-spacing: 0.15em;">UKURASA HAUKUPATIKANA • ERROR 404</span>
+        <div class="error-code">404</div>
+        <h1 style="font-size: 2.1rem; color: var(--forest); margin-bottom: 0.75rem;">Page or Product Not Found</h1>
+        <p style="font-size: 1.05rem; color: var(--text-muted); max-width: 540px; margin: 0 auto; line-height: 1.6;">
+          The farm input, category, or article you are searching for might have moved, been renamed, or is temporarily out of season.
+        </p>
+
+        <!-- On-Page Instant Search Form -->
+        <form class="error-search-box" action="shop.html" method="get">
+          <svg class="error-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" name="q" placeholder="Type crop, chemical name, or pest to find inputs..." aria-label="Search inputs">
+        </form>
+
+        <!-- Popular Shortcuts -->
+        <div style="margin: 1.5rem 0;">
+          <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Popular Farm Categories:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
+            <a href="shop.html?cat=crop-production" class="quick-categories-pill">🌾 Crop Protection</a>
+            <a href="shop.html?cat=seeds" class="quick-categories-pill">🌱 Certified Seeds</a>
+            <a href="shop.html?cat=insecticides" class="quick-categories-pill">🐛 Insecticides</a>
+            <a href="shop.html?cat=seeds-fertilizers" class="quick-categories-pill">🧪 Fertilizers</a>
+            <a href="shop.html?cat=farm-tools" class="quick-categories-pill">🎒 Knapsack Sprayers</a>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="error-actions">
+          <a href="shop.html" class="btn btn-gold btn-lg">
+            🛒 Browse Full Catalogue
+          </a>
+          <a href="index.html" class="btn btn-outline-leaf btn-lg">
+            🏠 Return to Home
+          </a>
+          <a href="https://wa.me/254700000000?text=Habari%20Agrovet%20Ltd,%20I%20am%20looking%20for%20a%20specific%20farm%20input" target="_blank" class="btn btn-whatsapp btn-lg">
+            💬 WhatsApp Agronomist
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Master Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo">
+            <span class="brand-name" style="color: #fff; font-size: 1.4rem;">AGROVET <span style="color: var(--gold);">LTD</span></span>
+          </div>
+          <p class="footer-desc">
+            Kenya's leading online supplier of agricultural inputs, crop protection chemicals, certified seeds, fertilizers, and sprayers across all 47 counties.
+          </p>
+          <div class="footer-badges">
+            <span class="badge" style="background: rgba(255,255,255,0.1); color: var(--gold); border: 1px solid rgba(244,185,67,0.3);">✓ PCPB Licensed</span>
+            <span class="badge" style="background: rgba(255,255,255,0.1); color: #a3e635; border: 1px solid rgba(163,230,53,0.3);">✓ KEPHIS Certified</span>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop Catalogue</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="blog.html">Agronomy Guides</a></li>
+            <li><a href="contact.html">Store Location</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Product Lines</h4>
+          <ul class="footer-links">
+            <li><a href="shop.html?cat=crop-production">Crop Protection</a></li>
+            <li><a href="shop.html?cat=insecticides">Insecticides & Pest Control</a></li>
+            <li><a href="shop.html?cat=seeds">Certified Hybrid Seeds</a></li>
+            <li><a href="shop.html?cat=seeds-fertilizers">Granular & Foliar Fertilizers</a></li>
+            <li><a href="shop.html?cat=farm-tools">Knapsack Sprayers & Safety PPE</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Agronomist Contact</h4>
+          <div class="footer-contact-item">
+            <span>📍</span>
+            <span>Kirinyaga Road, Agricultural Center, Shop No. 12, Nairobi</span>
+          </div>
+          <div class="footer-contact-item">
+            <span>📞</span>
+            <a href="tel:+254700000000" style="color: inherit;">+254 700 000 000</a>
+          </div>
+          <div class="footer-contact-item">
+            <span>💬</span>
+            <a href="https://wa.me/254700000000" target="_blank" style="color: #25D366; font-weight: 700;">WhatsApp Agronomist</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2024–2026 Agrovet Ltd (agrovet.ltd). All Rights Reserved.</div>
+        <div class="footer-bottom-links" style="display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; justify-content: center;">
+          <a href="terms.html" style="color: rgba(255,255,255,0.7);">Terms & Conditions</a>
+          <a href="delivery-returns.html" style="color: rgba(255,255,255,0.7);">Delivery & Returns</a>
+          <a href="privacy.html" style="color: rgba(255,255,255,0.7);">Privacy Policy (Kenya DPA 2019)</a>
+          <a href="credits.html" style="color: rgba(255,255,255,0.7);">Credits & Licensing</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-Over Cart Drawer -->
+  <div id="drawer-backdrop" class="drawer-backdrop" onclick="window.AgrovetApp.closeCart()"></div>
+  <aside id="cart-drawer" class="cart-drawer" aria-label="Shopping Cart Drawer">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <h3 style="font-size: 1.35rem; color: var(--forest);">Your Shopping Cart</h3>
+        <span class="cart-count-badge">0</span>
+      </div>
+      <button class="drawer-close-btn" onclick="window.AgrovetApp.closeCart()" aria-label="Close cart">✕</button>
+    </div>
+    <div id="drawer-cart-list" class="drawer-items-list"></div>
+    <div class="drawer-footer">
+      <div class="drawer-subtotal-row">
+        <span>Subtotal:</span>
+        <span class="cart-subtotal-val">KSh 0</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+        <a href="cart.html" class="btn btn-gold btn-lg" onclick="window.AgrovetApp.closeCart()" style="width: 100%;">
+          View Full Cart & Checkout
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile Bottom Tab Bar -->
+  <nav class="mobile-tab-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      </svg>
+      <span>Home</span>
+    </a>
+    <a href="shop.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>Shop</span>
+    </a>
+    <button class="tab-bar-item" onclick="window.AgrovetApp.openCart()" aria-label="Open Cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="tab-badge cart-count-badge">0</span>
+      <span>Cart</span>
+    </button>
+    <a href="contact.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+      </svg>
+      <span>Contact</span>
+    </a>
+  </nav>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/254700000000?text=Hello%20Agrovet%20Ltd,%20I%20am%20looking%20for%20a%20product" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.201.3-.778.978-.954 1.179-.176.2-.352.225-.653.075-.301-.15-1.272-.469-2.423-1.495-.897-.8-1.503-1.789-1.68-2.09-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.2.05-.376-.025-.526-.075-.15-.678-1.636-.929-2.24-.244-.588-.493-.508-.678-.518-.176-.009-.377-.011-.578-.011s-.527.075-.803.376c-.276.301-1.054 1.03-1.054 2.511 0 1.481 1.079 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.721.229 1.377.197 1.895.12.578-.087 1.78-.727 2.031-1.43.251-.703.251-1.305.176-1.43-.075-.125-.276-.201-.577-.351z"/>
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.177L2.05 22l4.98-1.305A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.633 0-3.15-.49-4.421-1.332l-.317-.207-2.956.775.789-2.882-.228-.363A8.17 8.17 0 0 1 3.8 12c0-4.521 3.679-8.2 8.2-8.2 4.521 0 8.2 3.679 8.2 8.2 0 4.521-3.679 8.2-8.2 8.2z"/>
+    </svg>
+  </a>
+
+  <div id="toast-container" class="toast-container"></div>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

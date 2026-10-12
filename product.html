@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Details | Agrovet Ltd Kenya</title>
   <meta name="description" content="Certified agricultural inputs and crop chemicals with dosage, pre-harvest interval (PHI) and safety directions. Agrovet Ltd Nairobi.">
-  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <link rel="stylesheet" href="css/style.css?v=2026-v4">
   <style>
     .product-single-grid {
       display: grid;
@@ -332,7 +332,7 @@
           <p id="p-tab-full-desc">Full description goes here.</p>
           <table class="spec-table">
             <tr><th>Active Ingredient</th><td id="p-tab-ai">Glyphosate 360 g/L</td></tr>
-            <tr><th>PCPB Registration</th><td id="p-tab-pcpb">[PCPB LICENCE NO.]</td></tr>
+            <tr><th>PCPB Registration</th><td id="p-tab-pcpb">Approved for Commercial Sale in Kenya (PCPB / KEPHIS)</td></tr>
             <tr><th>Target Crops</th><td id="p-tab-crops">Tomatoes, Maize, Potatoes</td></tr>
             <tr><th>Target Pests / Weeds</th><td id="p-tab-pests">Aphids, Blight, Couch grass</td></tr>
           </table>
@@ -503,7 +503,7 @@
       // Tabs Content
       document.getElementById('p-tab-full-desc').textContent = currentProduct.fullDescription || currentProduct.shortDescription;
       document.getElementById('p-tab-ai').textContent = currentProduct.activeIngredient || 'Standard formulation';
-      document.getElementById('p-tab-pcpb').textContent = currentProduct.pcpbReg || '[PCPB LICENCE NO.]';
+      document.getElementById('p-tab-pcpb').textContent = currentProduct.pcpbReg || 'Approved for Commercial Sale in Kenya (PCPB / KEPHIS)';
       document.getElementById('p-tab-crops').textContent = currentProduct.targetCrops?.join(', ') || 'Various Kenyan crops';
       document.getElementById('p-tab-pests').textContent = currentProduct.targetPests?.join(', ') || 'Broad spectrum';
       document.getElementById('p-tab-how-to').textContent = currentProduct.dosage ? `Application: ${currentProduct.dosage}` : 'Follow directions on packet.';

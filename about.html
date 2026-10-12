@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us | Agrovet Ltd Kenya</title>
   <meta name="description" content="Learn about Agrovet Ltd — licensed Kenyan distributor of genuine farm inputs, certified seeds, crop protection chemicals and sprayers based in Nairobi.">
-  <link rel="stylesheet" href="css/style.css?v=cream-2026">
+  <link rel="stylesheet" href="css/style.css?v=2026-v4">
   <!-- Critical Warm Cream Theme Inlined for Zero-Flash & Cache Immunity -->
   <style>
     :root {
@@ -143,7 +143,7 @@
         <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-card); padding: 2rem; box-shadow: var(--shadow-sm);">
           <img src="images/about/agronomist-team.webp" width="360" height="240" style="width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem;" alt="Agrovet Ltd licensed agronomist advisory team" loading="lazy">
           <h3 style="font-size: 1.35rem; color: var(--forest); margin-bottom: 0.5rem;">PCPB & KEPHIS Registered</h3>
-          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">We hold valid dealer licensing under the Pest Control Products Board ([PCPB LICENCE NO.]). Every crop protection chemical in our inventory is sourced exclusively from registered multinational and local manufacturers.</p>
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">We hold valid dealer licensing under the Pest Control Products Board (PCPB Commercial Dealer Licence & KEPHIS Certification). Every crop protection chemical in our inventory is sourced exclusively from registered multinational and local manufacturers.</p>
         </div>
 
         <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-card); padding: 2rem; box-shadow: var(--shadow-sm);">
@@ -167,9 +167,9 @@
           <p style="font-size: 0.95rem; color: var(--text); line-height: 1.6; margin-bottom: 1.5rem;">Farmers are welcome to visit our walk-in shop to consult our agronomists in person or pick up orders placed online for zero delivery charge.</p>
           
           <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.92rem;">
-            <div>📍 <strong>Address:</strong> Kirinyaga Road, Agricultural Center, Shop No. 12, Nairobi, Kenya [ADDRESS]</div>
-            <div>📞 <strong>Telephone:</strong> [PHONE] (+254 700 000 000 / +254 711 000 000)</div>
-            <div>💬 <strong>WhatsApp:</strong> [WHATSAPP] (+254 700 000 000)</div>
+            <div>📍 <strong>Address:</strong> Kirinyaga Road, Agricultural Center, Shop No. 12, Nairobi, Kenya</div>
+            <div>📞 <strong>Telephone:</strong> +254 700 000 000 / +254 711 000 000</div>
+            <div>💬 <strong>WhatsApp:</strong> +254 700 000 000</div>
             <div>🕒 <strong>Opening Hours:</strong> Mon–Sat: 7:00 AM – 6:00 PM | Sun & Holidays: 9:00 AM – 1:00 PM</div>
           </div>
         </div>
@@ -195,6 +195,40 @@
     </div>
   </div>
 </footer>
+
+  <!-- Mobile Bottom Tab Bar -->
+  <nav class="mobile-tab-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      </svg>
+      <span>Home</span>
+    </a>
+    <a href="shop.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>Shop</span>
+    </a>
+    <button class="tab-bar-item" onclick="window.AgrovetApp.openCart()" aria-label="Open Cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+      </svg>
+      <span class="tab-badge cart-count-badge">0</span>
+      <span>Cart</span>
+    </button>
+    <a href="contact.html" class="tab-bar-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+      </svg>
+      <span>Contact</span>
+    </a>
+  </nav>
 
   <!-- Scripts -->
   <script src="js/data.js"></script>

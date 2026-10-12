@@ -1,0 +1,18 @@
+# robots.txt for Agrovet Ltd Kenya (https://agrovet.ltd)
+# Kenya's trusted online agricultural inputs & crop protection supplier
+
+User-agent: *
+Allow: /
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Shield private administrative & cart checkout sessions
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /cart
+Disallow: /cart.html
+
+# Production XML Sitemap & Host
+Sitemap: https://agrovet.ltd/sitemap.xml
+Host: https://agrovet.ltd
