@@ -7,7 +7,9 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 const { checkAdminLoginRateLimit, recordAdminFailedLogin, clearAdminFailedLogin } = require('./_rate-limit');
+const { applyCorsHeaders } = require('./_cors');
 
 // Auto-load .env.local or .env if process.env is missing admin config
 if (!process.env.ADMIN_PASSWORD || !process.env.SESSION_SECRET) {
@@ -41,10 +43,20 @@ if (!process.env.ADMIN_PASSWORD || !process.env.SESSION_SECRET) {
 }
 
 // Configured admin credentials
-const ADMIN_USER = process.env.ADMIN_USERNAME || 'Chalton';
-const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'chalton5825$';
-const SESSION_SECRET = process.env.SESSION_SECRET || 'agrovet_super_secret_session_key_2026_kirinyaga_hq';
+const ADMIN_USER = (process.env.ADMIN_USERNAME || 'Chalton').trim();
+const ADMIN_PASS = (process.env.ADMIN_PASSWORD || '').trim();
+const SESSION_SECRET = (process.env.SESSION_SECRET || '').trim();
 const SESSION_EXPIRY_MS = (parseInt(process.env.SESSION_EXPIRY_HOURS, 10) || 8) * 3600 * 1000;
+
+if (!SESSION_SECRET && process.env.NODE_ENV === 'production') {
+  console.error('[SECURITY CRITICAL] SESSION_SECRET must be configured in production!');
+}
+
+// Compute or read bcrypt password hash
+let cachedAdminHash = (process.env.ADMIN_PASSWORD_HASH || '').trim();
+if (!cachedAdminHash && ADMIN_PASS) {
+  cachedAdminHash = bcrypt.hashSync(ADMIN_PASS, 10);
+}
 
 /**
  * Creates a cryptographically signed session token:
@@ -58,8 +70,9 @@ function createSessionToken(username, role = 'owner') {
     exp: Date.now() + SESSION_EXPIRY_MS,
   };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const secretKey = SESSION_SECRET || 'agrovet_dev_session_secret_2026_local_fallback';
   const signature = crypto
-    .createHmac('sha256', SESSION_SECRET)
+    .createHmac('sha256', secretKey)
     .update(payloadB64)
     .digest('base64url');
   return `${payloadB64}.${signature}`;
@@ -74,8 +87,9 @@ function verifySessionToken(token) {
   if (parts.length !== 2) return null;
 
   const [payloadB64, signature] = parts;
+  const secretKey = SESSION_SECRET || 'agrovet_dev_session_secret_2026_local_fallback';
   const expectedSig = crypto
-    .createHmac('sha256', SESSION_SECRET)
+    .createHmac('sha256', secretKey)
     .update(payloadB64)
     .digest('base64url');
 
@@ -122,12 +136,8 @@ function extractToken(req) {
 }
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (applyCorsHeaders(req, res, { methods: 'GET, POST, OPTIONS', headers: 'Content-Type, Authorization' })) {
+    return;
   }
 
   // Parse path or action from query/url
@@ -206,17 +216,13 @@ module.exports = async function handler(req, res) {
     const username = (body && body.username ? String(body.username).trim() : '').toLowerCase();
     const password = (body && body.password ? String(body.password).trim() : '');
 
-    // Check on username and password
+    // Strict authentication: username match + cryptographic bcrypt hash verification
     const validUser =
       username === ADMIN_USER.toLowerCase() ||
       username === 'admin' ||
       username === 'agrovet_admin' ||
       username === 'chalton';
-    const validPass =
-      password === ADMIN_PASS ||
-      password === 'chalton5825$' ||
-      password === 'agrovetltd' ||
-      password === 'agrovetltd2026';
+    const validPass = cachedAdminHash ? bcrypt.compareSync(password, cachedAdminHash) : false;
 
     if (!validUser || !validPass) {
       recordAdminFailedLogin(req);

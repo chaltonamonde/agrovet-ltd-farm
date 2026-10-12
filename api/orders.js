@@ -8,15 +8,11 @@ const { getPool, getConnectionString, ensureSchema, query } = require('./_db');
 const { verifySessionToken, extractToken } = require('./admin');
 const { checkOrderRateLimit } = require('./_rate-limit');
 const { sendOrderNotification } = require('./_notify');
+const { applyCorsHeaders } = require('./_cors');
 
 module.exports = async function handler(req, res) {
-  // CORS & Header setup
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (applyCorsHeaders(req, res, { methods: 'GET, POST, PATCH, PUT, OPTIONS' })) {
+    return;
   }
 
   const connStr = getConnectionString();
