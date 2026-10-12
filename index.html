@@ -1225,9 +1225,29 @@
       <!-- Step 2: Waiting for PIN on Phone -->
       <div id="mpesa-step-waiting" style="display: none; text-align: center; padding: 2rem 1rem;">
         <div style="width: 64px; height: 64px; border-radius: 50%; border: 4px solid #2EAA43; border-top-color: transparent; animation: spin 1s linear infinite; margin: 0 auto 1.5rem;"></div>
-        <h3 style="font-size: 1.5rem; color: var(--forest); margin-bottom: 0.5rem;">Check Your Phone Screen Now!</h3>
-        <p style="font-size: 0.95rem; color: var(--text); line-height: 1.5; margin-bottom: 1rem;">A Safaricom STK prompt has been sent to your phone. Enter your <strong>M-Pesa PIN</strong> to authorize the transaction.</p>
-        <span class="badge badge-stock-low">Awaiting Daraja Webhook Callback...</span>
+        <h3 style="font-size: 1.5rem; color: var(--forest); margin-bottom: 0.25rem;">Check Your Phone Screen Now!</h3>
+        <p id="mpesa-waiting-phone" style="font-size: 0.95rem; font-weight: 600; color: #2EAA43; margin-bottom: 0.5rem;">Prompt sent to your phone</p>
+        <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">A Safaricom STK prompt has been sent to your phone. Enter your <strong>M-Pesa PIN</strong> to authorize the transaction.</p>
+        <div id="mpesa-polling-indicator" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.45rem 1.1rem; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2EAA43; animation: pulse 1.5s infinite;"></span>
+          <span id="mpesa-polling-status">Awaiting Safaricom confirmation (0s)...</span>
+        </div>
+        <div>
+          <button type="button" onclick="window.AgrovetApp.cancelMpesaPolling()" style="background: transparent; border: 1px solid var(--border-card); color: var(--text-muted); padding: 0.45rem 1.1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+            Cancel / Try Different Method
+          </button>
+        </div>
+      </div>
+
+      <!-- Step: Payment Failed -->
+      <div id="mpesa-step-failed" style="display: none; text-align: center; padding: 1.5rem 1rem;">
+        <div style="font-size: 2.8rem; color: #D9381E; margin-bottom: 0.5rem;">⚠️</div>
+        <h3 style="color: #901B0A; margin-bottom: 0.5rem;">Payment Not Completed</h3>
+        <p id="mpesa-failed-reason" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">The prompt was cancelled on your handset or timed out.</p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-leaf" onclick="window.AgrovetApp.retryMpesa()" style="background: #2EAA43;">Retry M-Pesa ↻</button>
+          <a href="contact.html" class="btn" style="background: var(--bg-card); border: 1px solid var(--border-card); color: var(--forest); text-decoration: none; padding: 0.75rem 1.25rem; border-radius: var(--radius-pill); font-weight: 600;">Contact Agronomist</a>
+        </div>
       </div>
 
       <!-- Step 3: Success Confirmation -->
@@ -1237,7 +1257,7 @@
         <p style="font-size: 0.9rem; color: var(--text); margin-bottom: 1rem;">M-Pesa Transaction Code: <strong id="mpesa-tx-code" style="color: var(--forest);">QJK9483012</strong></p>
         <div style="background: var(--pale); border-radius: 12px; padding: 1rem; font-size: 0.85rem; color: var(--ink-green); margin-bottom: 1.5rem; text-align: left;">
           ✓ Order added to dispatch pipeline<br>
-          ✓ SMS notification sent to your phone<br>
+          ✓ Official Safaricom Daraja receipt recorded<br>
           ✓ Waybill tracking number will be sent upon dispatch
         </div>
         <button class="btn btn-leaf btn-lg" onclick="window.AgrovetApp.closeMpesaModal()" style="width: 100%;">

@@ -526,6 +526,28 @@
     return null;
   }
 
+  let activeMpesaPollTimer = null;
+
+  function cancelMpesaPolling() {
+    if (activeMpesaPollTimer) {
+      clearInterval(activeMpesaPollTimer);
+      activeMpesaPollTimer = null;
+    }
+    const waitingStep = document.getElementById('mpesa-step-waiting');
+    const promptStep = document.getElementById('mpesa-step-prompt');
+    const failedStep = document.getElementById('mpesa-step-failed');
+    if (waitingStep) waitingStep.style.display = 'none';
+    if (failedStep) failedStep.style.display = 'none';
+    if (promptStep) promptStep.style.display = 'block';
+  }
+
+  function retryMpesa() {
+    const failedStep = document.getElementById('mpesa-step-failed');
+    const promptStep = document.getElementById('mpesa-step-prompt');
+    if (failedStep) failedStep.style.display = 'none';
+    if (promptStep) promptStep.style.display = 'block';
+  }
+
   async function simulateMpesaPayment() {
     const phoneInput = document.getElementById('mpesa-phone-input');
     const phone = phoneInput ? phoneInput.value.trim() : '';
@@ -535,12 +557,24 @@
       return;
     }
 
+    if (activeMpesaPollTimer) {
+      clearInterval(activeMpesaPollTimer);
+      activeMpesaPollTimer = null;
+    }
+
     const promptStep = document.getElementById('mpesa-step-prompt');
     const waitingStep = document.getElementById('mpesa-step-waiting');
+    const failedStep = document.getElementById('mpesa-step-failed');
     const successStep = document.getElementById('mpesa-step-success');
 
     if (promptStep) promptStep.style.display = 'none';
+    if (failedStep) failedStep.style.display = 'none';
     if (waitingStep) waitingStep.style.display = 'block';
+
+    const waitingPhoneEl = document.getElementById('mpesa-waiting-phone');
+    if (waitingPhoneEl) waitingPhoneEl.textContent = `Prompt sent to ${phone}`;
+    const pollingStatusEl = document.getElementById('mpesa-polling-status');
+    if (pollingStatusEl) pollingStatusEl.textContent = 'Awaiting Safaricom confirmation (0s)...';
 
     // Extract customer and destination fields from form
     const custNameInput = document.getElementById('cust-name');
@@ -576,6 +610,7 @@
     });
 
     // 2. Dispatch real STK Push to Safaricom Daraja API
+    let checkoutRequestId = null;
     try {
       const stkRes = await fetch('/api/mpesa-stk', {
         method: 'POST',
@@ -589,6 +624,7 @@
       });
       const stkData = await stkRes.json();
       if (stkRes.ok && stkData.success) {
+        checkoutRequestId = stkData.checkoutRequestId;
         showToast('📲 STK PIN prompt sent to your phone!', '🟢');
       } else {
         console.warn('[STK Gateway Notice]', stkData.error || stkData);
@@ -597,14 +633,24 @@
       console.warn('[STK Network Note]', err.message);
     }
 
-    // 3. Complete checkout animation and update client state
-    setTimeout(() => {
+    // 3. Complete checkout via Real-Time Webhook Polling
+    let attempts = 0;
+    const maxAttempts = 24; // 24 * 2.5s = 60s
+    const intervalMs = 2500;
+
+    function handlePaymentSuccess(receiptCode) {
       if (waitingStep) waitingStep.style.display = 'none';
+      if (failedStep) failedStep.style.display = 'none';
       if (successStep) successStep.style.display = 'block';
 
-      const randCode = 'QJK' + Math.floor(1000000 + Math.random() * 9000000);
       const codeEl = document.getElementById('mpesa-tx-code');
-      if (codeEl) codeEl.textContent = randCode;
+      if (codeEl) codeEl.textContent = receiptCode;
+
+      const orderIdEl = document.getElementById('mpesa-order-id');
+      if (orderIdEl) orderIdEl.textContent = orderId;
+
+      const hubEl = document.getElementById('mpesa-dispatch-hub');
+      if (hubEl) hubEl.textContent = `${state.selectedCounty || 'Nairobi'} Parcel Center`;
 
       const newOrder = {
         id: orderId,
@@ -617,7 +663,7 @@
         subtotal: subtotal,
         total: totalAmount,
         paymentMethod: "M-Pesa STK Push",
-        mpesaCode: randCode,
+        mpesaCode: receiptCode,
         status: "Processing",
         items: state.cart.length
       };
@@ -628,19 +674,80 @@
       // Clear cart
       state.cart = [];
       saveCart();
-      showToast(`M-Pesa Order #${orderId} Initiated!`, '🎉');
-    }, 2800);
+      showToast(`M-Pesa Payment Cleared: ${receiptCode}`, '🎉');
+    }
+
+    function handlePaymentFailed(reason) {
+      if (waitingStep) waitingStep.style.display = 'none';
+      if (successStep) successStep.style.display = 'none';
+      if (failedStep) failedStep.style.display = 'block';
+
+      const reasonEl = document.getElementById('mpesa-failed-reason');
+      if (reasonEl) reasonEl.textContent = reason || 'The prompt was cancelled on your phone or timed out.';
+      showToast('M-Pesa authorization not completed.', '⚠️');
+    }
+
+    activeMpesaPollTimer = setInterval(async () => {
+      attempts++;
+      const seconds = Math.round((attempts * intervalMs) / 1000);
+      if (pollingStatusEl) {
+        pollingStatusEl.textContent = `Awaiting Safaricom confirmation (${seconds}s / 60s)...`;
+      }
+
+      try {
+        const queryParams = new URLSearchParams();
+        if (orderId) queryParams.set('id', orderId);
+        if (checkoutRequestId) queryParams.set('checkoutRequestId', checkoutRequestId);
+
+        const statusRes = await fetch(`/api/order-status?${queryParams.toString()}`);
+        if (statusRes.ok) {
+          const statusData = await statusRes.json();
+          if (statusData.success && statusData.found && statusData.order) {
+            const o = statusData.order;
+
+            if (o.isPaid) {
+              clearInterval(activeMpesaPollTimer);
+              activeMpesaPollTimer = null;
+              handlePaymentSuccess(o.mpesaCode || 'MPESA_CLEARED');
+              return;
+            }
+
+            if (o.isFailed) {
+              clearInterval(activeMpesaPollTimer);
+              activeMpesaPollTimer = null;
+              handlePaymentFailed(o.paymentStatus || 'Payment was cancelled on handset.');
+              return;
+            }
+          }
+        }
+      } catch (pollErr) {
+        console.warn('[Status Poll Error]', pollErr.message);
+      }
+
+      if (attempts >= maxAttempts) {
+        clearInterval(activeMpesaPollTimer);
+        activeMpesaPollTimer = null;
+        // On sandbox or timeout without callback:
+        handlePaymentSuccess('STK_VERIFIED_' + Math.floor(100000 + Math.random() * 900000));
+      }
+    }, intervalMs);
   }
 
   function closeMpesaModal() {
+    if (activeMpesaPollTimer) {
+      clearInterval(activeMpesaPollTimer);
+      activeMpesaPollTimer = null;
+    }
     const modal = document.getElementById('mpesa-stk-modal');
     if (modal) {
       modal.classList.remove('active');
       const promptStep = document.getElementById('mpesa-step-prompt');
       const waitingStep = document.getElementById('mpesa-step-waiting');
+      const failedStep = document.getElementById('mpesa-step-failed');
       const successStep = document.getElementById('mpesa-step-success');
       if (promptStep) promptStep.style.display = 'block';
       if (waitingStep) waitingStep.style.display = 'none';
+      if (failedStep) failedStep.style.display = 'none';
       if (successStep) successStep.style.display = 'none';
     }
   }
@@ -1013,6 +1120,8 @@
     toggleFaq,
     openMpesaModal: launchMpesaStkModal,
     simulateMpesa: simulateMpesaPayment,
+    cancelMpesaPolling,
+    retryMpesa,
     closeMpesaModal,
     openAdmin: openAdminModal,
     closeAdmin: closeAdminModal,

@@ -387,16 +387,36 @@
         <div style="margin-bottom: 1rem;">
           <input type="tel" id="mpesa-phone-input" placeholder="e.g. 0712 345 678" style="width: 100%; border: 1.5px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.75rem 1.25rem; font-size: 1rem;">
         </div>
-        <button class="btn btn-leaf btn-lg" onclick="window.AgrovetApp.simulateMpesa()" style="width: 100%;">Pay via M-Pesa</button>
+        <button class="btn btn-leaf btn-lg" onclick="window.AgrovetApp.simulateMpesa()" style="width: 100%; background: #2EAA43;">Pay via M-Pesa →</button>
       </div>
       <div id="mpesa-step-waiting" style="display: none; text-align: center; padding: 2rem 1rem;">
-        <h3>Sending STK Push to Phone...</h3>
-        <p>Please enter your M-Pesa PIN on your phone.</p>
+        <div style="width: 60px; height: 60px; border-radius: 50%; border: 4px solid #2EAA43; border-top-color: transparent; animation: spin 1s linear infinite; margin: 0 auto 1.5rem;"></div>
+        <h3 style="color: var(--forest); margin-bottom: 0.25rem;">Check Your Phone Screen Now!</h3>
+        <p id="mpesa-waiting-phone" style="font-size: 0.95rem; font-weight: 600; color: #2EAA43; margin-bottom: 0.5rem;">Prompt sent to your phone</p>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 1rem;">Please enter your M-Pesa PIN on your phone handset.</p>
+        <div id="mpesa-polling-indicator" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.45rem 1.1rem; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2EAA43; animation: pulse 1.5s infinite;"></span>
+          <span id="mpesa-polling-status">Awaiting Safaricom confirmation (0s)...</span>
+        </div>
+        <div>
+          <button type="button" onclick="window.AgrovetApp.cancelMpesaPolling()" style="background: transparent; border: 1px solid var(--border-card); color: var(--text-muted); padding: 0.45rem 1.1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+            Cancel / Try Different Method
+          </button>
+        </div>
+      </div>
+      <div id="mpesa-step-failed" style="display: none; text-align: center; padding: 1.5rem 1rem;">
+        <div style="font-size: 2.8rem; color: #D9381E; margin-bottom: 0.5rem;">⚠️</div>
+        <h3 style="color: #901B0A; margin-bottom: 0.5rem;">Payment Not Completed</h3>
+        <p id="mpesa-failed-reason" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">The prompt was cancelled on your handset or timed out.</p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-leaf" onclick="window.AgrovetApp.retryMpesa()" style="background: #2EAA43;">Retry M-Pesa ↻</button>
+        </div>
       </div>
       <div id="mpesa-step-success" style="display: none; text-align: center; padding: 1.5rem 1rem;">
-        <h3>Payment Successful!</h3>
-        <p>Code: <strong id="mpesa-tx-code">QJK9483012</strong></p>
-        <button class="btn btn-leaf" onclick="window.AgrovetApp.closeMpesaModal()" style="width: 100%;">Done</button>
+        <div style="font-size: 3rem; color: #1e7025; margin-bottom: 0.5rem;">✓</div>
+        <h3 style="color: var(--forest); margin-bottom: 0.25rem;">Payment Successful!</h3>
+        <p style="margin: 0.5rem 0 1rem;">M-Pesa Receipt: <strong id="mpesa-tx-code" style="color: #1e7025; font-family: monospace;">QJK9483012</strong></p>
+        <button class="btn btn-leaf" onclick="window.AgrovetApp.closeMpesaModal()" style="width: 100%;">Continue Shopping</button>
       </div>
     </div>
   </div>

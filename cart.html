@@ -458,14 +458,47 @@
       </div>
       <div id="mpesa-step-waiting" style="display: none; text-align: center; padding: 2rem 1rem;">
         <div style="width: 60px; height: 60px; border-radius: 50%; border: 4px solid #2EAA43; border-top-color: transparent; animation: spin 1s linear infinite; margin: 0 auto 1.5rem;"></div>
-        <h3 style="color: var(--forest);">Check Your Phone Screen Now!</h3>
-        <p style="color: var(--text-muted); margin-top: 0.5rem;">Enter your M-Pesa PIN on the prompt...</p>
+        <h3 style="color: var(--forest); margin-bottom: 0.25rem;">Check Your Phone Screen Now!</h3>
+        <p id="mpesa-waiting-phone" style="font-size: 0.95rem; font-weight: 600; color: #2EAA43; margin-bottom: 0.5rem;">Prompt sent to your phone</p>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0 0 1rem;">Enter your M-Pesa PIN on the handset to authorize payment.</p>
+        <div id="mpesa-polling-indicator" style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-card); border-radius: var(--radius-pill); padding: 0.45rem 1.1rem; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #2EAA43; animation: pulse 1.5s infinite;"></span>
+          <span id="mpesa-polling-status">Awaiting Safaricom confirmation (0s)...</span>
+        </div>
+        <div>
+          <button type="button" onclick="window.AgrovetApp.cancelMpesaPolling()" style="background: transparent; border: 1px solid var(--border-card); color: var(--text-muted); padding: 0.45rem 1.1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+            Cancel / Try Different Method
+          </button>
+        </div>
+      </div>
+      <div id="mpesa-step-failed" style="display: none; text-align: center; padding: 1.5rem 1rem;">
+        <div style="font-size: 2.8rem; color: #D9381E; margin-bottom: 0.5rem;">⚠️</div>
+        <h3 style="color: #901B0A; margin-bottom: 0.5rem;">Payment Not Completed</h3>
+        <p id="mpesa-failed-reason" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">The prompt was cancelled on your handset or timed out.</p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-leaf" onclick="window.AgrovetApp.retryMpesa()" style="background: #2EAA43;">Retry M-Pesa ↻</button>
+          <button class="btn" onclick="window.AgrovetApp.orderViaWhatsApp()" style="background: #25D366; color: #fff;">Complete on WhatsApp 💬</button>
+        </div>
       </div>
       <div id="mpesa-step-success" style="display: none; text-align: center; padding: 1.5rem 1rem;">
         <div style="font-size: 3rem; color: #1e7025; margin-bottom: 0.5rem;">✓</div>
-        <h3 style="color: var(--forest);">Order & Payment Confirmed!</h3>
-        <p style="margin: 0.5rem 0 1.5rem;">Transaction Code: <strong id="mpesa-tx-code">QJK9483012</strong></p>
-        <a href="shop.html" class="btn btn-leaf" style="width: 100%;">Continue Shopping</a>
+        <h3 style="color: var(--forest); margin-bottom: 0.25rem;">Order & Payment Confirmed!</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">Safaricom Daraja payment received and verified.</p>
+        <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 10px; padding: 1rem; text-align: left; margin-bottom: 1.25rem; font-size: 0.88rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="color: var(--text-muted);">M-Pesa Receipt:</span>
+            <strong id="mpesa-tx-code" style="color: #1e7025; font-family: monospace; font-size: 1rem;">Checking...</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+            <span style="color: var(--text-muted);">Order Number:</span>
+            <strong id="mpesa-order-id" style="color: var(--forest);">ORD-0000</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted);">Dispatch Hub:</span>
+            <span id="mpesa-dispatch-hub" style="font-weight: 600;">Nairobi Central Warehouse</span>
+          </div>
+        </div>
+        <a href="shop.html" class="btn btn-leaf" style="width: 100%;">Continue Shopping →</a>
       </div>
     </div>
   </div>

@@ -8,6 +8,7 @@
     "db:init": "node scripts/init-db.js",
     "test": "node scripts/test-db-and-auth.js",
     "test:backend": "node scripts/test-serverless-backend.js",
+    "test:polling": "node scripts/test-order-status-polling.js",
     "dev": "node server.js",
     "start": "node server.js"
   },
