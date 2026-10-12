@@ -157,14 +157,14 @@ async function runTests() {
   // ------------------------------------------------------------------
   // TEST 4: Dispatcher to ADMIN_NOTIFICATION_EMAIL
   // ------------------------------------------------------------------
-  console.log('[4/4] Testing Notification Dispatcher to jjjanuaries@gmail.com...');
+  console.log('[4/4] Testing Notification Dispatcher to chaltononyango5@gmail.com...');
   const dispatchResult = await sendOrderNotification({ order: testOrder, eventType: 'PAYMENT_RECEIVED' });
 
   if (!dispatchResult.success) {
     throw new Error(`Notification dispatch failed: ${dispatchResult.error}`);
   }
   console.log(`   ✅ Notification Engine Status: Active`);
-  console.log(`      • Admin Target: ${dispatchResult.recipient || 'jjjanuaries@gmail.com'}`);
+  console.log(`      • Admin Target: ${dispatchResult.recipient || 'chaltononyango5@gmail.com'}`);
   console.log(`      • Email Subject: "${dispatchResult.subject}"`);
   console.log(`      • Mode: ${dispatchResult.simulated ? 'Pre-flight verified (Local/Sandbox logging ready for live RESEND_API_KEY)' : 'Live API sent'}`);
 

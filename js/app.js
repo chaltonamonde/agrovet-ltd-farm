@@ -351,7 +351,7 @@
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
               <button class="btn btn-gold btn-sm" onclick="window.AgrovetApp.addToCart('${product.id}', 0, 1)">Prescribe & Add to Cart (${formatKsh(product.variants[0].price)})</button>
               <a href="product.html?slug=${product.slug}" class="btn btn-outline-white btn-sm">Full Product Specs</a>
-              <a href="https://wa.me/${(window.AGROVET_CONTACT ? window.AGROVET_CONTACT.whatsappNumber : '254720263503')}?text=Hello%20Agronomist,%20I%20have%20${encodeURIComponent(problem.pest)}%20on%20my%20${encodeURIComponent(problem.crop)}" target="_blank" class="btn btn-whatsapp btn-sm">Chat with Agronomist</a>
+              <a href="https://wa.me/${(window.AGROVET_CONTACT ? window.AGROVET_CONTACT.whatsappNumber : '254110677149')}?text=Hello%20Agronomist,%20I%20have%20${encodeURIComponent(problem.pest)}%20on%20my%20${encodeURIComponent(problem.crop)}" target="_blank" class="btn btn-whatsapp btn-sm">Chat with Agronomist</a>
             </div>
           </div>
         `;

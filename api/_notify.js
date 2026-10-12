@@ -174,7 +174,7 @@ function buildOrderEmailHtml({ order, eventType }) {
 
     <!-- Footer -->
     <div style="padding: 16px 24px; text-align: center; font-size: 12px; color: #9ca3af; background: #ffffff;">
-      Agrovet Ltd Kenya • Kirinyaga Road, Nairobi • Phone: +254 720 263 503 • jjjanuaries@gmail.com<br>
+      Agrovet Ltd Kenya • Kirinyaga Road, Nairobi • Phone: +254 110 677 149 • chaltononyango5@gmail.com<br>
       Licensed Agricultural Distributor (PCPB & KEPHIS Certified)
     </div>
 
@@ -192,7 +192,7 @@ function buildOrderEmailHtml({ order, eventType }) {
 async function sendOrderNotification({ order, eventType = 'ORDER_CREATED' }) {
   if (!order) return { success: false, error: 'No order data provided' };
 
-  const adminEmail = (process.env.ADMIN_NOTIFICATION_EMAIL || 'jjjanuaries@gmail.com').trim();
+  const adminEmail = (process.env.ADMIN_NOTIFICATION_EMAIL || 'chaltononyango5@gmail.com').trim();
   const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
   const fromEmail = (process.env.EMAIL_FROM || 'Agrovet Ltd <onboarding@resend.dev>').trim();
 
@@ -207,9 +207,11 @@ async function sendOrderNotification({ order, eventType = 'ORDER_CREATED' }) {
   if (resendApiKey && !resendApiKey.startsWith('re_123456789')) {
     try {
       const recipients = [adminEmail];
-      if (order.email && order.email.includes('@') && !recipients.includes(order.email)) {
-        recipients.push(order.email.trim());
-      }
+      // TEST MODE: All notifications route to admin only — no emails sent to real customers
+      // Remove line below when going live to enable customer confirmations:
+      // if (order.email && order.email.includes('@') && !recipients.includes(order.email)) {
+      //   recipients.push(order.email.trim());
+      // }
 
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',

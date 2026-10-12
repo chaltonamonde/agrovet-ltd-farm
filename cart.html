@@ -217,7 +217,7 @@
           <span class="live-dot-pulse"></span> Live Farm View
         </span>
         <span>📍 Kirinyaga Rd, Nairobi</span>
-        <a href="tel:+254720263503" data-contact-href="tel">📞 <span data-contact="phoneDisplay">+254 720 263 503</span></a>
+        <a href="tel:+254110677149" data-contact-href="tel">📞 <span data-contact="phoneDisplay">+254 110 677 149</span></a>
         <button id="lang-switch-toggle" class="lang-switch-btn" onclick="window.AgrovetApp.toggleLanguage()">
           🇰🇪 Kiswahili
         </button>
@@ -703,7 +703,7 @@
         alert(`Pickup Order #${randId} Confirmed! Your items will be packaged and ready for collection at Kirinyaga Road, Agricultural Center, Shop No. 12.`);
       } else {
         const tillMsg = (window.AGROVET_CONTACT ? window.AGROVET_CONTACT.tillNumber : 'Till number coming soon');
-        const phoneMsg = (window.AGROVET_CONTACT ? window.AGROVET_CONTACT.phoneDisplay : '+254 720 263 503');
+        const phoneMsg = (window.AGROVET_CONTACT ? window.AGROVET_CONTACT.phoneDisplay : '+254 110 677 149');
         alert(`Manual M-Pesa Instructions: Go to M-Pesa > Lipa na M-Pesa > Buy Goods Till: ${tillMsg} (Agrovet Ltd). Enter amount and send confirmation to WhatsApp (${phoneMsg}).`);
       }
     }
@@ -783,7 +783,7 @@
         });
       }
 
-      const waUrl = window.AGROVET_CONTACT ? window.AGROVET_CONTACT.getWhatsAppUrl(waMessage) : `https://wa.me/254720263503?text=${encodeURIComponent(waMessage)}`;
+      const waUrl = window.AGROVET_CONTACT ? window.AGROVET_CONTACT.getWhatsAppUrl(waMessage) : `https://wa.me/254110677149?text=${encodeURIComponent(waMessage)}`;
       window.open(waUrl, '_blank');
 
       window.AgrovetApp.state.cart = [];
@@ -842,7 +842,7 @@
   </nav>
 
   <!-- Floating WhatsApp Button -->
-  <a href="https://wa.me/254720263503?text=Hello%20Agrovet%20Ltd,%20I%20have%20an%20inquiry%20regarding%20my%20cart%20order" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+  <a href="https://wa.me/254110677149?text=Hello%20Agrovet%20Ltd,%20I%20have%20an%20inquiry%20regarding%20my%20cart%20order" class="floating-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
     <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
       <path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.978-.276-.1-.477-.15-.678.15-.201.3-.778.978-.954 1.179-.176.2-.352.225-.653.075-.301-.15-1.272-.469-2.423-1.495-.897-.8-1.503-1.789-1.68-2.09-.176-.301-.019-.464.132-.614.136-.135.301-.351.452-.527.15-.176.201-.301.301-.502.101-.2.05-.376-.025-.526-.075-.15-.678-1.636-.929-2.24-.244-.588-.493-.508-.678-.518-.176-.009-.377-.011-.578-.011s-.527.075-.803.376c-.276.301-1.054 1.03-1.054 2.511 0 1.481 1.079 2.91 1.229 3.111.15.201 2.122 3.24 5.141 4.544.718.31 1.279.496 1.716.635.721.229 1.377.197 1.895.12.578-.087 1.78-.727 2.031-1.43.251-.703.251-1.305.176-1.43-.075-.125-.276-.201-.577-.351z"/>
       <path d="M12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.177L2.05 22l4.98-1.305A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.633 0-3.15-.49-4.421-1.332l-.317-.207-2.956.775.789-2.882-.228-.363A8.17 8.17 0 0 1 3.8 12c0-4.521 3.679-8.2 8.2-8.2 4.521 0 8.2 3.679 8.2 8.2 0 4.521-3.679 8.2-8.2 8.2z"/>
