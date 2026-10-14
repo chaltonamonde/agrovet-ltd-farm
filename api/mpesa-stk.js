@@ -138,7 +138,7 @@ module.exports = async function handler(req, res) {
   if (formattedPhone.length !== 12 || !formattedPhone.startsWith('254')) {
     return res.status(400).json({
       success: false,
-      error: `Invalid Safaricom phone format "${phone}". Expected Kenyan format (e.g., 0720263503 or +254110677149).`,
+      error: `Invalid Safaricom phone format "${phone}". Expected Kenyan format (e.g., 0712345678 or +254110677149).`,
     });
   }
 

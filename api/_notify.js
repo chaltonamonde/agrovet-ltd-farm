@@ -1,7 +1,7 @@
 /**
  * AGROVET LTD (agrovet.ltd) — Transactional Order Notifications & Alerts
  * Dispatches automated, responsive HTML email notifications to merchant
- * administrators (jjjanuaries@gmail.com) and customers via Resend REST API.
+ * administrators (chaltononyango5@gmail.com) and customers via Resend REST API.
  */
 
 function escapeHtml(str) {

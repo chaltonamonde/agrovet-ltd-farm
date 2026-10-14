@@ -10,7 +10,7 @@ Production-ready e-commerce platform and real-time order logistics management sy
 - **Backend**: Node.js, Express (standalone local server) and Vercel Serverless Functions (`api/*.js`).
 - **Database**: PostgreSQL (with connection pooling via `pg`, indexed lookup keys, and automated schema migration).
 - **Payment Gateway**: Safaricom Daraja M-Pesa API (Lipa Na M-Pesa Online STK Push, Buy Goods Till Number & Paybill support, verified webhook reconciliation, and query fallback).
-- **Transactional Alerts**: Resend REST API sending itemized HTML order confirmations to customers and merchant admins (`jjjanuaries@gmail.com`).
+- **Transactional Alerts**: Resend REST API sending itemized HTML order confirmations to customers and merchant admins (`chaltononyango5@gmail.com`).
 - **Security**: Bcrypt password hashing, cryptographic HMAC SHA256 HttpOnly sessions, sliding-window rate limiting, and strict domain-isolated CORS.
 
 ---
