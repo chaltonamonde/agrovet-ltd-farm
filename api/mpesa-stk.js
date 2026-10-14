@@ -17,8 +17,8 @@ function getDarajaConfig() {
   const consumerKey = (process.env.DARAJA_CONSUMER_KEY || process.env.MPESA_CONSUMER_KEY || '').trim();
   const consumerSecret = (process.env.DARAJA_CONSUMER_SECRET || process.env.MPESA_CONSUMER_SECRET || '').trim();
   const passkey = (process.env.DARAJA_PASSKEY || process.env.MPESA_PASSKEY || '').trim();
-  const shortcode = (process.env.DARAJA_BUSINESS_SHORTCODE || process.env.MPESA_SHORTCODE || '174379').trim();
-  const tillNumber = (process.env.MPESA_TILL_NUMBER || process.env.DARAJA_TILL_NUMBER || '').trim();
+  const shortcode = (process.env.DARAJA_BUSINESS_SHORTCODE || process.env.MPESA_SHORTCODE || '1755724').trim();
+  const tillNumber = (process.env.MPESA_TILL_NUMBER || process.env.DARAJA_TILL_NUMBER || '1755724').trim();
   const callbackUrl = (process.env.DARAJA_CALLBACK_URL || process.env.MPESA_CALLBACK_URL || 'https://agrovet.ltd/api/mpesa-callback').trim();
 
   const baseUrl = isProd
@@ -28,12 +28,16 @@ function getDarajaConfig() {
   // Buy Goods Till vs Paybill configuration:
   // For Paybill: Shortcode = Paybill, PartyB = Paybill, TransactionType = CustomerPayBillOnline
   // For Buy Goods: Shortcode = Store/HO Shortcode, PartyB = Till Number, TransactionType = CustomerBuyGoodsOnline
+  // Note: Safaricom Sandbox mock only accepts Shortcode 174379 with CustomerPayBillOnline.
   const rawTxType = (process.env.DARAJA_TRANSACTION_TYPE || process.env.MPESA_TRANSACTION_TYPE || '').trim();
-  const isBuyGoods = rawTxType === 'CustomerBuyGoodsOnline' ||
-    (Boolean(tillNumber) && tillNumber !== shortcode && shortcode !== '174379');
+  const isBuyGoods = isProd && (rawTxType === 'CustomerBuyGoodsOnline' || Boolean(tillNumber));
 
   const transactionType = isBuyGoods ? 'CustomerBuyGoodsOnline' : 'CustomerPayBillOnline';
-  const partyB = (isBuyGoods && tillNumber) ? tillNumber : shortcode;
+  const effectiveShortcode = (!isProd && shortcode !== '174379') ? '174379' : (shortcode || tillNumber);
+  const effectivePasskey = (!isProd && (!passkey || passkey.length < 60))
+    ? 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+    : (passkey || 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919');
+  const partyB = (isBuyGoods && tillNumber) ? tillNumber : effectiveShortcode;
 
   return {
     isProd,
@@ -41,8 +45,8 @@ function getDarajaConfig() {
     baseUrl,
     consumerKey,
     consumerSecret,
-    passkey,
-    shortcode,
+    passkey: effectivePasskey,
+    shortcode: effectiveShortcode,
     tillNumber,
     partyB,
     transactionType,

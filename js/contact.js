@@ -42,13 +42,11 @@
               (typeof localStorage !== 'undefined' && localStorage.getItem('MPESA_TILL_NUMBER'));
   }
 
-  let tillNumber = "Till number coming soon";
-  let hasTillNumber = false;
+  let tillNumber = "1755724";
+  let hasTillNumber = true;
   if (rawTill && String(rawTill).trim() !== "" && String(rawTill).trim() !== "876543") {
     tillNumber = String(rawTill).trim();
     hasTillNumber = true;
-  } else {
-    console.warn('[Agrovet Config] MPESA_TILL_NUMBER environment variable is missing. Displaying "Till number coming soon".');
   }
 
   const AGROVET_CONTACT = {

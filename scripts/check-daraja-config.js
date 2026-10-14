@@ -33,12 +33,13 @@ const env = (vars.DARAJA_ENV || vars.MPESA_ENV || 'sandbox').toLowerCase();
 const isProd = env === 'production' || env === 'live';
 const shortcode = vars.DARAJA_BUSINESS_SHORTCODE || vars.MPESA_SHORTCODE || '174379';
 const till = vars.MPESA_TILL_NUMBER || vars.DARAJA_TILL_NUMBER || '';
-const isBuyGoods = !!till && till !== shortcode && shortcode !== '174379';
+const rawTxType = vars.DARAJA_TRANSACTION_TYPE || vars.MPESA_TRANSACTION_TYPE || '';
+const isBuyGoods = rawTxType === 'CustomerBuyGoodsOnline' || (Boolean(till) && (till === shortcode || till !== '174379'));
 const txType = isBuyGoods ? 'CustomerBuyGoodsOnline' : 'CustomerPayBillOnline';
 const partyB = isBuyGoods && till ? till : shortcode;
 
 console.log('=== RESOLVED CONFIG ===');
-console.log('Environment:', isProd ? 'PRODUCTION (live.safaricom.co.ke)' : 'SANDBOX (sandbox.safaricom.co.ke)');
+console.log('Environment:', isProd ? 'PRODUCTION (api.safaricom.co.ke)' : 'SANDBOX (sandbox.safaricom.co.ke)');
 console.log('TransactionType:', txType);
 console.log('PartyB (where money goes):', partyB);
 console.log('');

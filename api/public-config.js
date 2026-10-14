@@ -13,9 +13,9 @@ module.exports = async function handler(req, res) {
   }
   res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
-  const rawTill = (process.env.MPESA_TILL_NUMBER || process.env.DARAJA_TILL_NUMBER || '').trim();
-  const isRealTill = Boolean(rawTill && rawTill !== '174379' && rawTill !== '876543');
-  const tillNumber = isRealTill ? rawTill : (rawTill || 'Till number coming soon');
+  const rawTill = (process.env.MPESA_TILL_NUMBER || process.env.DARAJA_TILL_NUMBER || '1755724').trim();
+  const isRealTill = Boolean(rawTill && rawTill !== '876543' && rawTill !== '174379');
+  const tillNumber = isRealTill ? rawTill : (rawTill || '1755724');
 
   return res.status(200).json({
     success: true,
