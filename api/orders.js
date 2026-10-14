@@ -162,7 +162,7 @@ module.exports = async function handler(req, res) {
     }
 
     // Customer and Location extraction
-    const customerName = (body.customer_name || body.customer || body.name || '').trim();
+    const customerName = (body.customerName || body.customer_name || body.customer || body.name || '').trim();
     const phone = (body.phone || body.phone_number || body.customer_phone || '').trim();
     const county = (body.county || 'Nairobi').trim();
     const town = (body.town || body.address || 'Central Post Office').trim();
