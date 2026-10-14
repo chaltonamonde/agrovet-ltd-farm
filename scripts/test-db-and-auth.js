@@ -89,7 +89,10 @@ async function runTests() {
     {
       method: 'POST',
       query: { action: 'login' },
-      body: { username: 'Chalton', password: 'chalton5825$' },
+      body: {
+        username: process.env.ADMIN_USERNAME || 'Chalton',
+        password: process.env.ADMIN_PASSWORD || 'chalton5825$'
+      },
       headers: {},
     },
     {

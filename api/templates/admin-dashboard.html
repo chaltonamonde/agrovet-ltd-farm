@@ -41,6 +41,11 @@
       --border-card: #C9BFA6;
       --shadow-sm:   0 1px 3px rgba(0,0,0,0.06);
       --shadow-md:   0 4px 14px rgba(0,0,0,0.09);
+      --radius-card: 18px;
+      --radius-md:   14px;
+      --radius-inner: 12px;
+      --radius-sm:   8px;
+      --radius-pill: 9999px;
     }
 
     * {
@@ -412,7 +417,7 @@
     .metric-card-slim {
       background: var(--bg-card);
       border: 1px solid var(--border-card);
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       padding: 0.75rem 0.95rem;
       box-shadow: var(--shadow-sm);
       position: relative;
@@ -755,7 +760,7 @@
     .chart-box-card {
       background: #FFFFFF;
       border: 1px solid var(--border-card);
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       padding: 1rem;
       box-shadow: var(--shadow-sm);
       display: flex;
@@ -800,7 +805,7 @@
     .cat-deepdive-card {
       background: #FFFFFF;
       border: 2px solid var(--forest);
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       padding: 1.15rem;
       box-shadow: var(--shadow-md);
       display: flex;

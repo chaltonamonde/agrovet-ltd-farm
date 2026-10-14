@@ -5,7 +5,7 @@
   "private": true,
   "main": "api/orders.js",
   "scripts": {
-    "build": "node -e \"console.log('Production build validation verified')\"",
+    "build": "node scripts/build-verify.js",
     "lint": "node scripts/lint.js",
     "db:init": "node scripts/init-db.js",
     "db:backup": "node scripts/backup-db.js",
@@ -20,5 +20,8 @@
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "pg": "^8.23.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

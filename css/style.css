@@ -38,6 +38,8 @@
   --shadow-md:   0 8px 24px rgba(42, 42, 30, 0.08);
   --shadow-lg:   0 16px 36px rgba(42, 42, 30, 0.14);
   --radius-card: 18px;
+  --radius-md:   14px;
+  --radius-inner: 12px;
   --radius-pill: 9999px;
   --radius-sm:   8px;
   --font-heading: 'Barlow Condensed', sans-serif;
@@ -1139,7 +1141,7 @@ h1, h2, h3, h4, h5, h6 {
   gap: 0.85rem;
   padding: 12px 16px;
   background: #ffffff;
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(201, 191, 166, 0.55);
   box-shadow: 0 2px 8px rgba(34, 63, 33, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
@@ -1332,7 +1334,7 @@ h1, h2, h3, h4, h5, h6 {
 .product-card {
   background-color: #ffffff;
   border: 1px solid rgba(201, 191, 166, 0.55);
-  border-radius: 14px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -2690,7 +2692,7 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center !important;
     gap: 10px !important;
     background: var(--pale-2);
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     border: 1px solid rgba(201, 191, 166, 0.5);
     box-sizing: border-box;
   }
@@ -2742,7 +2744,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .product-card {
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     box-shadow: 0 2px 8px rgba(34, 63, 33, 0.06);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     display: flex;
@@ -2970,7 +2972,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 20px 16px !important;
     height: auto !important;
     min-height: auto !important;
-    border-radius: 16px !important;
+    border-radius: var(--radius-card) !important;
     overflow: hidden;
   }
 

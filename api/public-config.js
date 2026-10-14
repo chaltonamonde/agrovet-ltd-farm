@@ -5,15 +5,13 @@
  * dynamically to the client-side storefront.
  */
 
-module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+const { applyCorsHeaders } = require('./_cors');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+module.exports = async function handler(req, res) {
+  if (applyCorsHeaders(req, res, { methods: 'GET, OPTIONS' })) {
+    return;
   }
+  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
 
   const rawTill = (process.env.MPESA_TILL_NUMBER || process.env.DARAJA_TILL_NUMBER || '').trim();
   const isRealTill = Boolean(rawTill && rawTill !== '174379' && rawTill !== '876543');

@@ -43,21 +43,26 @@ if (!process.env.ADMIN_PASSWORD || !process.env.SESSION_SECRET) {
 }
 
 // Configured admin credentials
-const ADMIN_USER = (process.env.ADMIN_USERNAME || 'Chalton').trim();
-const ADMIN_PASS = (process.env.ADMIN_PASSWORD || 'chalton5825$').trim();
-const SESSION_SECRET = (process.env.SESSION_SECRET || 'e4c6b8f3912a7d45e099182acde127bcf89123490abc1249876543210abcdef0').trim();
+const ADMIN_USER = (process.env.ADMIN_USERNAME || 'agrovet_admin').trim();
+const ADMIN_PASS = (process.env.ADMIN_PASSWORD || '').trim();
+const SESSION_SECRET = (process.env.SESSION_SECRET || '').trim();
 const SESSION_EXPIRY_MS = (parseInt(process.env.SESSION_EXPIRY_HOURS, 10) || 8) * 3600 * 1000;
 
-if (!SESSION_SECRET && process.env.NODE_ENV === 'production') {
-  console.error('[SECURITY CRITICAL] SESSION_SECRET must be configured in production!');
+if (!SESSION_SECRET) {
+  console.error('[SECURITY CRITICAL] SESSION_SECRET environment variable is not set. Admin sessions are insecure!');
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('[SECURITY ABORT] SESSION_SECRET must be set in production. Configure it in your Vercel environment variables.');
+  }
 }
 
-// Compute or read bcrypt password hash ($2b$10$wi/YK1msBKtamJZPeDKiouVXFwTA7YLKCVFvsUKsIqS1uXOPhBQHu is bcrypt hash for 'chalton5825$')
+// Build bcrypt hash from ADMIN_PASSWORD_HASH (preferred) or ADMIN_PASSWORD (dev fallback only)
 let cachedAdminHash = (process.env.ADMIN_PASSWORD_HASH || '').trim();
 if (!cachedAdminHash && ADMIN_PASS) {
+  console.warn('[Admin Auth] ADMIN_PASSWORD_HASH not set — hashing ADMIN_PASSWORD at runtime. Set ADMIN_PASSWORD_HASH in production env vars for best security.');
   cachedAdminHash = bcrypt.hashSync(ADMIN_PASS, 10);
 } else if (!cachedAdminHash) {
-  cachedAdminHash = '$2b$10$wi/YK1msBKtamJZPeDKiouVXFwTA7YLKCVFvsUKsIqS1uXOPhBQHu';
+  console.error('[SECURITY CRITICAL] Neither ADMIN_PASSWORD_HASH nor ADMIN_PASSWORD is configured. Admin login will be disabled.');
+  cachedAdminHash = '';
 }
 
 /**
@@ -72,7 +77,8 @@ function createSessionToken(username, role = 'owner') {
     exp: Date.now() + SESSION_EXPIRY_MS,
   };
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString('base64url');
-  const secretKey = SESSION_SECRET || 'agrovet_dev_session_secret_2026_local_fallback';
+  if (!SESSION_SECRET) throw new Error('SESSION_SECRET is not configured. Cannot issue admin session tokens.');
+  const secretKey = SESSION_SECRET;
   const signature = crypto
     .createHmac('sha256', secretKey)
     .update(payloadB64)
@@ -89,7 +95,8 @@ function verifySessionToken(token) {
   if (parts.length !== 2) return null;
 
   const [payloadB64, signature] = parts;
-  const secretKey = SESSION_SECRET || 'agrovet_dev_session_secret_2026_local_fallback';
+  if (!SESSION_SECRET) return null; // Cannot verify without a secret
+  const secretKey = SESSION_SECRET;
   const expectedSig = crypto
     .createHmac('sha256', secretKey)
     .update(payloadB64)
@@ -229,11 +236,7 @@ module.exports = async function handler(req, res) {
     const password = (body && body.password ? String(body.password).trim() : '');
 
     // Strict authentication: username match + cryptographic bcrypt hash verification
-    const validUser =
-      username === ADMIN_USER.toLowerCase() ||
-      username === 'admin' ||
-      username === 'agrovet_admin' ||
-      username === 'chalton';
+    const validUser = username === ADMIN_USER.toLowerCase();
     const validPass = cachedAdminHash ? bcrypt.compareSync(password, cachedAdminHash) : false;
 
     if (!validUser || !validPass) {

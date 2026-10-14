@@ -207,11 +207,10 @@ async function sendOrderNotification({ order, eventType = 'ORDER_CREATED' }) {
   if (resendApiKey && !resendApiKey.startsWith('re_123456789')) {
     try {
       const recipients = [adminEmail];
-      // TEST MODE: All notifications route to admin only — no emails sent to real customers
-      // Remove line below when going live to enable customer confirmations:
-      // if (order.email && order.email.includes('@') && !recipients.includes(order.email)) {
-      //   recipients.push(order.email.trim());
-      // }
+      // Send confirmation email to customer if they provided an email address
+      if (order.email && order.email.includes('@') && !recipients.includes(order.email.trim())) {
+        recipients.push(order.email.trim());
+      }
 
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -252,7 +251,42 @@ async function sendOrderNotification({ order, eventType = 'ORDER_CREATED' }) {
   };
 }
 
+/**
+ * Structured critical error logging and optional webhook alerting
+ */
+async function alertCriticalError({ context, error, details = {} }) {
+  const timestamp = new Date().toISOString();
+  const alertPayload = {
+    service: 'Agrovet Ltd',
+    environment: process.env.NODE_ENV || 'production',
+    timestamp,
+    context,
+    error: error instanceof Error ? error.message : String(error),
+    stack: error instanceof Error ? error.stack : undefined,
+    details,
+  };
+
+  console.error('[CRITICAL ALERT]', JSON.stringify(alertPayload));
+
+  const webhookUrl = process.env.ALERT_WEBHOOK_URL;
+  if (webhookUrl && webhookUrl.startsWith('http')) {
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: `🚨 *[Agrovet Alert]* ${context}: ${error instanceof Error ? error.message : String(error)}`,
+          ...alertPayload,
+        }),
+      });
+    } catch (e) {
+      console.warn('[Alert Webhook Failed]', e.message);
+    }
+  }
+}
+
 module.exports = {
   sendOrderNotification,
   buildOrderEmailHtml,
+  alertCriticalError,
 };

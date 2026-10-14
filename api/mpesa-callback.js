@@ -6,15 +6,12 @@
  */
 
 const { query } = require('./_db');
-const { sendOrderNotification } = require('./_notify');
+const { sendOrderNotification, alertCriticalError } = require('./_notify');
+const { applyCorsHeaders } = require('./_cors');
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (applyCorsHeaders(req, res, { methods: 'GET, POST, OPTIONS' })) {
+    return;
   }
 
   // Health check ping
@@ -156,6 +153,7 @@ module.exports = async function handler(req, res) {
       }
     } catch (dbErr) {
       console.error('[Daraja DB Update Error]', dbErr.message);
+      alertCriticalError({ context: 'Daraja Callback DB Update', error: dbErr, details: { CheckoutRequestID } });
     }
   } else {
     // FAILED / CANCELLED PAYMENT (User cancelled PIN prompt, insufficient funds, or timeout)
@@ -183,6 +181,7 @@ module.exports = async function handler(req, res) {
       }
     } catch (dbErr) {
       console.error('[Daraja DB Failure Update Error]', dbErr.message);
+      alertCriticalError({ context: 'Daraja Callback Failure Update', error: dbErr, details: { CheckoutRequestID } });
     }
   }
 

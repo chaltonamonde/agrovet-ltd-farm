@@ -7,7 +7,7 @@
 const { getPool, getConnectionString, ensureSchema, query } = require('./_db');
 const { verifySessionToken, extractToken } = require('./admin');
 const { checkOrderRateLimit } = require('./_rate-limit');
-const { sendOrderNotification } = require('./_notify');
+const { sendOrderNotification, alertCriticalError } = require('./_notify');
 const { applyCorsHeaders } = require('./_cors');
 
 module.exports = async function handler(req, res) {
@@ -169,11 +169,15 @@ module.exports = async function handler(req, res) {
     const landmark = (body.landmark || body.address_landmark || body.town || '').trim();
     const email = (body.email || '').trim();
 
-    if (!customerName) {
-      return res.status(400).json({ success: false, error: 'Customer name is required.' });
+    if (!customerName || customerName.length < 2 || customerName.length > 100) {
+      return res.status(400).json({ success: false, error: 'Customer name is required (2-100 characters).' });
     }
-    if (!phone) {
-      return res.status(400).json({ success: false, error: 'Customer phone number is required.' });
+    const cleanPhoneDigits = phone.replace(/[^0-9]/g, '');
+    if (!phone || cleanPhoneDigits.length < 9 || cleanPhoneDigits.length > 13) {
+      return res.status(400).json({ success: false, error: 'Valid customer phone number is required (e.g. 0712345678 or +254712345678).' });
+    }
+    if (email && (!email.includes('@') || !email.includes('.') || email.length > 150)) {
+      return res.status(400).json({ success: false, error: 'Please provide a valid email address.' });
     }
 
     // Financial calculations
@@ -284,6 +288,7 @@ module.exports = async function handler(req, res) {
       });
     } catch (err) {
       console.error('[POST /api/orders Error]', err);
+      alertCriticalError({ context: 'POST /api/orders', error: err, details: { orderId } });
       return res.status(500).json({
         success: false,
         error: 'Failed to save order to PostgreSQL: ' + err.message,
@@ -365,6 +370,7 @@ module.exports = async function handler(req, res) {
       });
     } catch (err) {
       console.error('[PATCH /api/orders Error]', err);
+      alertCriticalError({ context: 'PATCH /api/orders', error: err, details: { id } });
       return res.status(500).json({
         success: false,
         error: 'Failed to update order status in PostgreSQL: ' + err.message,

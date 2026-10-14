@@ -7,6 +7,7 @@
 const { query } = require('./_db');
 const { checkStkRateLimit } = require('./_rate-limit');
 const { applyCorsHeaders } = require('./_cors');
+const { alertCriticalError } = require('./_notify');
 
 // Helpers for environment variable fallback
 function getDarajaConfig() {
@@ -232,6 +233,7 @@ module.exports = async function handler(req, res) {
     });
   } catch (err) {
     console.error('[Daraja STK Handler Exception]', err);
+    alertCriticalError({ context: 'Daraja STK Handler Exception', error: err, details: { phone: formattedPhone, amount } });
     return res.status(500).json({
       success: false,
       error: `M-Pesa STK Push failed: ${err.message}`,

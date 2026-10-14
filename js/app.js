@@ -955,22 +955,22 @@
 
       <!-- Stats Cards Row -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-        <div style="background: var(--pale); border-radius: 12px; padding: 1.1rem; border: 1px solid var(--border-card);">
+        <div style="background: var(--pale); border-radius: var(--radius-md); padding: 1.1rem; border: 1px solid var(--border-card);">
           <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--forest); font-weight: 700;">Daily Sales Revenue</div>
           <div style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--forest);">${formatKsh(totalSales)}</div>
           <div style="font-size: 0.75rem; color: #1e7025;">+18% vs yesterday</div>
         </div>
-        <div style="background: #fff; border-radius: 12px; padding: 1.1rem; border: 1px solid var(--border-card);">
+        <div style="background: #fff; border-radius: var(--radius-md); padding: 1.1rem; border: 1px solid var(--border-card);">
           <div style="font-size: 0.75rem; text-transform: uppercase; color: #666; font-weight: 700;">Total Orders</div>
           <div style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--forest);">${state.adminOrders.length}</div>
           <div style="font-size: 0.75rem; color: #666;">M-Pesa STK & Delivery</div>
         </div>
-        <div style="background: #fff; border-radius: 12px; padding: 1.1rem; border: 1px solid var(--border-card);">
+        <div style="background: #fff; border-radius: var(--radius-md); padding: 1.1rem; border: 1px solid var(--border-card);">
           <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--danger); font-weight: 700;">Low Stock Alerts</div>
           <div style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--danger);">${lowStockItems.length}</div>
           <div style="font-size: 0.75rem; color: #666;">Requires Restocking</div>
         </div>
-        <div style="background: #fff; border-radius: 12px; padding: 1.1rem; border: 1px solid var(--border-card);">
+        <div style="background: #fff; border-radius: var(--radius-md); padding: 1.1rem; border: 1px solid var(--border-card);">
           <div style="font-size: 0.75rem; text-transform: uppercase; color: #666; font-weight: 700;">Catalogue Products</div>
           <div style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; color: var(--forest);">${window.AGROVET_DATA.products.length}</div>
           <div style="font-size: 0.75rem; color: #666;">Registered SKUs</div>
@@ -988,7 +988,7 @@
 
       <!-- Orders Table -->
       <h3 style="font-size: 1.25rem; color: var(--forest); margin-bottom: 0.75rem;">Recent Farm Orders & Delivery Flow</h3>
-      <div style="overflow-x: auto; background: #fff; border-radius: 12px; border: 1px solid var(--border-card); margin-bottom: 2rem;">
+      <div style="overflow-x: auto; background: #fff; border-radius: var(--radius-md); border: 1px solid var(--border-card); margin-bottom: 2rem;">
         <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
           <thead>
             <tr style="background: var(--pale-2); border-bottom: 1px solid var(--border-card); color: var(--forest);">
@@ -1030,7 +1030,7 @@
 
       <!-- Low Stock Warnings -->
       <h3 style="font-size: 1.25rem; color: var(--forest); margin-bottom: 0.75rem;">Low-Stock Inventory Warnings</h3>
-      <div style="background: #FFF8E7; border: 1px solid #F4B943; border-radius: 12px; padding: 1rem;">
+      <div style="background: #FFF8E7; border: 1px solid #F4B943; border-radius: var(--radius-md); padding: 1rem;">
         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
           ${lowStockItems.map(item => `
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 0.4rem;">

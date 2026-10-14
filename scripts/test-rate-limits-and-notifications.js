@@ -104,7 +104,10 @@ async function runTests() {
     method: 'POST',
     headers: { 'x-forwarded-for': '197.232.0.1' },
     query: { action: 'login' },
-    body: { username: 'chalton', password: 'chalton5825$' },
+    body: {
+      username: process.env.ADMIN_USERNAME || 'chalton',
+      password: process.env.ADMIN_PASSWORD || 'chalton5825$'
+    },
   };
   const legitRes = createMockRes();
   await adminHandler(legitReq, legitRes);
